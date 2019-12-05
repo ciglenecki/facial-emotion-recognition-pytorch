@@ -3,6 +3,7 @@ import tensorflow as tf
 import IPython.display as display
 from PIL import Image
 import numpy as np
+import pandas as pd
 import matplotlib.pyplot as plt
 import os
 import pathlib
@@ -11,12 +12,15 @@ dataset_location = '/run/media/matej/hdd-main/1-projects/1-tech/2019-projekt/ck+
 
 data_dir = pathlib.Path(dataset_location)
 
-list_ds = tf.data.Dataset.list_files(str(data_dir, '/*/'))
-# CLASS_NAMES = np.array([item.name for item in data_dir.glob('*')])
+print(data_dir)
+
+list_ds = tf.data.Dataset.list_files(str(data_dir/'*'))
+for f in list_ds.take(5):
+  print(f.numpy())
+# CLASS_NAMES = np.array([item.name for item in data_dir.glob('*')])cd
 
 # IMG_WIDTH = 640
 # IMG_HEIGHT = 490
-
 # for f in list_ds.take(5):
 #   print(f.numpy())
 
