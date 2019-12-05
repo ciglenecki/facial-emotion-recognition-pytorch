@@ -43,6 +43,16 @@ import pathlib
 # IMG_WIDTH = 640
 # IMG_HEIGHT = 490
 
+emotion_declaration = {
+ 'anger': 0,
+ 'disgust': 1,
+ 'fear': 2,
+ 'happiness': 3,
+ 'sadness': 4,
+ 'surprise': 5,
+ 'calm': 6
+}
+
 AUTOTUNE = tf.data.experimental.AUTOTUNE
 
 dataset_location = '/run/media/matej/hdd-main/1-projects/1-tech/2019-projekt/ck+'
