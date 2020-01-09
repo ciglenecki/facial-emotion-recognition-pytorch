@@ -6,7 +6,9 @@ import numpy as np
 import pandas as pd
 import matplotlib.pyplot as plt
 import os
-import pathlib
+import sys
+from pathlib import Path, PurePath
+import cv2
 
 # ck+
 #     ├── emotions
@@ -39,59 +41,133 @@ import pathlib
 #             ├── S011
 #             ...
 
-# IMG_WIDTH = 640
-# IMG_HEIGHT = 490
 
-emotion_declaration = {
- 'anger': 0,
- 'disgust': 1,
- 'fear': 2,
- 'happiness': 3,
- 'sadness': 4,
- 'surprise': 5,
- 'calm': 6
-}
+
+emotion_declaration = [
+    "neutral",
+    "anger",
+    "contempt",
+    "disgust",
+    "fear",
+    "happy",
+    "sadness",
+    "surprise"
+]
 
 AUTOTUNE = tf.data.experimental.AUTOTUNE
 
-dataset_location = '/run/media/matej/hdd-main/1-projects/1-tech/2019-projekt/ck+'
-
-data_dir = pathlib.Path(dataset_location)
-ds = list()
-
-emotions = tf.data.Dataset.list_files(str(data_dir/'emotions/*/*/*'))
-facs = tf.data.Dataset.list_files(str(data_dir/'facs/*/*/*'))
-images = tf.data.Dataset.list_files(str(data_dir/'images/*/*/*'))
-landmarks = tf.data.Dataset.list_files(str(data_dir/'landmarks/*/*/*'))
-
-data_files = tf.data.Dataset.list_files(str(data_dir/'*/*/*/*'))
-
-for file_emotion in emotions.take(5):
-    print(file_emotion)
-    print(os.path.splitext(file_emotion.numpy())[0])
-
-for file_emotion in emotions.take(5):
-    parts = tf.strings.split(file_emotion, os.path.sep)
-    file_name = parts[len(parts) - 1]
-    print(file_name)
-
-data_directories = np.array([item.name for item in data_dir.glob('*')])
+IMG_WIDTH = 640
+IMG_HEIGHT = 490
 
 
-def process_path(file_path):
-    print(file_path)
-    parts = tf.strings.split(file_path, os.path.sep)
 
-    os.path.splitext(file_emotion.numpy())[0]
-    file_name = parts[len(parts) - 1].numpy()
+path_dataset_string = '/home/matej/projects/fer-projekt/ck+/'
 
-    print(file_name)
-    return file_name
+path_dataset = Path(path_dataset_string)
+path_emotions = Path(path_dataset , 'emotions')
+path_facs = Path(path_dataset , 'facs')
+path_images = Path(path_dataset , 'images')
+path_landmarks = Path(path_dataset , 'landmarks')
 
+# filepaths_emotions = tf.data.Dataset.list_files(str(str(path_emotions) + '*/*/*'))
+filepaths_emotions = tf.data.Dataset.list_files(str(path_emotions/'*/*/*'))
+filepaths_facs= tf.data.Dataset.list_files(str(path_facs/'*/*/*'))
+filepaths_images = tf.data.Dataset.list_files(str(path_images/'*/*/*'))
+filepaths_landmarks = tf.data.Dataset.list_files(str(path_landmarks/'*/*/*'))
 
-# num_parallel_calls = multiple images are processed in parallel
-labeled_ds = emotions.map(process_path, num_parallel_calls=AUTOTUNE)
-print(labeled_ds)
+filepaths_all = tf.data.Dataset.list_files(str(path_dataset /'*/*/*/*'))
+filepaths_directories = np.array([item.name for item in path_dataset .glob('*')])
+
+for filepath_emotions in filepaths_emotions.take(5):
+    print(filepath_emotions)
+    print(os.path.splitext(filepath_emotions.numpy())[0])
+
+for filepath_emotions in filepaths_emotions.take(5):
+    parts = tf.strings.split(filepath_emotions, os.path.sep)
+    filename = parts[len(parts) - 1]
+    print(filename)
+
+print("++++++++\n++++++++\n++++++++\n")
+
+def get_emotion(subject, subject_ordinal_number, sequence_count_string):
+
+    # By given arguments function constructs a filename
+    # Finds the file
+    # Reads it's emotion value and returns it
+    emotion_filename = '_'.join([subject, subject_ordinal_number, sequence_count_string, 'emotion.txt'])
+    emotion_file  = open(str(Path(path_emotions, subject, subject_ordinal_number, emotion_filename)), 'r')
+    emotion = int(float(emotion_file.readline()))
+    return emotion
+
+def get_images(subject, subject_ordinal_number, sequence_count_string):
+
+    # By given arguments function constructs a filename
+    # Finds the file
+    # Reads all images and returns them
+
+    images = []
+    image_folder  = Path(path_images, subject, subject_ordinal_number)
+    image_filenames = list(image_folder.glob('*.png'))    
+
+    # Read each image filename and add image to images[]
+    for image_filename in image_filenames:            
+        image_fullpath  = Path(path_images, subject, subject_ordinal_number, image_filename)
+        images.append(np.array(Image.open(image_fullpath).convert('LA')))
+    return images
+
+def process_filepath(filepath):
+    filepath_parts = filepath.split('_')
+    subject = filepath_parts[0] #S154
+    subject_ordinal_number = filepath_parts[1] #002
+    sequence_count_string = filepath_parts[2]
+
+    return subject, subject_ordinal_number, sequence_count_string
+
+def encode_emotion(emotion):
+    return tf.convert_to_tensor(np.array(emotion))
+
+def decode_image(img):
+    # convert the compressed string to a 3D uint8 tensor
+    img = tf.convert_to_tensor(img, dtype=tf.uint8)    
+    # resize the image to the desired size.
+    return tf.image.resize(img, [IMG_WIDTH, IMG_HEIGHT])
+
+def create_dataset(filepath):
+
+    # define properties
+    subject, subject_ordinal_number, sequence_count_string = process_filepath(filepath)
+    emotions = []
+    # find values
+    emotion = get_emotion(subject, subject_ordinal_number, sequence_count_string)
+    images = get_images(subject, subject_ordinal_number, sequence_count_string)
+    sequence_count_override = len(images)
+    dataset = []
+
+    for i in range(0,len(images)):
+        # 0. index neutral i index EMOCIJE 
+        p = i/(len(images) - 1)
+        emotion_current = [0,0,0,0,0,0,0,0]
+        emotion_current[0] = round(1 - p, 3)
+        print(emotion)
+        emotion_current[emotion] = round(p, 3)
+        # TODO: after image decoding save 1 label and 1 image to TF dataset
+        decoded_image = decode_image(images[i])        
+        dataset.append([decoded_image, encode_emotion(emotion_current)])
+    for i in dataset:
+        print(i)
+    dataset_tensor = tf.data.Dataset.from_tensor_slices(dataset)
+    return dataset_tensor
+    
+    
+for filepath_emotions in filepaths_emotions:
+    # Split full path into parts seperated by /    
+    parts = tf.strings.split(filepath_emotions, os.path.sep)
+    filepath = (parts[len(parts) - 1]).numpy().decode('UTF-8')
+    image, emotion = create_dataset(filepath)
+
+    
+# result = tf.map_fn(process_path, filepaths_emotions)
+# print(result)
 
 # def decode_img(img):
 #   # string -> 3D uint8 tensor
