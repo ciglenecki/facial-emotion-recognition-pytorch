@@ -1,0 +1,29 @@
+run:
+cd ~/projects/fer-projekt && source ./venv/bin/activate && cd ~/projects/fer-projekt/source
+
+
+Packages:
+
+sci-kit-imagels
+https://scikit-image.org/docs/dev/api/skimage.html
+
+
+Slike koje nemaju emocije koristiti za?
+
+1. uzeti sve filename-ove svih emocija
+
+2. iz svakog filenama očitati emociju i PREPRIMITI ju negdje (još ne spremati)
+
+3. iz svakog filenama extractati dijelove filenamea (S160, 001) i pronaći odgovarajuće slike landmarkove i facs
+
+4. učtati svaku (slike landmarkove i facs) i tek onda sve zajedno spremiti u jedan vektor
+
+
+
+-- uctitati sve filenameove svih skila
+-- probati otvoriti file sa emocijama, ukoliko je bezupjesno
+-- filtriraj tako da ostanu samo flienamovi/slike koji imaju emocije
+
+
+Improvement:
+-- sortiaj fileove (ne uzimaj random, uzmi pojednako emocija za testiranje)
