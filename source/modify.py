@@ -12,6 +12,7 @@ import torchvision
 from torchvision import transforms
 from torch.utils.data import Dataset, DataLoader
 import skimage.io as io
+from facenet_pytorch import MTCNN, InceptionResnetV1
 
 
 emotion_declaration = [
@@ -46,8 +47,44 @@ filepaths_images = path_images.glob("*/*/*.png")
 filepaths_landmarks = path_landmarks.glob("*/*/*")
 filepaths_numpy = sorted(path_numpy.glob("*.npy"))
 
+mtcnn = MTCNN(select_largest=False, post_process=False)
+resnet = InceptionResnetV1(pretrained='vggface2').eval()
 
-# plt.figure()
+
+class Rescale(object):
+    """Rescale the image in a sample to a given size.
+
+    Args:
+        output_size (tuple or int): Desired output size. If tuple, output is
+            matched to output_size. If int, smaller of image edges is matched
+            to output_size keeping aspect ratio the same.
+    """
+
+    def __init__(self, output_size):
+        assert isinstance(output_size, (int, tuple))
+        self.output_size = output_size
+
+    def __call__(self, sample):
+        image = sample['image']
+
+        h, w = image.shape[:2]
+        if isinstance(self.output_size, int):
+            if h > w:
+                new_h, new_w = self.output_size * h / w, self.output_size
+            else:
+                new_h, new_w = self.output_size, self.output_size * w / h
+        else:
+            new_h, new_w = self.output_size
+
+        new_h, new_w = int(new_h), int(new_w)
+
+        img = transform.resize(image, (new_h, new_w))
+
+        # h and w are swapped for landmarks because for images,
+        # x and y axes are axis 1 and 0 respectively
+        landmarks = landmarks * [new_w / w, new_h / h]
+
+        return {'image': img, 'landmarks': landmarks}
 
 
 class MyDataset(Dataset):
@@ -57,45 +94,54 @@ class MyDataset(Dataset):
 
     def __getitem__(self, idx):
         if torch.is_tensor(idx):
-            print("test")
             idx = idx.tolist()
 
         img_name = str(Path(self.filepaths_numpy[idx]))
         numpy_object = np.load(img_name, allow_pickle=True)
+
         numpy_image = numpy_object[0]
         numpy_emotion = numpy_object[1]
-        image = torch.from_numpy(numpy_image)
-        emotion = torch.from_numpy(numpy_emotion)
-        # x = torch.from_numpy(numpy_image).float()
+
+        image = Image.fromarray(numpy_image).convert('LA').convert('RGB')
+
+        image = mtcnn(image)
+        image = image.permute(1, 2, 0).int()
+
+        emotion = numpy_emotion
+        # image = torch.from_numpy(numpy_image)
+        # emotion = torch.from_numpy(numpy_emotion)
+
         sample = {'image': image, 'emotion': emotion}
-        if self.transform:
-            sample['image'] = self.transform(
-                np.array(Image.fromarray(numpy_image).convert('LA'))
+
+        # if self.transform:
+        #    self.transform(sample)
+
         return sample
 
     def __len__(self):
         return len(filepaths_numpy)
 
 
-transform=transforms.Compose([
+transform = transforms.Compose([
     transforms.RandomCrop(60),
     transforms.RandomHorizontalFlip()
 ])
 
 
-dataset=MyDataset(filepaths_numpy, transform)
-dataloader=DataLoader(dataset, batch_size=4, num_workers=4)
+dataset = MyDataset(filepaths_numpy, transform)
+dataloader = DataLoader(dataset, batch_size=4, num_workers=4)
 
 
 plt.figure()
 
+
 for i_batch, sample_batched in enumerate(dataloader):
-    image=Image.fromarray(sample_batched['image'].numpy()[0]).convert('LA')
+    image = sample_batched['image'].numpy()[0]
     print(i_batch, image)
     plt.imshow(image)
     plt.pause(0.001)
 
-    if (i_batch == 4):
+    if (i_batch == 1):
         break
     # observe 4th batch and stop
 
