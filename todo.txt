@@ -4,8 +4,7 @@ cd ~/projects/fer-projekt && source ./venv/bin/activate && cd ~/projects/fer-pro
 
 Packages:
 
-sci-kit-imagels
-https://scikit-image.org/docs/dev/api/skimage.html
+
 
 
 Slike koje nemaju emocije koristiti za?
@@ -27,3 +26,9 @@ Slike koje nemaju emocije koristiti za?
 
 Improvement:
 -- sortiaj fileove (ne uzimaj random, uzmi pojednako emocija za testiranje)
+
+
+-- Equivalent
+return Image.fromarray(np.transpose(image, (1, 2, 0)).astype(np.uint8))
+
+return Image.fromarray(np.dstack((image[0], image[1], image[2])).astype(np.uint8))
