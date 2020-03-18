@@ -39,8 +39,6 @@ path_images = Path(path_dataset, "images")
 path_landmarks = Path(path_dataset, "landmarks")
 path_numpy = Path(path_project, "numpy")
 
-
-# filepaths_emotions = tf.data.Dataset.list_files(str(str(path_emotions) + '*/*/*'))
 filepaths_emotions = path_emotions.glob("*/*/*")
 filepaths_facs = path_facs.glob("*/*/*")
 filepaths_images = path_images.glob("*/*/*.png")
@@ -176,7 +174,8 @@ plt.figure()
 
 
 def imshow(img):
-    img = img / 2 + 0.5     # unnormalize
+    # unnormalize
+    img = img / 2 + 0.5
     npimg = img
     plt.imshow(np.transpose(npimg, (1, 2, 0)))
     plt.show()
