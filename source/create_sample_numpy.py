@@ -2,61 +2,9 @@ from __future__ import absolute_import, division, print_function, unicode_litera
 import IPython.display as display
 from PIL import Image  # Pillow Pil
 import numpy as np
-import pandas as pd
-import matplotlib.pyplot as plt
 import os
 import sys
 from pathlib import Path, PurePath
-from tempfile import TemporaryFile
-
-
-# ck+
-#     |----- emotions
-#     |   |----- S005
-#     |   |   ----- 001
-#     |   |   |   |----- S005_001_00000011_emotion.txt
-#     |   |   |   |   ----- 3.0000000e+00
-#     |   |----- S010
-#     |   |   |----- 001
-#     |   |   |   EMPTY!
-#     |   |   |----- 002
-#     |   |   |   |----- S010_002_00000014_emotion.txt
-#     |   |   |   |   ----- 7.0000000e+00
-#     |   |   |----- 003
-#             ...
-
-#     |----- facs
-#             |----- S005
-#             |----- S010
-#             |----- S011
-#             ...
-#     |----- images
-#             |----- S005
-#             |----- S010
-#             |----- S011
-#             ...
-#     ----- landmarks
-#             |----- S005
-#             |----- S010
-#             |----- S011
-#             ...
-
-
-emotion_declaration = [
-    "neutral",
-    "anger",
-    "contempt",
-    "disgust",
-    "fear",
-    "happy",
-    "sadness",
-    "surprise",
-]
-
-# AUTOTUNE = tf.data.experimental.AUTOTUNE
-
-IMG_WIDTH = 640
-IMG_HEIGHT = 490
 
 path_project = "/home/matej/projects/fer-projekt/"
 path_dataset_string = "/home/matej/projects/fer-projekt/ck+/"
@@ -67,20 +15,22 @@ path_facs = Path(path_dataset, "facs")
 path_images = Path(path_dataset, "images")
 path_landmarks = Path(path_dataset, "landmarks")
 
-# filepaths_emotions = tf.data.Dataset.list_files(str(str(path_emotions) + '*/*/*'))
 filepaths_emotions = path_emotions.glob("*/*/*")
 filepaths_facs = path_facs.glob("*/*/*")
 filepaths_images = path_images.glob("*/*/*.png")
 filepaths_landmarks = path_landmarks.glob("*/*/*")
 
-print("++++++++\n++++++++\n++++++++\n")
 
+def read_emotion(subject, subject_ordinal_number, sequence_count_string):
+    """Reads emotion value from emotion filename
+    Filename is constructed from arugments
 
-def get_emotion(subject, subject_ordinal_number, sequence_count_string):
+    Args:
+        subject (string)
+        subject_ordinal_number (string)
+        sequence_count_string (string)
+    """
 
-    # By given arguments function constructs a filename
-    # Finds the file
-    # Reads it's emotion value and returns it
     emotion_filename = "_".join(
         [subject, subject_ordinal_number, sequence_count_string, "emotion.txt"]
     )
@@ -91,24 +41,30 @@ def get_emotion(subject, subject_ordinal_number, sequence_count_string):
         emotion_file = open(str(emotion_fullpath), "r",)
     else:
         return -1
+
     emotion = int(float(emotion_file.readline()))
     return emotion
 
 
-# Todo: rewrite to get_image
-def get_image_filenames(subject, subject_ordinal_number, sequence_count_string):
-
-    # By given arguments function constructs a filename
-    # Finds the file
-    # Reads all images and returns them
+def get_image_batch_filenames(subject, subject_ordinal_number):
+    """Returns image filenames for given subject and his ordinal number sequence
+    Args:
+        subject (string)
+        subject_ordinal_number (string)
+        sequence_count_string (string)
+    """
     image_folder = Path(path_images, subject, subject_ordinal_number)
-    image_filenames = list(sorted(image_folder.glob("*.png")))
+    image_batch_filenames = list(sorted(image_folder.glob("*.png")))
 
-    return image_filenames
+    return image_batch_filenames
 
 
 def split_filename(filename):
-    # filename = S125_001_00000014_emotion.txt
+    """Return parts of a filename
+    Args:
+        filename (string) - S125_001_00000014_emotion.txt
+    """
+
     filename_parts = filename.split("_")
     subject = filename_parts[0]  # S154
     subject_ordinal_number = filename_parts[1]  # 002
@@ -116,28 +72,22 @@ def split_filename(filename):
     return subject, subject_ordinal_number, sequence_count_string
 
 
-def encode_emotion(emotion):
-    # return tf.convert_to_tensor(np.array(emotion))
-    pass
-
-
-def decode_image(img):
-    # convert the compressed string to a 3D uint8 tensor
-    # img = tf.convert_to_tensor(img, dtype=tf.uint8)
-    # resize the image to the desired size.
-    # return tf.image.resize(img, [IMG_WIDTH, IMG_HEIGHT])
-    pass
+def filepath_to_filename(filepath):
+    filename_parts = str(filepath).split(os.path.sep)
+    return filename_parts[len(filename_parts) - 1]
 
 
 def create_vectors(subject, subject_ordinal_number, sequence_count_string):
-    print(subject)
-    emotion = get_emotion(subject, subject_ordinal_number,
-                          sequence_count_string)
+
+    emotion = read_emotion(
+        subject, subject_ordinal_number, sequence_count_string)
+
     if not emotion == -1:
-        image_filenames = get_image_filenames(
-            subject, subject_ordinal_number, sequence_count_string
-        )
-        for i, image_filename in enumerate(image_filenames, start=0):
+        image_batch_filenames = get_image_batch_filenames(
+            subject, subject_ordinal_number)
+
+        # TODO: maybe throw out the `i` variable and use only split_filename
+        for i, image_filename in enumerate(image_batch_filenames, start=0):
 
             # Fixing if `i` value if needed
             _, _, sequence_count_check = split_filename(str(image_filename))
@@ -152,7 +102,7 @@ def create_vectors(subject, subject_ordinal_number, sequence_count_string):
             image = np.asarray(Image.open(image_fullpath).convert("L"))
 
             # Find out emotion level
-            p = i / (len(image_filenames) - 1)
+            p = i / (len(image_batch_filenames) - 1)
             emotion_current = [0, 0, 0, 0, 0, 0, 0, 0]
             emotion_current[0] = round(1 - p, 3)
             emotion_current[emotion] = round(p, 3)
@@ -168,21 +118,18 @@ def create_vectors(subject, subject_ordinal_number, sequence_count_string):
                 + "_"
                 + str(i).zfill(8),
                 np.array((image, emotion_current)))
-
-            # Save to datastrcture
-            # vectors.append([image, emotion_current])
     else:
+        print("Error")
         print(subject, subject_ordinal_number)
 
 
-vectors = []
-
 # you can iterate glob only once
-for filepath_emotions in filepaths_emotions:
+for i, filepath_emotions in enumerate(filepaths_emotions, start=0):
 
     # Split full path into parts seperated by /
-    filename_parts = str(filepath_emotions).split(os.path.sep)
-    filename = filename_parts[len(filename_parts) - 1]
+    filename = filepath_to_filename(filepath_emotions)
     subject, subject_ordinal_number, sequence_count_string = split_filename(
         filename)
     create_vectors(subject, subject_ordinal_number, sequence_count_string)
+    if i % 30 == 0:
+        print(i, "/300")
