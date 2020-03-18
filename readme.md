@@ -91,8 +91,6 @@ sample1{
 ```
 ## Dataset structure
 
-## images
-
 ```
 ------subject\_numberS005
 ------------sequence\_number001
