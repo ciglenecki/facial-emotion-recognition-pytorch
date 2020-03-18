@@ -102,7 +102,7 @@ def get_image_filenames(subject, subject_ordinal_number, sequence_count_string):
     # Finds the file
     # Reads all images and returns them
     image_folder = Path(path_images, subject, subject_ordinal_number)
-    image_filenames = list(image_folder.glob("*.png"))
+    image_filenames = list(sorted(image_folder.glob("*.png")))
 
     return image_filenames
 
@@ -130,7 +130,7 @@ def decode_image(img):
 
 
 def create_vectors(subject, subject_ordinal_number, sequence_count_string):
-
+    print(subject)
     emotion = get_emotion(subject, subject_ordinal_number,
                           sequence_count_string)
     if not emotion == -1:
@@ -139,22 +139,26 @@ def create_vectors(subject, subject_ordinal_number, sequence_count_string):
         )
         for i, image_filename in enumerate(image_filenames, start=0):
 
+            # Fixing if `i` value if needed
+            _, _, sequence_count_check = split_filename(str(image_filename))
+            sequence_count_check = int(sequence_count_check)
+            if not i+1 == (sequence_count_check):
+                i = sequence_count_check
+
+            # Construct image from image path
             image_fullpath = Path(
                 path_images, subject, subject_ordinal_number, image_filename
             )
             image = np.asarray(Image.open(image_fullpath).convert("L"))
-            # 0. index neutral i index EMOCIJE
+
+            # Find out emotion level
             p = i / (len(image_filenames) - 1)
             emotion_current = [0, 0, 0, 0, 0, 0, 0, 0]
             emotion_current[0] = round(1 - p, 3)
             emotion_current[emotion] = round(p, 3)
-            emotion_current = np.array(emotion_current, dtype=np.uint8)
-            # TODO: after image decoding save 1 label and 1 image to TF dataset
-            # decoded_image = decode_image(images[i]) if doEncode else images[i]
-            # encoded_emotion = (
-            #     encode_emotion(emotion_current) if doEncode else emotion_current
-            # )
-            print(emotion_current.dtype)
+            emotion_current = np.array(emotion_current)
+
+            # Save image
             np.save(
                 path_project
                 + "numpy/"
@@ -163,11 +167,10 @@ def create_vectors(subject, subject_ordinal_number, sequence_count_string):
                 + subject_ordinal_number
                 + "_"
                 + str(i).zfill(8),
-                np.array([image, emotion_current], dtype=[
-                         ('image', 'u1'), ('emotion', 'u1')])
+                np.array((image, emotion_current)))
 
-            )
-            vectors.append([image, emotion_current])
+            # Save to datastrcture
+            # vectors.append([image, emotion_current])
     else:
         print(subject, subject_ordinal_number)
 
@@ -176,29 +179,10 @@ vectors = []
 
 # you can iterate glob only once
 for filepath_emotions in filepaths_emotions:
+
     # Split full path into parts seperated by /
-    parts = str(filepath_emotions).split(os.path.sep)
-    filename = parts[len(parts) - 1]
+    filename_parts = str(filepath_emotions).split(os.path.sep)
+    filename = filename_parts[len(filename_parts) - 1]
     subject, subject_ordinal_number, sequence_count_string = split_filename(
         filename)
     create_vectors(subject, subject_ordinal_number, sequence_count_string)
-
-print(vectors)
-# image, emotion = create_dataset(filepath)
-
-# result = tf.map_fn(process_path, filepaths_emotions)
-# print(result)
-
-# def decode_img(img):
-#   # string -> 3D uint8 tensor
-#   img = tf.image.decode_jpeg(img, channels=3)
-#   # floats -> [0, 1].
-#   img = tf.image.convert_image_dtype(img, tf.float32)
-#   # all pictures, same size
-#   return tf.image.resize(img, [IMG_WIDTH, IMG_HEIGHT])
-
-
-# Loading files
-# filepaths_emotions = tf.data.Dataset.list_files(str(path_emotions/'*/*/*'))
-
-#    print(os.path.splitext(filepath_emotions.numpy())[0])

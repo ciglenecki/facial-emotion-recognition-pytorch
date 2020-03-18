@@ -49,9 +49,26 @@ filepaths_numpy = sorted(path_numpy.glob("*.npy"))
 
 mtcnn = MTCNN(select_largest=False, post_process=False)
 resnet = InceptionResnetV1(pretrained='vggface2').eval()
+tensor2pil = transforms.ToPILImage()
+
+
+def npy_to_sample(npy_filepath):
+    numpy_sample = np.load(npy_filepath, allow_pickle=True)
+    numpy_image = numpy_sample[0]
+    numpy_emotion = numpy_sample[1]
+    image = Image.fromarray(numpy_image).convert('LA').convert('RGB')
+    emotion = numpy_emotion
+    return image, emotion
+
+
+def facedetect_to_pil(image):
+    image = np.array(image)
+    # Stacks r,g,b into rgb
+    return Image.fromarray(np.transpose(image, (1, 2, 0)).astype(np.uint8))
 
 
 class Rescale(object):
+
     """Rescale the image in a sample to a given size.
 
     Args:
@@ -87,65 +104,96 @@ class Rescale(object):
         return {'image': img, 'landmarks': landmarks}
 
 
+class ToTensor(object):
+    """Convert ndarrays in sample to Tensors."""
+
+    def __call__(self, sample):
+        image, emotion = sample['image'], sample['emotion']
+        # swap color axis because
+        # numpy image: H x W x C
+        # torch image: C X H X W
+        image = image.transpose((2, 0, 1))
+
+        return {'image': torch.from_numpy(image),
+                'emotion': torch.from_numpy(emotion)}
+
+
+class FaceDetect(object):
+    """Apply facedetect to image.
+
+    Args:
+        None
+    """
+
+    def __call__(self, image):
+        image = mtcnn(image)
+        image = facedetect_to_pil(image)
+        return image
+
+
 class MyDataset(Dataset):
-    def __init__(self, filepaths_numpy, transform=None):
+    def __init__(self, filepaths_numpy, transform_image=None, transform_sample=None):
         self.filepaths_numpy = filepaths_numpy
-        self.transform = transform
+        self.transform_image = transform_image
+        self.transform_sample = transform_sample
+
+    def __len__(self):
+        return len(filepaths_numpy)
 
     def __getitem__(self, idx):
         if torch.is_tensor(idx):
             idx = idx.tolist()
 
-        img_name = str(Path(self.filepaths_numpy[idx]))
-        numpy_object = np.load(img_name, allow_pickle=True)
+        sample_name = str(Path(self.filepaths_numpy[idx]))
+        image, emotion = npy_to_sample(sample_name)
 
-        numpy_image = numpy_object[0]
-        numpy_emotion = numpy_object[1]
+        # Image transformation
+        if self.transform_image:
+            image = self.transform_image(image)
 
-        image = Image.fromarray(numpy_image).convert('LA').convert('RGB')
-
-        image = mtcnn(image)
-        image = image.permute(1, 2, 0).int()
-
-        emotion = numpy_emotion
-        # image = torch.from_numpy(numpy_image)
-        # emotion = torch.from_numpy(numpy_emotion)
-
+        # Sample transformation
         sample = {'image': image, 'emotion': emotion}
-
-        # if self.transform:
-        #    self.transform(sample)
+        if self.transform_sample:
+            sample = self.transform_sample(sample)
 
         return sample
 
-    def __len__(self):
-        return len(filepaths_numpy)
 
+dataset = MyDataset(filepaths_numpy,
+                    transform_sample=transforms.Compose([
+                    ]),
+                    transform_image=transforms.Compose([
+                        FaceDetect(),
+                        transforms.RandomHorizontalFlip(),
+                        transforms.ToTensor(),
+                        transforms.Normalize((0.5, 0.5, 0.5), (0.5, 0.5, 0.5))
+                    ]))
 
-transform = transforms.Compose([
-    transforms.RandomCrop(60),
-    transforms.RandomHorizontalFlip()
-])
-
-
-dataset = MyDataset(filepaths_numpy, transform)
-dataloader = DataLoader(dataset, batch_size=4, num_workers=4)
+dataloader = DataLoader(dataset, batch_size=1, num_workers=1, shuffle=True)
 
 
 plt.figure()
 
 
+def imshow(img):
+    img = img / 2 + 0.5     # unnormalize
+    npimg = img
+    plt.imshow(np.transpose(npimg, (1, 2, 0)))
+    plt.show()
+
+
+# Dataset itterating
 for i_batch, sample_batched in enumerate(dataloader):
+
     image = sample_batched['image'].numpy()[0]
-    print(i_batch, image)
-    plt.imshow(image)
-    plt.pause(0.001)
+    emotion = sample_batched['emotion'].numpy()[0]
 
-    if (i_batch == 1):
+    print(image)
+    if (i_batch == 2):
+        imshow(image)
+        plt.pause(0.001)
         break
-    # observe 4th batch and stop
 
-plt.show()
 
 # Python Tensor to PIL
 # Image.fromarray(sample_batched['image'].numpy()[0])
