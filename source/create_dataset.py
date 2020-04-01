@@ -1,4 +1,6 @@
 from __future__ import absolute_import, division, print_function, unicode_literals
+import torch.optim as optim
+import torch.nn.functional as F
 import IPython.display as display
 from PIL import Image  # Pillow Pil
 import numpy as np
@@ -9,10 +11,12 @@ import sys
 from pathlib import Path, PurePath
 import torch
 import torchvision
-from torchvision import transforms
+from torchvision import transforms, models
 from torch.utils.data import Dataset, DataLoader
 import skimage.io as io
 from facenet_pytorch import MTCNN, InceptionResnetV1
+import torch.nn as nn
+import torch.nn.functional as F
 
 
 emotion_declaration = [
@@ -26,7 +30,8 @@ emotion_declaration = [
     "surprise",
 ]
 
-IMG_WIDTH = 640
+emotion_total = np.array([0, 0, 0, 0, 0, 0, 0, 0])
+IMG_WIDTH = 32
 IMG_HEIGHT = 490
 
 path_project = "/home/matej/projects/fer-projekt/"
@@ -45,9 +50,9 @@ filepaths_images = path_images.glob("*/*/*.png")
 filepaths_landmarks = path_landmarks.glob("*/*/*")
 filepaths_numpy = sorted(path_numpy.glob("*.npy"))
 
-mtcnn = MTCNN(select_largest=False, post_process=False)
+mtcnn = MTCNN(image_size=IMG_WIDTH, select_largest=False, post_process=False)
 resnet = InceptionResnetV1(pretrained='vggface2').eval()
-tensor2pil = transforms.ToPILImage()
+tensor_to_PIL = transforms.ToPILImage()
 
 
 def npy_to_sample(npy_filepath):
@@ -112,8 +117,7 @@ class ToTensor(object):
         # torch image: C X H X W
         image = image.transpose((2, 0, 1))
 
-        return {'image': torch.from_numpy(image),
-                'emotion': torch.from_numpy(emotion)}
+        return torch.from_numpy(image), torch.from_numpy(emotion)
 
 
 class FaceDetect(object):
@@ -139,22 +143,24 @@ class MyDataset(Dataset):
         return len(filepaths_numpy)
 
     def __getitem__(self, idx):
+        global emotion_total
         if torch.is_tensor(idx):
             idx = idx.tolist()
 
         sample_name = str(Path(self.filepaths_numpy[idx]))
         image, emotion = npy_to_sample(sample_name)
+        emotion_total = emotion_total + np.array(emotion)
 
         # Image transformation
         if self.transform_image:
             image = self.transform_image(image)
 
         # Sample transformation
-        sample = {'image': image, 'emotion': emotion}
+        sample = image, emotion
         if self.transform_sample:
             sample = self.transform_sample(sample)
 
-        return sample
+        return image, emotion
 
 
 dataset = MyDataset(filepaths_numpy,
@@ -176,23 +182,94 @@ plt.figure()
 def imshow(img):
     # unnormalize
     img = img / 2 + 0.5
-    npimg = img
+    npimg = img.numpy()
     plt.imshow(np.transpose(npimg, (1, 2, 0)))
     plt.show()
 
 
-# Dataset itterating
-for i_batch, sample_batched in enumerate(dataloader):
-
-    image = sample_batched['image'].numpy()[0]
-    emotion = sample_batched['emotion'].numpy()[0]
-
-    print(image)
-    if (i_batch == 2):
-        imshow(image)
-        plt.pause(0.001)
-        break
+# # Dataset itterating
+# for i_batch, sample_batched in enumerate(train_dataset):
+#     image, emotion = sample_batched
+#     print(image)
+#     if (i_batch == 0):
+#         imshow(image)
+#         plt.pause(0.001)
+#         break
 
 
-# Python Tensor to PIL
-# Image.fromarray(sample_batched['image'].numpy()[0])
+train_split = .2
+shuffle_dataset = True
+
+train_size = int(train_split * len(dataloader))
+test_size = len(dataloader) - train_size
+train_dataset, test_dataset = torch.utils.data.random_split(
+    dataset, [train_size, test_size])
+
+trainloader = torch.utils.data.DataLoader(train_dataset, batch_size=1,
+                                          shuffle=True, num_workers=2)
+
+
+resnet18 = models.resnet18(pretrained=True,  progress=True)
+resnet18.eval()
+lr = 0.1
+
+
+def get_model():
+    model = resnet18
+    optimizer = optim.Adam(model.fc.parameters(), lr=0.003)
+    return model, optimizer
+
+
+model, optimizer = get_model()
+criterion = nn.NLLLoss()
+
+
+class Net(nn.Module):
+    def __init__(self):
+        super(Net, self).__init__()
+        self.conv1 = nn.Conv2d(3, 1, 32)
+        self.pool = nn.MaxPool2d(2, 2)
+        self.conv2 = nn.Conv2d(6, 16, 5)
+        self.fc1 = nn.Linear(16 * 5 * 5, 120)
+        self.fc2 = nn.Linear(120, 84)
+        self.fc3 = nn.Linear(84, 10)
+
+    def forward(self, x):
+        x = self.pool(F.relu(self.conv1(x)))
+        x = self.pool(F.relu(self.conv2(x)))
+        x = x.view(-1, 16 * 5 * 5)
+        x = F.relu(self.fc1(x))
+        x = F.relu(self.fc2(x))
+        x = self.fc3(x)
+        return x
+
+
+PATH = './cifar_net.pth'
+net = Net()
+
+for epoch in range(2):  # loop over the dataset multiple times
+
+    running_loss = 0.0
+    for i, data in enumerate(trainloader, 0):
+        # get the inputs; data is a list of [inputs, labels]
+        inputs, labels = data
+        # inputs = inputs.squeeze(0)
+        # $labels = labels.squeeze(0)
+
+        # zero the parameter gradients
+        optimizer.zero_grad()
+
+        # forward + backward + optimize
+        outputs = net(inputs)
+        loss = criterion(outputs, labels)
+        loss.backward()
+        optimizer.step()
+
+        # print statistics
+        running_loss += loss.item()
+        if i % 2000 == 1999:    # print every 2000 mini-batches
+            print('[%d, %5d] loss: %.3f' %
+                  (epoch + 1, i + 1, running_loss / 2000))
+            running_loss = 0.0
+
+print('Finished Training')

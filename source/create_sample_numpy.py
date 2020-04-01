@@ -54,7 +54,8 @@ def get_image_batch_filenames(subject, subject_ordinal_number):
         sequence_count_string (string)
     """
     image_folder = Path(path_images, subject, subject_ordinal_number)
-    image_batch_filenames = list(sorted(image_folder.glob("*.png")))
+    image_batch_filenames = list(
+        sorted(image_folder.glob("*.png"), reverse=True))
 
     return image_batch_filenames
 
@@ -77,6 +78,17 @@ def filepath_to_filename(filepath):
     return filename_parts[len(filename_parts) - 1]
 
 
+def create_emotion_vector(i, max_sequence_number, emotion):
+    p = (i-1) / (max_sequence_number-1)
+    emotion_vector = [0, 0, 0, 0, 0, 0, 0, 0]
+    emotion_vector[0] = round(1 - p, 3)
+    emotion_vector[emotion] = round(p, 3)
+    if (emotion_vector[0] < 0) or (emotion_vector[emotion] < 0):
+        print("Error emotion is negative value")
+        return -1
+    return emotion_vector
+
+
 def create_vectors(subject, subject_ordinal_number, sequence_count_string):
 
     emotion = read_emotion(
@@ -86,28 +98,34 @@ def create_vectors(subject, subject_ordinal_number, sequence_count_string):
         image_batch_filenames = get_image_batch_filenames(
             subject, subject_ordinal_number)
 
-        # TODO: maybe throw out the `i` variable and use only split_filename
+        """
+        Find out arbitrary number of images in sequence
+        Number of pictrues doesn't represent maximal needed
+        1, 2, 4 => should be 4, not 3
+        """
+        _, _, max_sequence_number = split_filename(
+            str(image_batch_filenames[0]))
+        max_sequence_number = int(max_sequence_number)
+
+        """Find image and cooresponding emotion
+        Save it as .npy file
+        """
+
         for i, image_filename in enumerate(image_batch_filenames, start=0):
 
-            # Fixing if `i` value if needed
-            _, _, sequence_count_check = split_filename(str(image_filename))
-            sequence_count_check = int(sequence_count_check)
-            if not i+1 == (sequence_count_check):
-                i = sequence_count_check
+            _, _, i = split_filename(str(image_filename))
+            i = int(i)
 
-            # Construct image from image path
             image_fullpath = Path(
                 path_images, subject, subject_ordinal_number, image_filename
             )
+
             image = np.asarray(Image.open(image_fullpath).convert("L"))
 
-            # Find out emotion level
-            p = i / (len(image_batch_filenames) - 1)
-            emotion_current = [0, 0, 0, 0, 0, 0, 0, 0]
-            emotion_current[0] = round(1 - p, 3)
-            emotion_current[emotion] = round(p, 3)
-            emotion_current = np.array(emotion_current)
+            emotion_vector = create_emotion_vector(
+                i, max_sequence_number, emotion)
 
+            emotion_vector = np.array(emotion_vector)
             # Save image
             np.save(
                 path_project
@@ -117,9 +135,9 @@ def create_vectors(subject, subject_ordinal_number, sequence_count_string):
                 + subject_ordinal_number
                 + "_"
                 + str(i).zfill(8),
-                np.array((image, emotion_current)))
+                np.array((image, emotion_vector)))
     else:
-        print("Error")
+        print("Error; emotion is -1")
         print(subject, subject_ordinal_number)
 
 
