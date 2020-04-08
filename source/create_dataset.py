@@ -242,7 +242,7 @@ model, optimizer = get_model()
 model.train()
 epochs = 10
 loss_func = nn.BCEWithLogitsLoss()
-
+PATH_MODEL_SAVE = './resnetmy.pth'
 train_model = False
 
 if (train_model):
@@ -272,34 +272,36 @@ if (train_model):
 
     print('Finished Training')
 
-    PATH_MODEL_SAVE = './resnetmy.pth'
     torch.save(model.state_dict(), PATH_MODEL_SAVE)
+
+model = resnet18
+model.load_state_dict(torch.load(PATH_MODEL_SAVE))
+model.eval()
 
 
 def correct_factor(truth, predicted):
     """From 0 to 1 how similar are truth and prediction
     """
+    print(truth)
     predicted_normalized = []
-    print(predicted)
+    # print(predicted)
     print(predicted.numpy())
-    print
     for p in predicted.numpy()[0]:
-        print(p)
         predicted_normalized.append((p+1)/2)
-    print(predicted_normalized)
+    # print(predicted_normalized)
     # for t in truth:
 
 
 correct = 0
 total = 0
-model.eval()
+# model.eval()
 with torch.no_grad():
     for data in test_loader:
         images, labels = data
         outputs = model(images)
         correct_factor(labels, outputs)
-        total += labels.size(0)
-        correct += (predicted == labels).sum().item()
+        # total += labels.size(0)
+        # correct += (predicted == labels).sum().item()
 
 
 print('Accuracy of the network on the 10000 test images: %d %%' % (
