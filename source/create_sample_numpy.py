@@ -6,8 +6,11 @@ import os
 import sys
 from pathlib import Path, PurePath
 
-path_project = "/home/matej/projects/fer-projekt/"
-path_dataset_string = "/home/matej/projects/fer-projekt/ck+/"
+# Config
+do_save_npy = True
+
+path_project = "/home/matej/1-projects/fer-projekt/"
+path_dataset_string = "/home/matej/1-projects/fer-projekt/ck+/"
 
 path_dataset = Path(path_dataset_string)
 path_emotions = Path(path_dataset, "emotions")
@@ -80,12 +83,12 @@ def filepath_to_filename(filepath):
 
 def create_emotion_vector(i, max_sequence_number, emotion):
     p = (i-1) / (max_sequence_number-1)
-    emotion_vector = [0, 0, 0, 0, 0, 0, 0, 0]
-    emotion_vector[0] = round(1 - p, 3)
-    emotion_vector[emotion] = round(p, 3)
-    if (emotion_vector[0] < 0) or (emotion_vector[emotion] < 0):
-        print("Error emotion is negative value")
-        return -1
+    emotion_vector = [0, 0, 0, 0, 0, 0, 0]
+
+    #emotion_vector = [0, 0, 0, 0, 0, 0, 0, 0]
+    #emotion_vector[0] = round(1 - p, 3)
+    emotion_vector[emotion-1] = round(p, 3)
+
     return emotion_vector
 
 
@@ -93,7 +96,6 @@ def create_vectors(subject, subject_ordinal_number, sequence_count_string):
 
     emotion = read_emotion(
         subject, subject_ordinal_number, sequence_count_string)
-
     if not emotion == -1:
         image_batch_filenames = get_image_batch_filenames(
             subject, subject_ordinal_number)
@@ -126,16 +128,23 @@ def create_vectors(subject, subject_ordinal_number, sequence_count_string):
                 i, max_sequence_number, emotion)
 
             emotion_vector = np.array(emotion_vector)
+            print(emotion_vector)
+            if sum(emotion_vector) > 1:
+                print("Emotion_vector: ", emotion_vector)
+                print("Error sum of emotion for file ", image_filename)
+                sys.exit()
+
             # Save image
-            np.save(
-                path_project
-                + "numpy/"
-                + subject
-                + "_"
-                + subject_ordinal_number
-                + "_"
-                + str(i).zfill(8),
-                np.array((image, emotion_vector)))
+            if (do_save_npy):
+                np.save(
+                    path_project
+                    + "numpy/"
+                    + subject
+                    + "_"
+                    + subject_ordinal_number
+                    + "_"
+                    + str(i).zfill(8),
+                    np.array((image, emotion_vector)))
     else:
         print("Error; emotion is -1")
         print(subject, subject_ordinal_number)
