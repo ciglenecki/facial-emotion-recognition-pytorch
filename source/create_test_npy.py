@@ -26,30 +26,31 @@ import random
 
 i = 0
 
-path_project = "/home/matej/1-projects/fer-projekt"
-path_numpy = join(path_project, "numpy")
-path_test = join(path_numpy, "test")
+PATH_PROJECT = Path.cwd()
+PATH_NUMPY = Path(PATH_PROJECT, "numpy")
+PATH_TEST = Path(PATH_NUMPY, "test")
 
-print(str(path_project), str(path_numpy), str(path_test))
 test_split = 0.1
 
 # test -> Original
 files_numpy = [f for f in listdir(
-    path_test) if isfile(join(path_test, f))]
+    PATH_TEST) if isfile(join(PATH_TEST, f))]
 
 for numpy in files_numpy:
-    shutil.move(join(path_test, numpy), path_numpy)
+    shutil.move(join(PATH_TEST, numpy), PATH_NUMPY)
 
 
 files_numpy = [f for f in listdir(
-    path_numpy) if isfile(join(path_numpy, f))]
+    PATH_NUMPY) if isfile(join(PATH_NUMPY, f))]
 
 random_files = random.sample(
     files_numpy, int(len(files_numpy)*test_split))
 
 for numpy in random_files:
-    full_path = os.path.join(path_numpy, numpy)
+    full_path = os.path.join(PATH_NUMPY, numpy)
     os.rename(full_path,
-              os.path.join(path_test, numpy))
+              os.path.join(PATH_TEST, numpy))
     i += 1
-print("Created ", i, " files in folder ", path_test)
+
+
+print("Created ", i, " files in folder ", PATH_TEST)

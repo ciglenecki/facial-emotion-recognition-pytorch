@@ -7,60 +7,106 @@ import sys
 from pathlib import Path, PurePath
 
 # Config
-do_save_npy = True
+SAVE_NPY = True
+NEUTRAL_EXISTS = True
 
-path_project = "/home/matej/1-projects/fer-projekt/"
-path_dataset_string = "/home/matej/1-projects/fer-projekt/ck+/"
-
-path_dataset = Path(path_dataset_string)
-path_emotions = Path(path_dataset, "emotions")
-path_facs = Path(path_dataset, "facs")
-path_images = Path(path_dataset, "images")
-path_landmarks = Path(path_dataset, "landmarks")
-
-filepaths_emotions = path_emotions.glob("*/*/*")
-filepaths_facs = path_facs.glob("*/*/*")
-filepaths_images = path_images.glob("*/*/*.png")
-filepaths_landmarks = path_landmarks.glob("*/*/*")
+# Paths
+PATH_PROJECT = Path.cwd()
+PATH_NUMPY = Path(PATH_PROJECT, "numpy")
 
 
-def read_emotion(subject, subject_ordinal_number, sequence_count_string):
+PATH_DATASET_STRING = Path(PATH_PROJECT, "ck+")
+
+PATH_DATASET = Path(PATH_DATASET_STRING)
+PATH_EMOTIONS = Path(PATH_DATASET, "emotions")
+PATH_FACS = Path(PATH_DATASET, "facs")
+PATH_IMAGES = Path(PATH_DATASET, "images")
+PATH_LANDMARKS = Path(PATH_DATASET, "landmarks")
+
+FILEPATHS_EMOTIONS = PATH_EMOTIONS.glob("*/*/*")
+FILEPATHS_FACS = PATH_FACS.glob("*/*/*")
+FILEPATHS_IMAGES = PATH_IMAGES.glob("*/*/*.png")
+FILEPATHS_LANDMARKS = PATH_LANDMARKS.glob("*/*/*")
+
+EMOTION_DECLARATION = [
+    "neutral",
+    "anger",
+    "contempt",
+    "disgust",
+    "fear",
+    "happy",
+    "sadness",
+    "surprise",
+]
+
+total_emo = np.zeros(len(EMOTION_DECLARATION))
+
+
+def validate_emo_vector(emo_vector):
+    if (np.min(emo_vector) < 0):
+        print("Emo_vector has negative emotion", emo_vector)
+        return - 1
+    if sum(emo_vector) > 1:
+        print("Emo_vector's sum is larger than 1: ", emo_vector)
+        return - 1
+    return emo_vector
+
+
+def attr_to_prefolder(person, seq_num, file_type_name=None):
+
+    if(file_type_name == "emotion"):
+        pre_path = PATH_EMOTIONS
+    elif(file_type_name == "image"):
+        pre_path = PATH_IMAGES
+
+    return Path(pre_path, person, seq_num)
+
+
+def attr_to_filename(person, seq_num, seq_count_text, file_type_name=None):
+    if(file_type_name == "emotion"):
+        filename = "_".join([person, seq_num, seq_count_text, "emotion.txt"])
+
+    elif(file_type_name == "image"):
+        filename = "_".join([person, seq_num, seq_count_text + ".png"])
+
+    prefolder = attr_to_prefolder(person, seq_num, file_type_name)
+    return Path(prefolder, filename)
+
+
+def filename_to_fullpath(filename):
+    person, seq_num, seq_count_text, file_type = split_filename(filename)
+    pre_path = attr_to_prefolder(person, seq_num, file_type)
+    return Path(pre_path, filename)
+
+
+def get_img_filenames(person, seq_num):
+    """Returns img filenames for given person and his ordinal number sequence
+    Args:
+        person (string)
+        seq_num (string)
+        seq_count_text (string)
+    """
+
+    img_folder = attr_to_prefolder(person, seq_num, "image")
+    img_batch_filenames = list(sorted(img_folder.glob("*.png"), reverse=True))
+    return img_batch_filenames
+
+
+def get_emotion(emo_filename):
     """Reads emotion value from emotion filename
     Filename is constructed from arugments
 
     Args:
-        subject (string)
-        subject_ordinal_number (string)
-        sequence_count_string (string)
+        person (string)
+        seq_num (string)
+        seq_count_text (string)
     """
-
-    emotion_filename = "_".join(
-        [subject, subject_ordinal_number, sequence_count_string, "emotion.txt"]
-    )
-    emotion_fullpath = Path(
-        path_emotions, subject, subject_ordinal_number, emotion_filename
-    )
-    if os.path.isfile(emotion_fullpath):
-        emotion_file = open(str(emotion_fullpath), "r",)
+    if os.path.isfile(emo_filename):
+        emotion_file = open(str(emo_filename), "r",)
     else:
         return -1
 
-    emotion = int(float(emotion_file.readline()))
-    return emotion
-
-
-def get_image_batch_filenames(subject, subject_ordinal_number):
-    """Returns image filenames for given subject and his ordinal number sequence
-    Args:
-        subject (string)
-        subject_ordinal_number (string)
-        sequence_count_string (string)
-    """
-    image_folder = Path(path_images, subject, subject_ordinal_number)
-    image_batch_filenames = list(
-        sorted(image_folder.glob("*.png"), reverse=True))
-
-    return image_batch_filenames
+    return int(float(emotion_file.readline()))
 
 
 def split_filename(filename):
@@ -68,95 +114,96 @@ def split_filename(filename):
     Args:
         filename (string) - S125_001_00000014_emotion.txt
     """
+    filename = str(filename)
+    if (filename.endswith(".png")):
+        file_type = "image"
+    if (filename.endswith("emotion.txt")):
+        file_type = "emotion"
 
     filename_parts = filename.split("_")
-    subject = filename_parts[0]  # S154
-    subject_ordinal_number = filename_parts[1]  # 002
-    sequence_count_string = os.path.splitext(filename_parts[2])[0]
-    return subject, subject_ordinal_number, sequence_count_string
+    person = filename_parts[0]  # S154
+    seq_num = filename_parts[1]  # 002
+    seq_count_text = os.path.splitext(filename_parts[2])[0]  # 00000014
+    return person, seq_num, seq_count_text, file_type
 
 
-def filepath_to_filename(filepath):
+def fullpath_to_filename(filepath):
     filename_parts = str(filepath).split(os.path.sep)
     return filename_parts[len(filename_parts) - 1]
 
 
-def create_emotion_vector(i, max_sequence_number, emotion):
-    p = (i-1) / (max_sequence_number-1)
-    emotion_vector = [0, 0, 0, 0, 0, 0, 0]
+def calc_emo_vector(i, max_seq, emotion):
 
-    #emotion_vector = [0, 0, 0, 0, 0, 0, 0, 0]
-    #emotion_vector[0] = round(1 - p, 3)
-    emotion_vector[emotion-1] = round(p, 3)
+    p = (i-1) / (max_seq-1)
+    emo_vector = np.zeros(len(EMOTION_DECLARATION))
 
-    return emotion_vector
+    if (NEUTRAL_EXISTS):
+        emo_vector[0] = round(1 - p, 3)
+    emo_vector[emotion] = round(p, 3)
+
+    return validate_emo_vector(emo_vector)
 
 
-def create_vectors(subject, subject_ordinal_number, sequence_count_string):
+def create_vectors(person, seq_num, seq_count_text):
 
-    emotion = read_emotion(
-        subject, subject_ordinal_number, sequence_count_string)
+    emo_filename = attr_to_filename(person, seq_num, seq_count_text, "emotion")
+    emotion = get_emotion(emo_filename)
+
     if not emotion == -1:
-        image_batch_filenames = get_image_batch_filenames(
-            subject, subject_ordinal_number)
-
+        img_batch_filenames = get_img_filenames(person, seq_num)
         """
-        Find out arbitrary number of images in sequence
+        Find out arbitrary number of imgs in sequence
         Number of pictrues doesn't represent maximal needed
         1, 2, 4 => should be 4, not 3
         """
-        _, _, max_sequence_number = split_filename(
-            str(image_batch_filenames[0]))
-        max_sequence_number = int(max_sequence_number)
+        _, _, max_seq, _ = split_filename(str(img_batch_filenames[0]))
+        max_seq = int(max_seq)
 
-        """Find image and cooresponding emotion
+        """Find img and cooresponding emotion
         Save it as .npy file
         """
 
-        for i, image_filename in enumerate(image_batch_filenames, start=0):
+        for i, img_filename in enumerate(img_batch_filenames, start=0):
 
-            _, _, i = split_filename(str(image_filename))
+            _, _, i, _ = split_filename(str(img_filename))
             i = int(i)
+            img_fullpath = filename_to_fullpath(img_filename)
 
-            image_fullpath = Path(
-                path_images, subject, subject_ordinal_number, image_filename
-            )
+            img = np.asarray(Image.open(img_fullpath).convert("L"))
+            emo_vector = calc_emo_vector(i, max_seq, emotion)
 
-            image = np.asarray(Image.open(image_fullpath).convert("L"))
+            if emo_vector is not -1:
 
-            emotion_vector = create_emotion_vector(
-                i, max_sequence_number, emotion)
+                global total_emo
 
-            emotion_vector = np.array(emotion_vector)
-            print(emotion_vector)
-            if sum(emotion_vector) > 1:
-                print("Emotion_vector: ", emotion_vector)
-                print("Error sum of emotion for file ", image_filename)
+                total_emo = np.add(emo_vector, total_emo)
+                # Save img
+                if (SAVE_NPY):
+                    npy_filename = str(Path(PATH_NUMPY, str(person
+                                                            + "_"
+                                                            + seq_num
+                                                            + "_"
+                                                            + str(i).zfill(8))))
+                    np.save(npy_filename, np.array((img, emo_vector)))
+            else:
+                print(emo_vector)
+                print(person, seq_num, seq_count_text)
                 sys.exit()
-
-            # Save image
-            if (do_save_npy):
-                np.save(
-                    path_project
-                    + "numpy/"
-                    + subject
-                    + "_"
-                    + subject_ordinal_number
-                    + "_"
-                    + str(i).zfill(8),
-                    np.array((image, emotion_vector)))
     else:
-        print("Error; emotion is -1")
-        print(subject, subject_ordinal_number)
+        print("Emotion not read well")
+        print(person, seq_num)
+        sys.exit()
 
 
 # you can iterate glob only once
-for i, filepath_emotions in enumerate(filepaths_emotions, start=0):
+for i, f in enumerate(FILEPATHS_EMOTIONS, start=0):
 
     # Split full path into parts seperated by /
-    filename = filepath_to_filename(filepath_emotions)
-    subject, subject_ordinal_number, sequence_count_string = split_filename(
-        filename)
-    create_vectors(subject, subject_ordinal_number, sequence_count_string)
+    filename = fullpath_to_filename(f)
+    person, seq_num, seq_count_text, _ = split_filename(filename)
+    create_vectors(person, seq_num, seq_count_text)
+
     if i % 30 == 0:
         print(i, "/300")
+
+numpy.savetxt('total_emo.txt', total_emo)

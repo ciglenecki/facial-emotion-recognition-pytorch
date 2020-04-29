@@ -1,5 +1,5 @@
 run:
-cd ~/projects/fer-projekt && source ./venv/bin/activate && cd ~/projects/fer-projekt/source
+cd ~/1-projects/fer-projekt && source ./venv/bin/activate && cd ~/1-projects/fer-projekt/source
 
 
 Packages:
