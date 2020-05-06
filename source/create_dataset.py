@@ -39,25 +39,25 @@ local_var_name
 
 # Paths
 PATH_PROJECT = Path.cwd()
+# DATASET
 PATH_DATASET = Path(PATH_PROJECT, "ck+")
 PATH_EMOTIONS = Path(PATH_DATASET, "emotions")
 PATH_FACS = Path(PATH_DATASET, "facs")
 PATH_IMAGES = Path(PATH_DATASET, "images")
 PATH_LANDMARKS = Path(PATH_DATASET, "landmarks")
-
-PATH_NUMPY = Path(PATH_PROJECT, "numpy")
-PATH_NUMPY_VALIDATION = Path(PATH_NUMPY, "validation")
-
 FILEPATHS_EMOTIONS = PATH_EMOTIONS.glob("*/*/*")
 FILEPATHS_FACS = PATH_FACS.glob("*/*/*")
 FILEPATHS_IMAGES = PATH_IMAGES.glob("*/*/*.png")
 FILEPATHS_LANDMARKS = PATH_LANDMARKS.glob("*/*/*")
+# SOURCE
+PATH_SOURCE = Path(PATH_PROJECT, "source")
+PATH_MODEL_SAVE = Path(PATH_SOURCE, 'resnet34.pth')
+PATH_MODEL_STATE_CK_SAVE = Path(PATH_SOURCE, 'resnet34_ck.pth')
+# NUMPY
+PATH_NUMPY = Path(PATH_PROJECT, "numpy")
+PATH_NUMPY_VALIDATION = Path(PATH_NUMPY, "validation")
 FILEPATHS_NUMPY = sorted(PATH_NUMPY.glob("*.npy"))
 PATH_NUMPY_VALIDATION = sorted(PATH_NUMPY_VALIDATION.glob("*.npy"))
-
-
-PATH_MODEL_SAVE = './resnet34.pth'
-PATH_MODEL_STATE_CK_SAVE = './resnet34_ck.pth'
 
 
 # Global variables
@@ -76,19 +76,20 @@ EMOTION_DECLARATION = [
 # Configuration
 IMG_SIZE = 224
 
-DATASET_DROP_RATE = 0.5
-TRAIN_SPLIT = 0.8
-VALIDATION_SPLIT = 0.2
+DATASET_DROP_RATE = 0
+TRAIN_SPLIT = 0.9
+VAL_SPLIT = 0.1
 
 
-DO_TRAIN_MODEL = True
-LEARNING_RATE = 0.01
-EPOCHS = 15
-BATCH_SIZE = 4
-BATCH_PRINT = 50
+DO_TRAIN_MODEL = False
+LEARNING_RATE = 0.001
+EPOCHS = 17
+BATCH_SIZE = 16
+BATCH_PRINT = 15
 WEIGHTS = [2843.395, 494.659, 111.962, 423.327, 270.119, 648.553, 264.989, 645.996]
 WEIGHTS = torch.from_numpy(np.negative((np.array(WEIGHTS)/np.sum(WEIGHTS)-np.ones(len(WEIGHTS)))))
-print(WEIGHTS)
+
+
 torch.set_printoptions(sci_mode=False)
 
 
@@ -101,8 +102,97 @@ def npy_to_sample(npy_filepath):
     return image, emotion
 
 
-class Rescale(object):
+def tensor_to_image(tensor):
+    numpy_sample = np.load(npy_filepath, allow_pickle=True)
+    numpy_image = numpy_sample[0]
+    numpy_emotion = numpy_sample[1]
+    image = Image.fromarray(numpy_image).convert('LA').convert('RGB')
+    emotion = numpy_emotion
+    return image, emotion
 
+
+def set_train_val_size(train_split, VAL_SPLIT):
+    """ Set size for training and validation set
+    Args:
+        train_split [0,1] - percentage of train images
+        VAL_SPLIT [0,1] - percentage of validation images
+    """
+
+    if (train_split + VAL_SPLIT > 1.0):
+        sys.exit("Train size + validation size is bigger dataset")
+
+    dataset_size = len(dataset)
+    train_size = int(np.floor(train_split * dataset_size))
+    val_size = dataset_size - train_size
+
+    return train_size, val_size
+
+
+def CrossEntropyLossSoftTarget(pred, soft_targets, verbose=False):
+
+    def batch_tensor_value(tensor):
+        return (torch.sum(tensor, 0)/len(tensor)).data
+
+    logsoftmax = nn.LogSoftmax(dim=1)  # log(softmax(x))
+    softmax = nn.Softmax(dim=1)  # log(softmax(x))
+
+    plain_loss = - soft_targets * logsoftmax(pred)
+    weighted_loss = WEIGHTS * (plain_loss)
+    result = torch.mean(
+        torch.sum(
+            weighted_loss, 1
+        )
+    )
+    if (verbose):
+        # Softmax and LogSoftmax are applied to 2D vectors, then batch_tensor_value takes average to 1D vector
+        batch_soft_targets = batch_tensor_value(soft_targets)
+        batch_pred_prob = batch_tensor_value(softmax(pred))
+        batch_pred_logsoftmax = batch_tensor_value(logsoftmax(pred))
+
+        batch_plain_loss = batch_tensor_value(plain_loss)
+        batch_weighted_loss = batch_tensor_value(weighted_loss)
+
+        table = tabulate([
+            ["Weights", WEIGHTS.data],
+            ["Soft targets", batch_soft_targets],
+            ["Prediction probability", batch_pred_prob],
+            ["Prediction LogSoftMax", batch_pred_logsoftmax],
+            ["Loss", batch_plain_loss],
+            ["Loss weighted (res)", batch_weighted_loss]
+        ], tablefmt="github")
+
+        print(table)
+
+    return result
+
+
+def load_model():
+    if os.path.isfile(str(PATH_MODEL_SAVE)):
+        resnet34 = torch.load(str(PATH_MODEL_SAVE))
+    else:
+        resnet34 = models.resnet34(pretrained=True,  progress=True)
+        torch.save(resnet34, str(PATH_MODEL_SAVE))
+
+    return resnet34
+
+
+def get_model():
+    model = load_model()
+    for param in model.parameters():  # Param freezing
+        param.requires_grad = False
+
+    num_features = model.fc.in_features  # Model's last layer output number
+
+    model.fc = nn.Sequential(
+        nn.Linear(num_features, len(EMOTION_DECLARATION)),
+    )
+
+    optimizer = optim.Adam(model.fc.parameters())  # TODO: lr=LEARNING_RATE
+
+    return model, optimizer
+
+
+class Rescale(object):
     """Rescale the image in a sample to a given size.
 
     Args:
@@ -214,159 +304,146 @@ dataset, _ = torch.utils.data.random_split(
     dataset, [dataset_length, dataset_length_drop])
 
 
-def set_train_val_size(train_split, validation_split):
-    """ Set size for training and validation set
-    Args:
-        train_split [0,1] - percentage of train images
-        validation_split [0,1] - percentage of validation images
-    """
+train_size, val_size = set_train_val_size(TRAIN_SPLIT, VAL_SPLIT)
 
-    if (train_split + validation_split > 1.0):
-        sys.exit("Train size + validation size is bigger dataset")
-
-    dataset_size = len(dataset)
-    train_size = int(np.floor(train_split * dataset_size))
-    validation_size = dataset_size - train_size
-
-    return train_size, validation_size
+print("Train, val:", train_size, val_size)
+print("Dataset: ", len(dataset))
 
 
-train_size, validation_size = set_train_val_size(TRAIN_SPLIT, VALIDATION_SPLIT)
-
-print("Train and validation size: ", train_size, validation_size)
-print("Dataset size: ", len(dataset))
-
-
-train_dataset, validation_dataset = torch.utils.data.random_split(
-    dataset, [train_size, validation_size])
+train_dataset, val_dataset = torch.utils.data.random_split(
+    dataset, [train_size, val_size])
 
 train_loader = torch.utils.data.DataLoader(train_dataset, batch_size=BATCH_SIZE,
                                            shuffle=True, drop_last=True)
 
-test_loader = torch.utils.data.DataLoader(train_dataset, batch_size=BATCH_SIZE,
+val_loader = torch.utils.data.DataLoader(val_dataset, batch_size=BATCH_SIZE,
+                                         shuffle=True, drop_last=True)
+test_loader = torch.utils.data.DataLoader(val_dataset, batch_size=1,
                                           shuffle=True, drop_last=True)
 
-
-resnet34 = models.resnet34(pretrained=True,  progress=True)
-torch.save(resnet34, PATH_MODEL_SAVE)
-# resnet34 = torch.load('resnet34.pth')
-
-
-def CrossEntropyLossSoftTarget(pred, soft_targets):
-    logsoftmax = nn.LogSoftmax(dim=1)
-    return torch.mean(torch.sum(WEIGHTS * (- soft_targets * logsoftmax(pred)), 1))
-
-
-def get_model():
-
-    # Recall that after loading the pretrained model, but before reshaping, if feature_extract=True we manually set all of the parameter’s .requires_grad attributes to False. Then the reinitialized layer’s parameters have .requires_grad=True by default. So now we know that all parameters that have .requires_grad=True should be optimized. Next, we make a list of such parameters and input this list to the SGD algorithm constructor.
-
-    # mode.parameters()?
-
-    model = resnet34
-
-    for param in model.parameters():  # Freezing
-        param.requires_grad = False
-
-    num_features = model.fc.in_features  # In fetaures are previous in_features of resnet
-
-    model.fc = nn.Sequential(
-        nn.Linear(num_features, len(EMOTION_DECLARATION)),
-    )
-
-    optimizer = optim.Adam(model.fc.parameters(), lr=LEARNING_RATE)
-
-    return model, optimizer
-
-
 model, optimizer = get_model()
-loss_func = CrossEntropyLossSoftTarget  # CrossEntropyLoss- This criterion combines :func:`nn.LogSoftmax` and :func:`nn.NLLLoss`
-model.train()
-
+loss_func = CrossEntropyLossSoftTarget
 train_losses, val_losses = [], []
 
-
 if (DO_TRAIN_MODEL):
-    print("Starting model training...")
+    print("\nStarting model training...\n")
 
     for epoch in range(EPOCHS):
 
         train_loss = 0.0
-        running_corrects = 0
-        i = 0
-        val_loss = 0
+        batch_loss = 0
 
+        val_loss = 0
+        i = 0
+        ############ TRAIN ######################
+
+        model.train()
         for batch in train_loader:
 
-            face, emotions = batch
-            i += 1
-            optimizer.zero_grad()
+            if(i % BATCH_PRINT == BATCH_PRINT - 1):
+                verbose = True
+            else:
+                verbose = False
 
+            i += 1
+
+            face, emotions = batch
+            optimizer.zero_grad()
             outputs = model(face)  # face: batchsize x 3 x 244 x 244
             emotions = emotions.type_as(outputs)
-
-            loss = loss_func(outputs.float(), emotions.float())
+            loss = loss_func(pred=outputs.float(), soft_targets=emotions.float(), verbose=verbose)
             loss.backward()
             optimizer.step()
 
-            train_loss += loss.item() * BATCH_SIZE
+            batch_loss += loss.item()
+            train_loss += loss.item() * emotions.size(0)  # has to collect all loses
 
-        train_loss = train_loss / len(train_loader)
-        print("[Epoch:", epoch, ", train_loss:", train_loss, "]")
+            if verbose:
+                print("Batch("+str(BATCH_SIZE)+"): "+str(i*BATCH_SIZE)+"/"+str(len(train_dataset)))
+
+                print("batch_loss", batch_loss/BATCH_SIZE)
+
+                print()
+
+                batch_loss = 0
+
+        train_loss = train_loss / train_size
         train_losses.append(train_loss)
+        print("\n[Epoch:", epoch, ", train_loss:", train_loss, "]\n")
 
+        ############ VAL ######################
         model.eval()
         with torch.no_grad():
-            for batch in test_loader:
+
+            for batch in val_loader:
+                if(i % BATCH_PRINT == BATCH_PRINT - 1):
+                    verbose = True
+                else:
+                    verbose = False
+
+                i += 1
+
                 face, emotions = batch
+                optimizer.zero_grad()
                 outputs = model(face)
-                loss = loss_func(outputs.float(), emotions.float())
-                val_loss += loss.item() * BATCH_SIZE
+                emotions = emotions.type_as(outputs)
+                loss = loss_func(pred=outputs.float(), soft_targets=emotions.float(), verbose=verbose)
 
-            val_loss = val_loss / len(test_loader)
-            print("[Epoch:", epoch, ", train_loss:", val_loss, "]")
+                val_loss += loss.item() * emotions.size(0)  # has to collect all loses
+
+            val_loss = val_loss / val_size
             val_losses.append(val_loss)
-
-        model.train()
+            print("\n[Epoch:", epoch, ", val_loss:", val_loss, "]\n")
 
     print('Finished training...')
-    torch.save(model.state_dict(), PATH_MODEL_STATE_CK_SAVE)
+    torch.save(model.state_dict(), str(PATH_MODEL_STATE_CK_SAVE))
 
     plt.plot(train_losses, label='Training loss')
     plt.plot(val_losses, label='Validation loss')
     plt.legend(frameon=False)
     plt.show()
 
-    print('Trained model saved to: ', PATH_MODEL_STATE_CK_SAVE)
-
-model = resnet34
-model.load_state_dict(torch.load(PATH_MODEL_STATE_CK_SAVE))
+    print('Trained model saved to: ', str(PATH_MODEL_STATE_CK_SAVE))
 
 
 def correct_factor(truth, predicted):
     """From 0 to 1 how similar are truth and prediction
     """
-    print(truth)
+    # print(truth)
     predicted_normalized = []
     # print(predicted)
-    print(predicted.numpy())
+    # print(predicted.numpy())
     for p in predicted.numpy()[0]:
         predicted_normalized.append((p+1)/2)
     # print(predicted_normalized)
     # for t in truth:
 
 
+model, _ = get_model()
+model.load_state_dict(torch.load(str(PATH_MODEL_STATE_CK_SAVE)))
+
+
 correct = 0
 total = 0
+j = 0
+softmax = nn.Softmax(dim=0)
 model.eval()
+list_acc = []
 with torch.no_grad():
-    for data in test_loader:
-        images, labels = data
-        outputs = model(images)
-        correct_factor(labels, outputs)
-        # total += labels.size(0)
-        # correct += (predicted == labels).sum().item()
+    for batch in test_loader:
+        face, emotions = batch
+        optimizer.zero_grad()
+        emotions = emotions.squeeze(0)
 
+        outputs = model(face).squeeze(0)
+        outputs = softmax(outputs)
+        topk, indices = torch.topk(outputs, k=2)
+        # outputs = torch.zeros(len(EMOTION_DECLARATION)).scatter(0, indices, topk)
+        print(emotions)
+        print(outputs)
 
-print('Accuracy of the network on the 10000 test images: %d %%' % (
-    100 * correct / total))
+        # 2 = maximum mistake
+        acc = (2 - torch.sum(torch.abs(emotions - outputs))) / 2
+        list_acc.append(acc)
+
+print('Total acc', 100 * sum(list_acc) / len(list_acc))
