@@ -72,3 +72,33 @@ if i % BATCH_PRINT == BATCH_PRINT-1:
             running_loss = 0
             model.train()
             break
+
+-- Equivalent
+return Image.fromarray(np.transpose(image, (1, 2, 0)).astype(np.uint8))
+
+return Image.fromarray(np.dstack((image[0], image[1], image[2])).astype(np.uint8))
+
+
+############ VAL ######################
+  model.eval()
+      with torch.no_grad():
+
+           for batch in val_loader:
+                if(i % BATCH_PRINT == BATCH_PRINT - 1):
+                    verbose = True
+                else:
+                    verbose = False
+
+                i += 1
+
+                face, emotions = batch
+                optimizer.zero_grad()
+                outputs = model(face)
+                emotions = emotions.type_as(outputs)
+                loss = loss_func(pred=outputs.float(), soft_targets=emotions.float(), verbose=verbose)
+
+                val_loss += loss.item() * emotions.size(0)  # has to collect all loses
+
+            val_loss = val_loss / val_size
+            val_losses.append(val_loss)
+            print("\n[Epoch:", epoch, ", val_loss:", val_loss, "]\n")
