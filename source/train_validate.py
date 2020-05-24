@@ -2,290 +2,109 @@ from __future__ import (absolute_import, division, print_function,
                         unicode_literals)
 
 import os
+import cv2
 import sys
 from pathlib import Path, PurePath
-import IPython.display as display
 import matplotlib.pyplot as plt
 import numpy as np
-import pandas as pd
-import skimage.io as io
+import copy
+from PIL import Image, ImageFile
 import torch
 import torch.nn as nn
 import torch.nn.functional as F
 import torch.optim as optim
-import torchvision
-from facenet_pytorch import MTCNN, InceptionResnetV1
-from PIL import Image  # Pillow Pil
 from torch.utils.data import DataLoader, Dataset
 from torch.utils.data.sampler import SubsetRandomSampler
 from torchvision import models, transforms
 from torch.optim import lr_scheduler
-import sys
 from tabulate import tabulate
-import copy
-
-"""
-module_name
-package_name
-ClassName
-method_name
-ExceptionName
-function_name
-GLOBAL_CONSTANT_NAME
-global_var_name
-instance_var_name
-function_parameter_name
-local_var_name
-"""
+from paths import *
+from config import *
+from model import *
+from config_train import *
+import faulthandler
+import gc
+ImageFile.LOAD_TRUNCATED_IMAGES = True
+faulthandler.enable(all_threads=True)
 
 
-def bool_action(action_name):
-    result = ''
-    while (result != 'y') and (result != 'n'):
-        result = input(action_name + "? - y/n\n")
+def write_model_log(filename, train_losses, val_losses):
 
-    if result == 'y':
-        result = True
-    elif result == 'n':
-        result = False
-    return result
+    filename = str(PATH_MODEL_TMP) + filename+".log"
+    with open(filename, "w") as model_log:
 
-
-def number_action(number_name):
-    number = ''
-    while (not isinstance(number, int) and not isinstance(number, float)):
-        number = input(number_name + "?\n")
-        number = float(number)
-    return number
+        for attribute in ["DATASET_DROP_RATE", "DO_USE_SCHEDULER", "LEARNING_RATE", "EPOCHS", "BATCH_SIZE", "NUM_WORKERS", "IMG_SIZE", "TEST_SPLIT", "TRAIN_SPLIT", "VAL_SPLIT", "WEIGHTS_CK", "WEIGHTS_GOOGLE", "WEIGHTS", "train_losses", "val_losses", "OPTIMIZER"]:
+            line = [str(attribute), str(globals()[attribute])]
+            model_log.write(" ".join(line) + "\n")
+    model_log.close()
+    return filename
 
 
-# Paths
-PATH_PROJECT = Path.cwd()
+def get_model_name(acc=0, epoch=0):
+    suffix = "_"+MODEL_SUFFIX
+    dr = "_drop_"+str(DATASET_DROP_RATE)
+    epoch = "_epoch_"+str(epoch)
+    lr = "_lr_" + str(LEARNING_RATE)
+    acc = "_acc_" + str(acc)
+    goo_split = "_goosplit_"+str(GOOGLE_TRAIN_SPLIT)
+    ck_split = "_cksplit_"+str(CK_TRAIN_SPLIT)
 
-# DATASET
-PATH_DATASET = Path(PATH_PROJECT, "ck+")
-
-PATH_EMOTIONS = Path(PATH_DATASET, "emotions")
-PATH_FACS = Path(PATH_DATASET, "facs")
-PATH_IMAGES = Path(PATH_DATASET, "images")
-PATH_LANDMARKS = Path(PATH_DATASET, "landmarks")
-
-FILEPATHS_EMOTIONS = PATH_EMOTIONS.glob("*/*/*")
-FILEPATHS_FACS = PATH_FACS.glob("*/*/*")
-FILEPATHS_IMAGES = PATH_IMAGES.glob("*/*/*.png")
-FILEPATHS_LANDMARKS = PATH_LANDMARKS.glob("*/*/*")
-# SOURCE
-PATH_SOURCE = Path(PATH_PROJECT, "source")
-
-# NUMPY
-PATH_NUMPY = Path(PATH_PROJECT, "numpy")
-PATH_NUMPY_VALIDATION = Path(PATH_NUMPY, "validation")
-FILEPATHS_NUMPY = sorted(PATH_NUMPY.glob("*.npy"))
-PATH_NUMPY_VALIDATION = sorted(PATH_NUMPY_VALIDATION.glob("*.npy"))
-# MODELS
-PATH_MODELS = Path(PATH_PROJECT, "models")
-PATH_MODEL_SAVE = Path(PATH_MODELS, 'resnet34.pth')
-PATH_MODEL_STATE_CK_SAVE = Path(PATH_MODELS, 'resnet34_ck.pth')
-
-# Global variables
-EMOTION_DECLARATION = [
-    "neutral",
-    "anger",
-    "contempt",
-    "disgust",
-    "fear",
-    "happy",
-    "sadness",
-    "surprise",
+    return acc+dr+epoch+lr+suffix+goo_split+ck_split
 
 
-]
+def save_tmp_model(model, filename):
+    filename = str(PATH_MODEL_TMP)+filename+".pth"
+    torch.save(model, filename)
 
 
-# Configuration
-IMG_SIZE = 224
-
-DATASET_DROP_RATE = number_action("Dataset drop rate")
-TRAIN_SPLIT = 0.8
-VAL_SPLIT = 0.2
-
-
-DO_TRAIN_MODEL = bool_action("Train model")
-LEARNING_RATE = 0.001
-EPOCHS = int(number_action("Epochs"))
-BATCH_SIZE = 16
-BATCH_PRINT = 15
-WEIGHTS = [2843.395, 494.659, 111.962, 423.327, 270.119, 648.553, 264.989, 645.996]
-WEIGHTS = torch.from_numpy(np.amin(WEIGHTS)/np.array(WEIGHTS))
-
-
-print(WEIGHTS)
-torch.set_printoptions(sci_mode=False)
-
-
-def npy_to_sample(npy_filepath):
-    numpy_sample = np.load(npy_filepath, allow_pickle=True)
-    numpy_image = numpy_sample[0]
-    numpy_emotion = numpy_sample[1]
-    image = Image.fromarray(numpy_image).convert('LA').convert('RGB')
-    emotion = numpy_emotion
-    return image, emotion
+def save_model(model, filename):
+    filename = str(PATH_MODEL_STATE)+filename+".pth"
+    torch.save(model, filename)
+    print('Trained model saved to: ', filename)
 
 
 def tensor_to_image(tensor):
     numpy_sample = np.load(npy_filepath, allow_pickle=True)
     numpy_image = numpy_sample[0]
     numpy_emotion = numpy_sample[1]
-    image = Image.fromarray(numpy_image).convert('LA').convert('RGB')
+    image = Image.fromarray(numpy_image).convert('L').convert('RGB')
     emotion = numpy_emotion
     return image, emotion
 
 
-def set_train_val_size(train_split, VAL_SPLIT):
+def set_train_val_size(TRAIN_SPLIT, VAL_SPLIT):
     """ Set size for training and validation set
     Args:
-        train_split [0,1] - percentage of train images
+        TRAIN_SPLIT [0,1] - percentage of train images
         VAL_SPLIT [0,1] - percentage of validation images
     """
 
-    if (train_split + VAL_SPLIT > 1.0):
+    if (TRAIN_SPLIT + VAL_SPLIT > 1.0):
         sys.exit("Train size + validation size is bigger dataset")
 
     dataset_size = len(dataset)
-    train_size = int(np.floor(train_split * dataset_size))
+    train_size = int(np.floor(TRAIN_SPLIT * dataset_size))
     val_size = dataset_size - train_size
 
     return train_size, val_size
 
 
-def CrossEntropyLossSoftTarget(pred, soft_targets, verbose=False):
-
-    def batch_tensor_value(tensor):
-        return (torch.sum(tensor, 0)/len(tensor)).data
-
-    logsoftmax = nn.LogSoftmax(dim=1)  # log(softmax(x))
-    softmax = nn.Softmax(dim=1)  # log(softmax(x))
-
-    plain_loss = - soft_targets * logsoftmax(pred)
-    weighted_loss = WEIGHTS * (plain_loss)
-    result = torch.mean(
-        torch.sum(
-            weighted_loss, 1
-        )
-    )
-    if (verbose):
-        # Softmax and LogSoftmax are applied to 2D vectors, then batch_tensor_value takes average to 1D vector
-        batch_soft_targets = batch_tensor_value(soft_targets)
-        batch_pred_prob = batch_tensor_value(softmax(pred))
-        batch_pred_logsoftmax = batch_tensor_value(logsoftmax(pred))
-
-        batch_plain_loss = batch_tensor_value(plain_loss)
-        batch_weighted_loss = batch_tensor_value(weighted_loss)
-
-        table = tabulate([
-            ["Weights", WEIGHTS.data],
-            ["Soft targets", batch_soft_targets],
-            ["Prediction probability", batch_pred_prob],
-            ["Prediction LogSoftMax", batch_pred_logsoftmax],
-            ["Loss", batch_plain_loss],
-            ["Loss weighted (res)", batch_weighted_loss]
-        ], tablefmt="github")
-
-        print(table)
-
-    return result
-
-
-def load_model():
-    if os.path.isfile(str(PATH_MODEL_SAVE)):
-        resnet34 = torch.load(str(PATH_MODEL_SAVE))
-    else:
-        resnet34 = models.resnet34(pretrained=True,  progress=True)
-        torch.save(resnet34, str(PATH_MODEL_SAVE))
-
-    return resnet34
-
-
-def get_model():
-    model = load_model()
-    for param in model.parameters():  # Param freezing
-        param.requires_grad = False
-
-    num_features = model.fc.in_features  # Model's last layer output number
-
-    model.fc = nn.Sequential(
-        nn.Linear(num_features, len(EMOTION_DECLARATION)),
-    )
-
-    optimizer = optim.Adam(model.fc.parameters(), lr=LEARNING_RATE)
-
-    return model, optimizer
-
-
-class Rescale(object):
-    """Rescale the image in a sample to a given size.
-
-    Args:
-        output_size (tuple or int): Desired output size. If tuple, output is
-            matched to output_size. If int, smaller of image edges is matched
-            to output_size keeping aspect ratio the same.
+def calc_batch_acc(outputs, emotions):
     """
+    0.0, 0.5, 0.5, 0.0,   1.0, 0.0, 0.0 ,0.0
+    0.5, 0.5, 0.0, 0.0,   0.5, 0.5, 0.0, 0.0
 
-    def __init__(self, output_size):
-        assert isinstance(output_size, (int, tuple))
-        self.output_size = output_size
+    -0.5, 0.0, 0.5, 0.0   0.5, -0.5, 0.0, 0.0
 
-    def __call__(self, sample):
-        image = sample['image']
+    0.5, 0.0, 0.5, 0.0    0.5, 0.5, 0.0, 0.0
 
-        h, w = image.shape[: 2]
-        if isinstance(self.output_size, int):
-            if h > w:
-                new_h, new_w = self.output_size * h / w, self.output_size
-            else:
-                new_h, new_w = self.output_size, self.output_size * w / h
-        else:
-            new_h, new_w = self.output_size
+    1 1
+    1 1
 
-        new_h, new_w = int(new_h), int(new_w)
-
-        img = transform.resize(image, (new_h, new_w))
-
-        # h and w are swapped for landmarks because for images,
-        # x and y axes are axis 1 and 0 respectively
-        landmarks = landmarks * [new_w / w, new_h / h]
-
-        return {'image': img, 'landmarks': landmarks}
-
-
-class ToTensor(object):
-    """Convert ndarrays in sample to Tensors."""
-
-    def __call__(self, sample):
-        image, emotion = sample['image'], sample['emotion']
-        # swap color axis because
-        # numpy image: H x W x C
-        # torch image: C X H X W
-        image = image.transpose((2, 0, 1))
-        return torch.from_numpy(image), torch.from_numpy(emotion)
-
-
-class FaceDetect(object):
-
-    def __init__(self, image_size):
-        self.face_detect = MTCNN(image_size=image_size,
-                                 select_largest=False, post_process=False)
-
-    def __call__(self, image):
-        image = self.face_detect(image)
-        image = self.facedetect_to_PIL(image)
-        return image
-
-    def facedetect_to_PIL(self, image):
-        image = np.array(image)
-        # Stacks r,g,b into rgb
-        # (224, 224, 3)
-        return Image.fromarray(np.transpose(image, (1, 2, 0)).astype(np.uint8))
+    50% 50%
+    """
+    sums = torch.sum(torch.abs(emotions - outputs), dim=1)
+    return float(torch.mean((2 - sums)/2))
 
 
 class FERDataset(Dataset):
@@ -293,7 +112,6 @@ class FERDataset(Dataset):
         self.filepaths_numpy = filepaths_numpy
         self.transform_image = transform_image
         self.transform_emotion = transform_emotion
-        self.emotion_total_count = np.zeros(len(EMOTION_DECLARATION))
 
     def __len__(self):
         return len(self.filepaths_numpy)
@@ -301,7 +119,7 @@ class FERDataset(Dataset):
     def __getitem__(self, idx):
 
         sample_name = str(Path(self.filepaths_numpy[idx]))
-        image, emotion = npy_to_sample(sample_name)
+        image, emotion = self.npy_to_sample(sample_name)
 
         if self.transform_image:
             image = self.transform_image(image)
@@ -309,24 +127,37 @@ class FERDataset(Dataset):
         if self.transform_emotion:
             emotion = emotion.astype(np.float)
 
-        self.emotion_total_count = self.emotion_total_count + np.array(emotion)
-        image, emotion
         return image, emotion
 
-    def emotion_total_count_scaled(self):
-        return (self.emotion_total_count/np.max(self.emotion_total_count))
+    def npy_to_sample(self, npy_filepath):
+        numpy_sample = np.load(npy_filepath, allow_pickle=True)
+        numpy_image = numpy_sample[0]
+        numpy_emotion = numpy_sample[1]
+        image = Image.fromarray(numpy_image).convert('L').convert('RGB')
+        emotion = numpy_emotion
+        return image, emotion
 
 
+transform_image_train = transforms.Compose([
+    transforms.Resize(IMG_SIZE),
+    transforms.Grayscale(num_output_channels=3),
+    transforms.RandomHorizontalFlip(),
+    # transforms.RandomAffine(degrees=(-AUG_DEGREE, AUG_DEGREE)),
+    transforms.ToTensor(),
+    transforms.Normalize(mean=[0.485, 0.456, 0.406], std=[
+        0.229, 0.224, 0.225])
+])
+transform_image_val = transforms.Compose([
+    transforms.Resize(IMG_SIZE),
+    transforms.Grayscale(num_output_channels=3),
+    transforms.ToTensor(),
+    transforms.Normalize(mean=[0.485, 0.456, 0.406], std=[
+        0.229, 0.224, 0.225])
+])
 dataset = FERDataset(filepaths_numpy=FILEPATHS_NUMPY,
                      transform_emotion=True,
-                     transform_image=transforms.Compose([
-                         FaceDetect(IMG_SIZE),
-                         transforms.Resize(IMG_SIZE),
-                         transforms.RandomHorizontalFlip(),
-                         transforms.ToTensor(),
-                         transforms.Normalize(mean=[0.485, 0.456, 0.406], std=[
-                             0.229, 0.224, 0.225])
-                     ]))
+                     transform_image=transform_image_train)
+
 
 dataset_length = int(len(dataset) * (1 - DATASET_DROP_RATE))
 dataset_length_drop = len(dataset) - dataset_length
@@ -335,114 +166,130 @@ dataset, _ = torch.utils.data.random_split(
 
 
 train_size, val_size = set_train_val_size(TRAIN_SPLIT, VAL_SPLIT)
+train_dataset, val_dataset = torch.utils.data.random_split(dataset, [train_size, val_size])
 
-print("Train, val:", train_size, val_size)
-print("Dataset: ", len(dataset))
-
-
-train_dataset, val_dataset = torch.utils.data.random_split(
-    dataset, [train_size, val_size])
-
-train_loader = torch.utils.data.DataLoader(train_dataset, batch_size=BATCH_SIZE,
-                                           shuffle=True, drop_last=True)
-
-val_loader = torch.utils.data.DataLoader(val_dataset, batch_size=1,
-                                         shuffle=True, drop_last=True)
-test_loader = torch.utils.data.DataLoader(val_dataset, batch_size=1,
-                                          shuffle=True, drop_last=True)
+val_dataset.transform_image = transform_image_val
 
 
-model, optimizer = get_model()
+print("Dataset:", len(dataset), "\n")
+print("\nTrain, val:", train_size, val_size)
+
+print()
+
+train_loader = torch.utils.data.DataLoader(train_dataset, batch_size=BATCH_SIZE, shuffle=True, drop_last=True, num_workers=NUM_WORKERS)
+val_loader = torch.utils.data.DataLoader(val_dataset, batch_size=BATCH_SIZE, shuffle=True, drop_last=True, num_workers=NUM_WORKERS)
+
+
+model, optimizer, exp_lr_scheduler = get_model()
 loss_func = CrossEntropyLossSoftTarget
+
 train_losses, val_losses = [], []
+best_acc = 0
+best_epoch = 0
 
-exp_lr_scheduler = lr_scheduler.StepLR(optimizer, step_size=6, gamma=0.1)
-
-softmax = nn.Softmax(dim=0)
-
-max_acc = 0
 
 if (DO_TRAIN_MODEL):
     print("\nStarting model training...\n")
-
     for epoch in range(EPOCHS):
 
         train_loss = 0.0
         batch_loss = 0
-
         val_loss = 0
+        epoch_accs = []
         i = 0
-        ############ TRAIN ######################
+        verbose = False
+        # TRAIN ##################################
 
         model.train()
         for batch in train_loader:
-
-            if(i == int(len(train_loader)/BATCH_SIZE) - 1):
-                verbose = True
-            else:
-                verbose = False
-
             i += 1
+            if(i == int(len(train_dataset)/BATCH_SIZE)):
+                verbose = True
 
             face, emotions = batch
             optimizer.zero_grad()
-            outputs = model(face)  # face: batchsize x 3 x 244 x 244
-            emotions = emotions.type_as(outputs)
-            loss = loss_func(pred=outputs.float(), soft_targets=emotions.float(), verbose=verbose)
+            outputs = model(face)  # face: BATCH_SIZE x 3 x 244 x 244
+            emotions = emotions
+            loss = loss_func(pred=outputs.float(), soft_targets=emotions.float(), weights=WEIGHTS, verbose=verbose)
             loss.backward()
             optimizer.step()
 
-            batch_loss += loss.item()
-            train_loss += loss.item() * emotions.size(0)  # has to collect all loses
+            train_loss += float(loss) * int(emotions.size(0))  # emotion.   size(0) = batch size, dont use batch size cuz it might not be  16
 
             if verbose:
-                print("Batch("+str(BATCH_SIZE)+"): "+str(i*BATCH_SIZE)+"/"+str(len(train_dataset)))
-
-                print("batch_loss", batch_loss/BATCH_SIZE)
-
                 print()
+                print("Batch("+str(BATCH_SIZE)+"): "+str(i*BATCH_SIZE)+"/" + str(len(train_dataset)))
+                print("batch_loss", float(loss)/BATCH_SIZE)
+                print()
+                verbose = False
 
-                batch_loss = 0
-        exp_lr_scheduler.step()
         train_loss = train_loss / train_size
         train_losses.append(train_loss)
-        print("\n[Epoch:", epoch, ", train_loss:", train_loss, "]\n")
 
-        ############ VAL ACC ######################
+        # VALIDATION-ACCURACY ##################################
         model.eval()
-        epoch_accs = []
+        i = 0
         with torch.no_grad():
-
             for batch in val_loader:
-                face, emotions = batch
-                optimizer.zero_grad()
-                emotions = emotions.squeeze(0)
+                if batch is not None:
+                    i += 1
+                    if(i == int(len(val_dataset)/BATCH_SIZE)):
+                        verbose = True
+                    else:
+                        verbose = False
 
-                outputs = model(face).squeeze(0)
-                outputs = softmax(outputs)
+                    face, emotions = batch
+                    optimizer.zero_grad()
 
-                acc = (2 - torch.sum(torch.abs(emotions - outputs))) / 2
-                epoch_accs.append(acc)
+                    outputs = model(face)
+                    emotions = emotions
 
-        epoch_acc = 100 * sum(epoch_accs) / len(epoch_accs)
-        print("Epoch", epoch, "acc", epoch_acc)
-        if(epoch_acc > max_acc):
-            max_acc = epoch_acc
+                    loss = loss_func(pred=outputs.float(),  soft_targets=emotions.float(),   weights=WEIGHTS, verbose=verbose)
+                    val_loss += float(loss) * int(emotions.size(0))  # has to collect all loses
+
+                    softmax = nn.Softmax(dim=1)
+                    batch_acc = float(calc_batch_acc(outputs=softmax(outputs),  emotions=emotions))
+                    epoch_accs.append(batch_acc)
+
+        if(DO_USE_SCHEDULER):
+            exp_lr_scheduler.step()
+
+        val_loss = val_loss / val_size
+        val_losses.append(val_loss)
+
+        epoch_acc = (100 * sum(epoch_accs) / len(epoch_accs))
+
+        if(epoch_acc > best_acc):
+            best_acc = epoch_acc
+            best_epoch = epoch
             best_model = copy.deepcopy(model.state_dict())
+            filename = get_model_name(acc=epoch_acc, epoch=epoch)
+            save_tmp_model(best_model, filename)
+            write_model_log(filename, train_losses, val_losses)
 
-    print('Finished training...')
-    torch.save(best_model, str(PATH_MODEL_STATE_CK_SAVE))
+        print("\n[Epoch:", epoch, ",", "acc", epoch_acc, ", train_loss: ", train_loss, ",", "val_loss: ", val_loss, "lr: ", optimizer.param_groups[0]['lr'], "]\n\n")
+
+    print('\nFinished with best_acc: ', best_acc)
+    # Model saving
+    filename = get_model_name(acc=best_acc, epoch=best_epoch)
+    save_model(best_model, filename)
+    write_model_log(filename, train_losses, val_losses)
 
     plt.plot(train_losses, label='Training loss')
     plt.plot(val_losses, label='Validation loss')
     plt.legend(frameon=False)
-    plt.show()
+    plt.savefig(str(Path(PATH_VISUALS, filename+'.png')))
+    print('Plot saved to: ', str(Path(PATH_VISUALS, filename+'.png')))
 
-    print('Trained model saved to: ', str(PATH_MODEL_STATE_CK_SAVE))
 
+test_dataset = FERDataset(filepaths_numpy=FILEPATHS_NUMPY_TEST,
+                          transform_emotion=True,
+                          transform_image=transform_image_val)
 
-model, _ = get_model()
-model.load_state_dict(torch.load(str(PATH_MODEL_STATE_CK_SAVE)))
+test_loader = torch.utils.data.DataLoader(test_dataset, batch_size=1, shuffle=True, drop_last=True, num_workers=NUM_WORKERS)
+
+model, _, _ = get_model()
+model.load_state_dict(torch.load(str(Path(PATH_MODELS, 'resnet50_trained_acc_55.51374188840743_drop_0.0_epoch_44_lr_0.01_rLq7pt36.pth'))))
 
 
 correct = 0
@@ -450,19 +297,19 @@ total = 0
 j = 0
 model.eval()
 list_acc = []
+softmax = nn.Softmax(dim=0)
 with torch.no_grad():
     for batch in test_loader:
         face, emotions = batch
+
         optimizer.zero_grad()
         emotions = emotions.squeeze(0)
 
         outputs = model(face).squeeze(0)
         outputs = softmax(outputs)
-        topk, indices = torch.topk(outputs, k=2)
         # outputs = torch.zeros(len(EMOTION_DECLARATION)).scatter(0, indices, topk)
         print(emotions)
         print(outputs)
-
         # 2 = maximum mistake
         acc = (2 - torch.sum(torch.abs(emotions - outputs))) / 2
         list_acc.append(acc)

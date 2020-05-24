@@ -6,39 +6,22 @@ import os
 import sys
 import argparse
 from pathlib import Path, PurePath
-
+from paths import *
+from config import *
+from facenet_pytorch import MTCNN, InceptionResnetV1
+from misc_input import *
+import torchvision
+import matplotlib.pyplot as plt
+import PIL.ImageOps
 # Config
-SAVE_NPY = True
+
+SAVE_NPY = bool_action("Save npy file")
 NEUTRAL_EXISTS = True
 
-# Paths
-PATH_PROJECT = Path.cwd()
-PATH_NUMPY = Path(PATH_PROJECT, "numpy")
+USE_FACE_DETECT = bool_action("Apply facedetect")
+if USE_FACE_DETECT:
+    face_detect = MTCNN(image_size=IMG_SIZE, select_largest=False, post_process=False)
 
-
-PATH_DATASET_STRING = Path(PATH_PROJECT, "ck+")
-
-PATH_DATASET = Path(PATH_DATASET_STRING)
-PATH_EMOTIONS = Path(PATH_DATASET, "emotions")
-PATH_FACS = Path(PATH_DATASET, "facs")
-PATH_IMAGES = Path(PATH_DATASET, "images")
-PATH_LANDMARKS = Path(PATH_DATASET, "landmarks")
-
-FILEPATHS_EMOTIONS = PATH_EMOTIONS.glob("*/*/*")
-FILEPATHS_FACS = PATH_FACS.glob("*/*/*")
-FILEPATHS_IMAGES = PATH_IMAGES.glob("*/*/*.png")
-FILEPATHS_LANDMARKS = PATH_LANDMARKS.glob("*/*/*")
-
-EMOTION_DECLARATION = [
-    "neutral",
-    "anger",
-    "contempt",
-    "disgust",
-    "fear",
-    "happy",
-    "sadness",
-    "surprise",
-]
 
 total_emo = np.zeros(len(EMOTION_DECLARATION))
 
@@ -56,9 +39,9 @@ def validate_emo_vector(emo_vector):
 def attr_to_prefolder(person, seq_num, file_type_name=None):
 
     if(file_type_name == "emotion"):
-        pre_path = PATH_EMOTIONS
+        pre_path = PATH_CK_EMOTIONS
     elif(file_type_name == "image"):
-        pre_path = PATH_IMAGES
+        pre_path = PATH_CK_IMAGES
 
     return Path(pre_path, person, seq_num)
 
@@ -169,52 +152,46 @@ def create_vectors(person, seq_num, seq_count_text):
             _, _, i, _ = split_filename(str(img_filename))
             i = int(i)
             img_fullpath = filename_to_fullpath(img_filename)
+            img = Image.open(img_fullpath).convert("RGB")  # RGB needed for face_detect
+            img = face_detect(img)
+            # img = Image.fromarray(img, 'RGB')
+            # img.show()
 
-            img = np.asarray(Image.open(img_fullpath).convert("L"))
-            emo_vector = calc_emo_vector(i, max_seq, emotion)
+            if type(img) != type(None):
+                img = np.transpose(img.numpy().astype('uint8'), (1, 2, 0))  # unit8 + transform
 
-            if emo_vector is not -1:
+                emo_vector = calc_emo_vector(i, max_seq, emotion)
 
-                global total_emo
+                if emo_vector is not -1:
 
-                total_emo = np.add(emo_vector, total_emo)
-                # Save img
-                if (SAVE_NPY):
-                    npy_filename = str(Path(PATH_NUMPY, str(person
-                                                            + "_"
-                                                            + seq_num
-                                                            + "_"
-                                                            + str(i).zfill(8))))
-                    np.save(npy_filename, np.array((img, emo_vector)))
+                    global total_emo
+
+                    total_emo = np.add(emo_vector, total_emo)
+                    # Save img
+                    if (SAVE_NPY):
+                        npy_filename = str(Path(PATH_CK_NUMPY, str(person
+                                                                   + "_"
+                                                                   + seq_num
+                                                                   + "_"
+                                                                   + str(i).zfill(8))))
+                        np.save(npy_filename, np.array((img, emo_vector)))
             else:
-                print(emo_vector)
-                print(person, seq_num, seq_count_text)
-                sys.exit()
+                print("No face found on", img_fullpath)
+                with open("faceless_ck.txt", "a+") as f:
+                    f.write(str(img_fullpath)+"\n")
     else:
         print("Emotion not read well")
         print(person, seq_num)
         sys.exit()
 
 
-create_npy = ''
-while create_npy != 'y' and create_npy != 'n':
-    print(create_npy)
-    create_npy = input("Do you want to create new npy? Y/N\n")
-if create_npy == 'y':
-    create_npy = True
-else:
-    create_npy = False
-
 # you can iterate glob only once
-for i, f in enumerate(FILEPATHS_EMOTIONS, start=0):
+for i, f in enumerate(FILEPATHS_CK_EMOTIONS, start=0):
 
     # Split full path into parts seperated by /
     filename = fullpath_to_filename(f)
     person, seq_num, seq_count_text, _ = split_filename(filename)
-    if create_npy:
-        create_vectors(person, seq_num, seq_count_text)
+    create_vectors(person, seq_num, seq_count_text)
 
     if i % 30 == 0:
         print(i, "/300")
-
-np.savetxt('total_emo.txt', total_emo)

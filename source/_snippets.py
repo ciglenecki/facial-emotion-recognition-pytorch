@@ -102,3 +102,28 @@ return Image.fromarray(np.dstack((image[0], image[1], image[2])).astype(np.uint8
             val_loss = val_loss / val_size
             val_losses.append(val_loss)
             print("\n[Epoch:", epoch, ", val_loss:", val_loss, "]\n")
+
+
+# FACE DETECT IN TRAINING
+
+facedetector = FaceDetect(IMG_SIZE)
+
+class FaceDetect(object):
+
+    def __init__(self, image_size):
+        self.mtcnn = MTCNN(image_size=IMG_SIZE, select_largest=False, post_process=False)
+
+    def face_detect(self, image):
+        print(type(image))
+        print(image)
+        image = self.mtcnn(image)
+        if type(image) == type(None):
+            return None
+        else:
+            return self.facedetect_to_PIL(image)
+
+    def facedetect_to_PIL(self, image):
+        return Image.fromarray(np.transpose(np.array(image), (1, 2, 0)).astype(np.uint8))  # Stacks r,g,b into rgb# (224, 224, 3)
+
+
+
