@@ -1,4 +1,4 @@
-# Prepoznavanje emocija iz izraza lica pomoću strojnog učenja&quot;
+# Prepoznavanje emocija iz izraza lica metodom deep learning;
 
 
 ![](https://www.researchgate.net/profile/Kevin_Bailly/publication/301830237/figure/fig4/AS:613889410605070@1523374049786/Examples-of-images-extracted-from-the-CK-dataset-DISFA-Dataset-The-Denver-Intensity-of.png)
