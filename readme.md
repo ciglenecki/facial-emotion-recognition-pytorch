@@ -16,6 +16,9 @@ To je uređen par (sadržaj slike, emocija, FACS podatak).
 
 Za pojedinu sekvencu znamo samo o kojoj se emociji radi potrebno je linearno sklairati neutralnu emociju i emociju o kojoj se radi tako da svaka slika uistinu reprezentira o kojoj se kombinacija emocija radi.
 
+## Treutna točnost modela
+70% CK+ dataset
+
 ## Tools:
 
 - PyTorch
