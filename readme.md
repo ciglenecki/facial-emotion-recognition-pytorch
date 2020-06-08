@@ -1,4 +1,4 @@
-# Prepoznavanje emocija iz izraza lica pomoću strojnog učenja&quot;
+# Prepoznavanje emocija iz izraza lica metodom deep learninga
 
 
 ![](https://www.researchgate.net/profile/Kevin_Bailly/publication/301830237/figure/fig4/AS:613889410605070@1523374049786/Examples-of-images-extracted-from-the-CK-dataset-DISFA-Dataset-The-Denver-Intensity-of.png)
@@ -15,6 +15,9 @@ Prije samog treniranja potrebno je procesirati i urediti podatke te stvoriti jed
 To je uređen par (sadržaj slike, emocija, FACS podatak).
 
 Za pojedinu sekvencu znamo samo o kojoj se emociji radi potrebno je linearno sklairati neutralnu emociju i emociju o kojoj se radi tako da svaka slika uistinu reprezentira o kojoj se kombinacija emocija radi.
+
+## Treutna točnost modela
+70% CK+ dataset
 
 ## Tools:
 
