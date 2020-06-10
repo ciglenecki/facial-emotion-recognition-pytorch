@@ -32,7 +32,7 @@
 \thesisnumber{000}
 
 % TODO: Navedite naslov rada.
-\title{Naslov}
+\title{Prepoznavanje emocija iz izraza lica pomoću strojnog učenja}
 
 % TODO: Navedite vaše ime i prezime.
 \author{Matej Ciglenečki}
@@ -48,8 +48,11 @@
 \tableofcontents
 
 \chapter{Uvod}
-Uvod rada. Nakon uvoda dolaze poglavlja u kojima se obrađuje tema.
-\section{Poreba za prepoznavanjem emocija}
+**Poreba za prepoznavanjem emocija**
+**što emocije govore**
+**gdje se koristi prepozavanje emocija**
+**korištena metoda za klasifikaciju emcoija**
+
 
 %Prijenosnim učenjem moguće je istrenirani model koji može klasificirati ljudske emocije uz određenu točnost, ovisno o pristupu kojeg koristimo prilikom odabira skupa podataka pomoću kojeg treniramo model.
 %
@@ -59,14 +62,22 @@ Uvod rada. Nakon uvoda dolaze poglavlja u kojima se obrađuje tema.
 
 \chapter{Podatkovni skup}
 \section{Uvod}
-Podatkovni skup sastavni je dio u izvedbi treniranja rezidualne neuronske mreže. Treniranje se svodi na ulazne i izlazne podatke gdje su ulazni podaci podskup podatkovnog skupa. Korišten podatkovni skupovi su Cohn-Kanade (CK) i skup slika preuzetih sa Googla na temelju ključne riječi. Podatkovni skup dijelimo na dva djela. Skup za treniranje i skup za testiranje. Svi podaci koji su u skupu za treniranje iskorištavaju se za treniranje i optimiziranje odabranog modela dok se skup za testiranje koristi samo za evaluaciju točnosti treniranog modela. 80\% nasumičnih slika odabrane su za treniranje a ostalih 20\% koristi se za evaluaciju.
+Podatkovni skup sastavni je dio u izvedbi treniranja rezidualne neuronske mreže. Treniranje se svodi na ulazne i izlazne podatke gdje su ulazni podaci podskup podatkovnog skupa. Korišten podatkovni skupovi su Cohn-Kanade (CK) i skup slika preuzetih sa Google-a na temelju ključne riječi. Podatkovni skup dijelimo na dva djela. Skup za treniranje i skup za testiranje. Svi podaci koji su u skupu za treniranje iskorištavaju se za treniranje i optimiziranje odabranog modela dok se skup za testiranje koristi samo za evaluaciju točnosti treniranog modela. 80\% nasumičnih slika odabrane su za treniranje a ostalih 20\% koristi se za evaluaciju.
 
 \section{Extended Cohn-Kanade podatkovni skup}
 
-Cohn-Kanade podatkovni skup sastoji se od 593 sekvenci slika od 123 subjekta (osoba). Pojedina sekvenca sastoji se od 10 do 60 slika. Početna slika u sekvenci je neutralna emocija dok je zadnja slika vrhunac izraza emocije. Subjekti na slikama imaju od 18 do 50 godina, 69\% su žene, 81\% euro-Amerikanci i 6\% su subjekti ostalih rase. Rezolucija pojedine slike iznosi 640x480 ili 640x490 piksela u 8-bitnom crno-bijelom ili 24 bitnom puno-bojnom formatu.\cite{ck}
+Cohn-Kanade podatkovni skup sastoji se od 593 sekvenci slika od 123 subjekta (osoba). Pojedina sekvenca sastoji se od 10 do 60 slika. Početna slika u sekvenci je neutralna emocija dok je zadnja slika vrhunac izraza emocije. Subjekti na slikama imaju od 18 do 50 godina, 69\% su žene, 81\% euro-Amerikanci i 6\% su subjekti ostalih rase. Rezolucija pojedine slike iznosi 640x480 ili 640x490 piksela u 8-bitnom crno-bijelom ili 24 bitnom puno-bojnom formatu\cite{ck}. TODO: primjer slike CK+ dataseta
 
 \section{Ručno generirani podatkovni skup}
-Ručno generirani podatkovni stvoren je pomoću eksternog alata koji preuzima slike sa Google tražilice na temelju zadanih upita. Dobivene slike ne odgovaraju uvijek nužno upitu koji je zadan zbog čega je potrebno dodatno provjeriti valjanost pojedine slike.
+Slike CK+ podatkovnog skupa slikane su u istom okruženju (ista prostorija u kojoj se slikaju subjekti, ista kamera, slična svjetlina slike...). Nedostatak raznolikosti među slikama stvara potrebu za uvođenjem apstraktnijih slika ljudskih lica ne bi li neuronska mreža predviđala lica koja nisu slična samo CK+ podatkovnom skupu. Zbog toga se uvodi podatkovni skup Google slika. Google omogućuje pretraživanje slika po zadanom upitu te dodatnim parametrima koji olakšavaju pronalaženje ljudskog lica koji predstavlja određenu emociju. Npr. pronalazak ljudskih lica koji iskazuju tužnu emociju mogao bi biti "sad human face" sa tipom Google slike "lice". Rezultati tog upita prikazani su na slici \ref{pic:google_search_sad}.
+
+\begin{figure}[H]
+	\includegraphics[width=\linewidth]{2020-06-08-22-16-22.jpeg}
+	\caption{Rezultati Google upita "sad human face"}
+	\label{pic:google_search_sad}
+\end{figure}
+
+Rezultati ovog upita su slike veće raznolikosti (različit scenarij i drugačiji kut gledanja) što pridonosi apstrakciji emocije u ukupnom podatkovnom skupu. Dobivene slike ne odgovaraju uvijek nužno zadanom upitu zbog čega je potrebno dodatno provjeriti valjanost pojedine slike. Proces filtriranja objašnjen je u poglavlju \ref{google_npy_filter}
 
 
 \section{Priprema podatkovnih skupova}
@@ -193,15 +204,7 @@ Za daljnje korištenje svaka slika i njezin vektor emocije će pretvorena u nump
 
 \subsection{Priprema Google podatkovnog skupa}
 \subsubsection{Prikupljeni podaci}
-Slike CK+ podatkovnog skupa slikane su u istom okruženju (ista prostorija u kojoj se slikaju subjekti, ista kamera, slična svjetlina slike...). Nedostatak raznolikosti među slikama stvara potrebu za uvođenjem apstraktnijih slika ljudskih lica ne bi li neuronska mreža predviđala lica koja nisu slična samo CK+ podatkovnom skupu. Zbog toga se uvodi podatkovni skup Google slika. Google omogućuje pretraživanje slika po zadanom upitu te dodatnim parametrima koji olakšavaju pronalaženje ljudskog lica koji predstavlja određenu emociju. Npr. pronalazak ljudskih lica koji iskazuju tužnu emociju mogao bi biti "sad human face" sa tipom Google slike "lice". Rezultati tog upita prikazani su na slici \ref{pic:google_search_sad}.
-
-\begin{figure}[H]
-	\includegraphics[width=\linewidth]{2020-06-08-22-16-22.jpeg}
-	\caption{Rezultati Google upita "sad human face"}
-	\label{pic:google_search_sad}
-\end{figure}
-
-Rezultati ovog upita su slike veće raznolikosti (različit scenarij i drugačiji kut gledanja) što pridonosi apstrakciji emocije u ukupnom podatkovnom skupu. Umjesto preuzimanja jedne po jedne slike korištena je google-images-download skripta \cite{google-images-download} koja preuzima sve moguće slike na temelju zadanog upita. Upiti korišteni za pronalaženje odgovarajućih emocija nalaze se na slici \ref{cb:google_queries} a svi su popraćeni dodatnim "Google search" parametrom koji pretražuje slike samo ljudskih lica. Svaka slika spremljena je u direktoriji čije je ime upit koji je bio korišten prilikom preuzimanje te slike. 
+Umjesto preuzimanja jedne po jedne slike korištena je google-images-download skripta \cite{google-images-download} koja preuzima sve moguće slike na temelju zadanog upita. Upiti korišteni za pronalaženje odgovarajućih emocija nalaze se na slici \ref{cb:google_queries} a svi su popraćeni dodatnim "Google search" parametrom koji pretražuje slike samo ljudskih lica. Svaka slika spremljena je u direktoriji čije je ime upit koji je bio korišten prilikom preuzimanje te slike. 
 
 \begin{figure}[H]
 	\centering
@@ -224,7 +227,7 @@ Rezultati ovog upita su slike veće raznolikosti (različit scenarij i drugačij
 \end{figure}
 
 \noindent
-Nakon preuzimanja svih mogućih slika potrebno je ručno proći kroz svaki direktorij svakog upita i izbaciti slike koje ne zadovoljavaju sljedeće uvjete
+Nakon preuzimanja svih mogućih slika potrebno je ručno proći kroz svaki direktorij svakog upita i izbaciti slike koje ne zadovoljavaju sljedeće uvjete \label{google_npy_filter}
 
 \begin{itemize}
 	\item Na slici se nalazi samo jedno ljudsko lice
@@ -295,7 +298,7 @@ surprise & [0,0,0,0,0,0,0,1]\\
 Nakon dodjele vektora emocije za pojedinu sliku potrebno je pretvoriti sliku i vektor emocije u .npy podatak. Kako se radi o slici i vektoru emocije, postupak pretvorbe slike i vektora emocije u pojedinačni .npy podatak jednak je kao i kod CK+ podatkovnog skupa definiranom u poglavlju \ref{self:npy_save}.
 
 
-\subsection{Priprema Cohn-Kanade podatkovnog skupa}
+\subsection{Objedinjavanje podatkovnih skupova}
 Nakon obrade CK+ i Google podatkovnog skupa svi .npy podaci bit će spremljeni u direktoriji "ck" ili "Google" ovisno o tome iz kojeg je podatkovnog skupa slika dobivena. Struktura svih .npy podataka prikazana je na slici \ref{pic:npy_structure}. Ovom strukturom moguće je definirati udio svakog podatkovnog skupa koji će biti korišten za treniranje neuronske mreže.
 
 
@@ -304,13 +307,13 @@ Nakon obrade CK+ i Google podatkovnog skupa svi .npy podaci bit će spremljeni u
 \begin{Verbatim}[fontsize=\small]
 numpy
 ├── ck
-│   ├── slika_0001.npy
+│   ├── slika_i_emocija_0001.npy
 │   ├── ...
-│   └── slika_5703.npy
+│   └── slika_i_emocija_5703.npy
 └── google
-    ├── slika_0001.npy
+    ├── slika_i_emocija_0001.npy
     ├── ...
-    └── slika_3160.npy
+    └── slika_i_emocija_3160.npy
     
 
 \end{Verbatim}
@@ -321,12 +324,17 @@ numpy
 
 
 \chapter{Treniranje}
-\section{Rezidualna neuronska mreža}
-\section{Problem dubokog učenja}
-**problem treniranja dubokih mreža**	
 
-**gradient degradation**
-\section{ResNet 50}
+
+\section{Duboko učenje}
+**općenito**
+**problem treniranja dubokih mreža**	
+**gradient degradation problem**
+
+
+\section{Rezidualna neuronska mreža}
+
+\subsection{ResNet 50}
 **probleme koje riješava**
 
 **kako funckionira**
@@ -339,10 +347,17 @@ numpy
 **nedostatak labeliranih slika**
 
 \section{Implementacija treniranja u PyTorch-u}
-\subsection{ResNet 50}
-**pretreniran*
+\subsection{Priprema podataka}
+\subsubsection{Augmentacija slika}
+\subsubsection{Transformacija podataka}
 
-\section{Pre-training}
+
+\subsection{ResNet 50}
+\subsection{Adam optimizator}
+\subsection{Funckija gubitka}
+\subsubsection{križni entropijski gubitak}
+\subsection{Treniranje}
+
 \chapter{Testiranje/evaluacija}
 
 \chapter{Zaključak}
