@@ -1,0 +1,30 @@
+\babel@toc {croatian}{}
+\contentsline {chapter}{\numberline {1}Uvod}{1}% 
+\contentsline {section}{\numberline {1.1}Poreba za prepoznavanjem emocija}{1}% 
+\contentsline {chapter}{\numberline {2}Podatkovni skup}{2}% 
+\contentsline {section}{\numberline {2.1}Uvod}{2}% 
+\contentsline {section}{\numberline {2.2}Extended Cohn-Kanade podatkovni skup}{2}% 
+\contentsline {section}{\numberline {2.3}Ru\IeC {\v c}no generirani podatkovni skup}{2}% 
+\contentsline {section}{\numberline {2.4}Priprema podatkovnih skupova}{3}% 
+\contentsline {subsection}{\numberline {2.4.1}Priprema Cohn-Kanade podatkovnog skupa}{3}% 
+\contentsline {subsubsection}{Struktura podataka}{3}% 
+\contentsline {subsubsection}{Obrada podataka}{4}% 
+\contentsline {subsubsection}{Primjer vektora emocije za sekvencu "disgust" koja sadr\IeC {\v z}i 10 slika:}{5}% 
+\contentsline {subsubsection}{Spremanje slike i vektora emocije u .npy podatak}{6}% 
+\contentsline {subsection}{\numberline {2.4.2}Priprema Google podatkovnog skupa}{6}% 
+\contentsline {subsubsection}{Prikupljeni podaci}{6}% 
+\contentsline {subsubsection}{Struktura podataka}{8}% 
+\contentsline {subsubsection}{Obrada podataka}{9}% 
+\contentsline {subsubsection}{Spremanje slike i vektora emocije u .npy podatak}{10}% 
+\contentsline {subsection}{\numberline {2.4.3}Priprema Cohn-Kanade podatkovnog skupa}{10}% 
+\contentsline {chapter}{\numberline {3}Treniranje}{12}% 
+\contentsline {section}{\numberline {3.1}Rezidualna neuronska mre\IeC {\v z}a}{12}% 
+\contentsline {section}{\numberline {3.2}Problem dubokog u\IeC {\v c}enja}{12}% 
+\contentsline {section}{\numberline {3.3}ResNet 50}{12}% 
+\contentsline {section}{\numberline {3.4}Prijenosno u\IeC {\v c}enje}{12}% 
+\contentsline {section}{\numberline {3.5}Implementacija treniranja u PyTorch-u}{12}% 
+\contentsline {subsection}{\numberline {3.5.1}ResNet 50}{12}% 
+\contentsline {section}{\numberline {3.6}Pre-training}{12}% 
+\contentsline {chapter}{\numberline {4}Testiranje/evaluacija}{13}% 
+\contentsline {chapter}{\numberline {5}Zaklju\IeC {\v c}ak}{14}% 
+\contentsline {chapter}{Literatura}{15}% 
