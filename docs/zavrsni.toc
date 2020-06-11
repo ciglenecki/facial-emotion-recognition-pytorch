@@ -17,19 +17,22 @@
 \contentsline {subsubsection}{Spremanje slike i vektora emocije u .npy podatak}{10}% 
 \contentsline {subsection}{\numberline {2.4.3}Objedinjavanje podatkovnih skupova}{10}% 
 \contentsline {chapter}{\numberline {3}Treniranje}{12}% 
-\contentsline {section}{\numberline {3.1}Duboko u\IeC {\v c}enje}{12}% 
-\contentsline {section}{\numberline {3.2}Rezidualna neuronska mre\IeC {\v z}a}{12}% 
-\contentsline {subsection}{\numberline {3.2.1}ResNet 50}{12}% 
-\contentsline {section}{\numberline {3.3}Prijenosno u\IeC {\v c}enje}{12}% 
-\contentsline {section}{\numberline {3.4}Implementacija treniranja u PyTorch-u}{13}% 
-\contentsline {subsection}{\numberline {3.4.1}Priprema podataka}{13}% 
-\contentsline {subsubsection}{Augmentacija slika}{13}% 
-\contentsline {subsubsection}{Transformacija podataka}{13}% 
-\contentsline {subsection}{\numberline {3.4.2}ResNet 50}{13}% 
-\contentsline {subsection}{\numberline {3.4.3}Adam optimizator}{13}% 
-\contentsline {subsection}{\numberline {3.4.4}Funckija gubitka}{13}% 
-\contentsline {subsubsection}{kri\IeC {\v z}ni entropijski gubitak}{13}% 
-\contentsline {subsection}{\numberline {3.4.5}Treniranje}{13}% 
-\contentsline {chapter}{\numberline {4}Testiranje/evaluacija}{14}% 
-\contentsline {chapter}{\numberline {5}Zaklju\IeC {\v c}ak}{15}% 
-\contentsline {chapter}{Literatura}{16}% 
+\contentsline {section}{\numberline {3.1}Duboke neuronske mre\IeC {\v z}e za analizu slika}{13}% 
+\contentsline {subsection}{\numberline {3.1.1}Neuron}{13}% 
+\contentsline {subsubsection}{Aktivacijska funckija}{13}% 
+\contentsline {subsection}{\numberline {3.1.2}Sloj neurona}{14}% 
+\contentsline {subsection}{\numberline {3.1.3}Rezidualna neuronska mre\IeC {\v z}a}{14}% 
+\contentsline {subsection}{\numberline {3.1.4}ResNet 50}{14}% 
+\contentsline {subsection}{\numberline {3.1.5}Prijenosno u\IeC {\v c}enje}{14}% 
+\contentsline {section}{\numberline {3.2}Implementacija treniranja u PyTorch-u}{15}% 
+\contentsline {subsection}{\numberline {3.2.1}Priprema podataka}{15}% 
+\contentsline {subsubsection}{Augmentacija slika}{15}% 
+\contentsline {subsubsection}{Transformacija podataka}{15}% 
+\contentsline {subsection}{\numberline {3.2.2}ResNet 50}{15}% 
+\contentsline {subsection}{\numberline {3.2.3}Adam optimizator}{15}% 
+\contentsline {subsection}{\numberline {3.2.4}Funckija gubitka}{15}% 
+\contentsline {subsubsection}{kri\IeC {\v z}ni entropijski gubitak}{15}% 
+\contentsline {subsection}{\numberline {3.2.5}Treniranje}{15}% 
+\contentsline {chapter}{\numberline {4}Testiranje/evaluacija}{16}% 
+\contentsline {chapter}{\numberline {5}Zaklju\IeC {\v c}ak}{17}% 
+\contentsline {chapter}{Literatura}{18}% 

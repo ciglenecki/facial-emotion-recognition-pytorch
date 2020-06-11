@@ -90,6 +90,7 @@
 \RequirePackage{float}
 \RequirePackage{booktabs}
 \RequirePackage{listings}
+\RequirePackage{tikz,pgfplots}
 
 
 
