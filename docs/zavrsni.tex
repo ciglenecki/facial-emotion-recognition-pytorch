@@ -24,6 +24,9 @@
     tabsize=4  
 }
 
+%command for vector boldness
+\newcommand{\vect}[1]{\boldsymbol{#1}}
+
 \lstset{style=mystyle}
 
 \begin{document}
@@ -338,11 +341,11 @@ Neuron je osnovni dio neuronske mreže. Svaki neuron na svoj ulaz prima vektor $
 
 
 \begin{equation}\label{eq:neuron}
-	z=w_1x_1+w_2x_2+...+w_nx_n=w^{T} \cdot x
+	\vect{z}=w_1x_1+w_2x_2+...+w_nx_n=\vect{w^{T}} \cdot \vect{x}
 \end{equation}
 
 \begin{equation}\label{eq:neuron}
-	\hat{y} = g(z)
+	\hat{y} = g(vect{z})
 \end{equation}
 
 \subsubsection{Aktivacijska funckija}
@@ -414,6 +417,17 @@ Nakon zbrajanja kroz neuron izlaz je potrebno provesti kroz aktivacijsku funkcij
 
 \subsection{Sloj neurona}
 
+Sloj neurona sastoji se od skupa neurona. Sloj neurona sastoji se od vektora $a$ koji označava aktivaciju sloja neurona. U slučaju prvog sloja vrijedi $a = x$. Račun izlaza sloja neurona računa se slično kao i kod pojedinog neurona. Za svaki sloj neurona $l$ izlaz $z$ jednak je umnošku prethodne aktivacije $a_{l-1}$ sa trenutnim težinama sloja neurona $w_l$ zbrojen sa sklonošću $b_l$
+
+
+
+\begin{equation}\label{eq:neuron_layer}
+	\boldsymbol{\vect{z_l}} = \vect{w_l} \cdot \vect{a_{l-1}} + \vect{b_l}
+\end{equation}
+
+\begin{equation}\label{eq:neuron}
+	\hat{y} = g(z)
+\end{equation}
 
 
 
