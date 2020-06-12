@@ -1,6 +1,4 @@
 \documentclass[times, utf8, zavrsni,numeric,pstricks]{fer}
-
-
 \graphicspath{{lib/pics/}} %Setting the graphicspath
 
 \definecolor{codegreen}{rgb}{0,0.6,0}
@@ -78,7 +76,13 @@ Podatkovni skup sastavni je dio u izvedbi treniranja modela. Treniranje se svodi
 
 \section{Extended Cohn-Kanade podatkovni skup}
 
-Cohn-Kanade podatkovni skup sastoji se od 593 sekvenci slika od 123 subjekta (osoba). Pojedina sekvenca sastoji se od 10 do 60 slika. Početna slika u sekvenci je neutralna emocija dok je zadnja slika vrhunac izraza emocije. Subjekti na slikama imaju od 18 do 50 godina, 69\% su žene, 81\% euro-Amerikanci i 6\% su subjekti ostalih rase. Rezolucija pojedine slike iznosi 640x480 ili 640x490 piksela u 8-bitnom crno-bijelom ili 24 bitnom puno-bojnom formatu\cite{ck}. TODO: primjer slike CK+ dataseta
+Cohn-Kanade podatkovni skup sastoji se od 593 sekvenci slika od 123 subjekta (osoba). Pojedina sekvenca sastoji se od 10 do 60 slika. Početna slika u sekvenci je neutralna emocija dok je zadnja slika vrhunac izraza emocije. Subjekti na slikama imaju od 18 do 50 godina, 69\% su žene, 81\% euro-Amerikanci i 6\% su subjekti ostalih rase. Rezolucija pojedine slike iznosi 640x480 ili 640x490 piksela u 8-bitnom crno-bijelom ili 24 bitnom puno-bojnom formatu\cite{ck}.
+
+\begin{figure}[H]
+	\includegraphics[width=\linewidth]{ck_example.png}
+	\caption{Primjer slike iz CK+ podatkovnog skupa}
+	\label{Podatkovni skup}
+\end{figure}
 
 \section{Ručno generirani podatkovni skup}
 Slike CK+ podatkovnog skupa slikane su u istom okruženju (ista prostorija u kojoj se slikaju subjekti, ista kamera, slična svjetlina slike...). Nedostatak raznolikosti među slikama stvara potrebu za uvođenjem apstraktnijih slika ljudskih lica ne bi li model klasificirao emocije ljudskih lica koja nisu slična samo CK+ podatkovnom skupu. Zbog toga se uvodi podatkovni skup Google slika. Google omogućuje pretraživanje slika po zadanom upitu te dodatnim parametrima koji olakšavaju pronalaženje ljudskog lica koji predstavlja određenu emociju. Npr. pronalazak ljudskih lica koji iskazuju tužnu emociju mogao bi biti "sad human face" sa tipom Google slike "lice". Rezultati tog upita prikazani su na slici \ref{pic:google_search_sad}.
@@ -566,19 +570,100 @@ test_dataset = FERDataset(filepaths_numpy=FILEPATHS_NUMPY_TEST,
 \label{pic:init_dataset}
 \end{figure}
 
-\subsubsection{Transformacija podataka}
-Prije nego što se podaci dobiveni iz "train_dataseta" mogu slobodno koristiti za treniranje neuronske mreže potrebno ih je transformirati u pravilan oblik. 
-\subsubsection{Augmentacija slika}
+\subsubsection{Transformacija slike}
 
+Prije nego što se podaci dobiveni iz "train\_dataseta" mogu slobodno koristiti za treniranje neuronske mreže potrebno ih je transformirati u pravilan oblik. Sliku ljudskog lica potrebno je pretvoriti u PyTorch Tensor \cite{pytorch_tensor}. Pretvorbom podatka u ovaj tip omogućava PyTorch-u nastavlja koristiti ovaj podataka u svojoj domeni uz moguće korištenje PyTorch funckija. Korak prije slanja podataka slike u model je normalizacija. Kako se koristi unaprijed trenirana neuronska mreža ResNet 50 potrebno je provesti normalizaciju koja je matematički ispravna nad skupom koji je korišten prilikom treniranja. Ta normalizacija dana je od strane ImageNet-a čiji je podatkovni skup korišten prilikom treniranja ResNet 50 neuronske mreže \cite{normalize_imagenet} a ona glasi:
+
+\begin{figure}[H]
+\centering
+
+\begin{Verbatim}[fontsize=\small]
+transforms.Normalize(
+		mean = [0.485, 0.456, 0.406],
+		std = [0.229, 0.224, 0.225])
+\end{Verbatim}
+\caption{Implementacija FERDataset klasa}
+\label{pic:init_dataset}
+\end{figure}
+
+\subsubsection{Augmentacija slike}
+
+Dodatne i opcionalne transformacije su transformacije koje povećavaju ukupnu apstraktnost podataka \engl{data augmentation}. Ove transformacije igraju ulogu simuliranja raznolikijeg podatkovnog skupa na način da rade manje promjene na pojedinoj slici. Primjerice, nasumično povećavanje svjetline slike ili nasumično okretanje slike za kut $\alpha$. Na ovaj način model će naučiti klasificirati slike i u okolnostima stvorenim okolnostima gdje je slika svjetlija ili blago zarotirana čime se proširuje primjena modela na veći skup različitih slika.
+
+Augmentacija slika primjenjivati će se nasumično za svaku sliku, čime se osigurava da model ne bude pretreniran za slike iste svjetline ili slike na kojima je ljudsko lice jednakog nagiba. Također, sve slike ćemo postaviti na fiksnu veličinu iznosa 224x224 pixela zbog lakšeg računanja konvolucije.
+
+Razlog broja IMG\_SIZE = 224 je uzastopna mogućnost djeljivosti sa brojem 2, pogodna za ResNet 50 neuronsku mrežu.
+
+Sliku ćemo pretvoriti u crno-bijelu iz razloga što ne želimo da boje igraju ulogu u predviđanju emocija. Oblik, kontrast i rubovi na slici su dovoljno značajni za prepoznavanje ekspresije ljudskog lica.
+
+Nasumično horizontalno zrcaljenje je još jedna od korisnih augmentacijskih transformacija koja će povećati apstrakciju. Model će bolje raditi za općenite slučajeve, neovisno o zrcaljenju kamere koja slika lice.
+
+Transformacija i augmentacija slika u PyTorch-u implementira se na način da funkcija "transform.Compose" primi listu željenih transformacija koja se šalje u FERDataset pod imenom "transform\_image". Augmentacija slike mora se obaviti prije normalizacije slike. Kod za potpunu transformaciju je sljedeći:
+
+\begin{figure}[H]
+\centering
+
+\begin{Verbatim}[fontsize=\small]
+transform_image_train = transforms.Compose([
+    transforms.Resize(IMG_SIZE),
+    transforms.Grayscale(num_output_channels=3),
+    transforms.RandomHorizontalFlip(),
+    # transforms.RandomAffine(degrees=(-AUG_DEGREE, AUG_DEGREE)),
+    transforms.ToTensor(),
+    transforms.Normalize(mean=[0.485, 0.456, 0.406], std=[
+        0.229, 0.224, 0.225])
+])
+\end{Verbatim}
+\caption{Implementacija FERDataset klasa}
+\label{pic:init_dataset}
+\end{figure}
 
 
 \subsection{ResNet 50}
+
+Spomenutu unaprijed treniranu mrežu ResNet 50 potrebno je uvesti u projekt. Srećom PyTorch već ima ugrađenu unaprijed treniranu ResNet 50 mrežu koja se poziva na sljedeći način:
+
+\begin{figure}[H]
+\centering
+
+\begin{Verbatim}[fontsize=\small]
+resnet50 = models.resnet50(pretrained=True,  progress=True)
+
+\end{Verbatim}
+\caption{Inicijalizacija ResNet 50}
+\label{pic:init_resnet}
+\end{figure}
+
++
+
+
+
 \subsection{Adam optimizator}
-\subsection{Funckija gubitka}
-\subsubsection{križni entropijski gubitak}
 \subsection{Treniranje}
 
 \chapter{Testiranje/evaluacija}
+
+\subsection{Konfuzijska matrica}
+
+
+\begin{figure}[H]
+\centering
+
+\begin{Verbatim}[fontsize=\small]
+[17, 1 , 4 , 4 , 3 , 0 , 11, 3]
+[4 , 19, 2 , 5 , 1 , 1 , 5 , 2]
+[3 , 0 , 6 , 4 , 3 , 0 , 3 , 0]
+[4 , 6 , 1 , 22, 4 , 2 , 4 , 1]
+[0 , 0 , 1 , 5 , 12, 1 , 5 , 6]
+[1 , 0 , 2 , 3 , 2 , 23, 1 , 3]
+[11, 5 , 2 , 3 , 3 , 4 , 31, 3]
+[1 , 2 , 1 , 2 , 2 , 1 , 0 ,26]
+\end{Verbatim}
+\caption{Inicijalizacija ResNet 50}
+\label{pic:init_resnet}
+\end{figure}
+
+
 
 \chapter{Zaključak}
 Korištenjem dva podatkovna skupa i alata PyTorch istrenirani model može do određene točnosti predviđati koju emociju izražava slika ljudskog lica. Uvođenjem dodatnog ručno generiranog Google podatkovnog skupa poboljšana je apstrakcija prepoznavanja emocija koja dopušta modelu da bolje predviđa emocije sa neviđenih slika lica koje nisu slične slikama iz podatkovnog skupa CK+. Točnost predviđanja emocija može biti poboljšana uvođenjem većeg i apstraktnijeg podatkovnog skupa koji sadrži raznolike slike ljudskih lica. 

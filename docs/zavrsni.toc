@@ -29,13 +29,12 @@
 \contentsline {section}{\numberline {3.2}Implementacija treniranja u PyTorch-u}{18}% 
 \contentsline {subsection}{\numberline {3.2.1}Priprema podataka}{18}% 
 \contentsline {subsubsection}{Podjela skupa}{19}% 
-\contentsline {subsubsection}{Augmentacija slika}{20}% 
-\contentsline {subsubsection}{Transformacija podataka}{20}% 
-\contentsline {subsection}{\numberline {3.2.2}ResNet 50}{20}% 
-\contentsline {subsection}{\numberline {3.2.3}Adam optimizator}{20}% 
-\contentsline {subsection}{\numberline {3.2.4}Funckija gubitka}{20}% 
-\contentsline {subsubsection}{kri\IeC {\v z}ni entropijski gubitak}{20}% 
-\contentsline {subsection}{\numberline {3.2.5}Treniranje}{20}% 
-\contentsline {chapter}{\numberline {4}Testiranje/evaluacija}{21}% 
-\contentsline {chapter}{\numberline {5}Zaklju\IeC {\v c}ak}{22}% 
-\contentsline {chapter}{Literatura}{23}% 
+\contentsline {subsubsection}{Transformacija slike}{20}% 
+\contentsline {subsubsection}{Augmentacija slike}{20}% 
+\contentsline {subsection}{\numberline {3.2.2}ResNet 50}{21}% 
+\contentsline {subsection}{\numberline {3.2.3}Adam optimizator}{21}% 
+\contentsline {subsection}{\numberline {3.2.4}Treniranje}{21}% 
+\contentsline {chapter}{\numberline {4}Testiranje/evaluacija}{22}% 
+\contentsline {subsection}{\numberline {4.0.1}Konfuzijska matrica}{22}% 
+\contentsline {chapter}{\numberline {5}Zaklju\IeC {\v c}ak}{23}% 
+\contentsline {chapter}{Literatura}{24}% 

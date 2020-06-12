@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.14159265-2.6-1.40.20 (TeX Live 2019/Debian) (preloaded format=pdflatex 2020.5.24)  12 JUN 2020 21:16
+This is pdfTeX, Version 3.14159265-2.6-1.40.20 (TeX Live 2019/Debian) (preloaded format=pdflatex 2020.5.24)  12 JUN 2020 22:36
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
@@ -901,25 +901,34 @@ LaTeX Warning: Label `pic:init_dataset' multiply defined.
 
 LaTeX Warning: Label `pic:init_dataset' multiply defined.
 
+
+LaTeX Warning: Label `pic:init_dataset' multiply defined.
+
+
+LaTeX Warning: Label `pic:init_dataset' multiply defined.
+
+
+LaTeX Warning: Label `pic:init_resnet' multiply defined.
+
 )
 \openout1 = `zavrsni.aux'.
 
-LaTeX Font Info:    Checking defaults for OML/cmm/m/it on input line 35.
-LaTeX Font Info:    ... okay on input line 35.
-LaTeX Font Info:    Checking defaults for T1/cmr/m/n on input line 35.
-LaTeX Font Info:    ... okay on input line 35.
-LaTeX Font Info:    Checking defaults for OT1/cmr/m/n on input line 35.
-LaTeX Font Info:    ... okay on input line 35.
-LaTeX Font Info:    Checking defaults for OMS/cmsy/m/n on input line 35.
-LaTeX Font Info:    ... okay on input line 35.
-LaTeX Font Info:    Checking defaults for OMX/cmex/m/n on input line 35.
-LaTeX Font Info:    ... okay on input line 35.
-LaTeX Font Info:    Checking defaults for U/cmr/m/n on input line 35.
-LaTeX Font Info:    ... okay on input line 35.
+LaTeX Font Info:    Checking defaults for OML/cmm/m/it on input line 33.
+LaTeX Font Info:    ... okay on input line 33.
+LaTeX Font Info:    Checking defaults for T1/cmr/m/n on input line 33.
+LaTeX Font Info:    ... okay on input line 33.
+LaTeX Font Info:    Checking defaults for OT1/cmr/m/n on input line 33.
+LaTeX Font Info:    ... okay on input line 33.
+LaTeX Font Info:    Checking defaults for OMS/cmsy/m/n on input line 33.
+LaTeX Font Info:    ... okay on input line 33.
+LaTeX Font Info:    Checking defaults for OMX/cmex/m/n on input line 33.
+LaTeX Font Info:    ... okay on input line 33.
+LaTeX Font Info:    Checking defaults for U/cmr/m/n on input line 33.
+LaTeX Font Info:    ... okay on input line 33.
 LaTeX Font Info:    Checking defaults for pmboxdraw/pmboxdraw/m/n on input line
- 35.
-LaTeX Font Info:    ... okay on input line 35.
-LaTeX Font Info:    Try loading font information for T1+ptm on input line 35.
+ 33.
+LaTeX Font Info:    ... okay on input line 33.
+LaTeX Font Info:    Try loading font information for T1+ptm on input line 33.
  (/usr/share/texlive/texmf-dist/tex/latex/psnfss/t1ptm.fd
 File: t1ptm.fd 2001/06/04 font definitions for T1/ptm.
 )
@@ -1006,33 +1015,33 @@ ABD: EveryShipout initializing macros
 Package pgfplots Warning: running in backwards compatibility mode (unsuitable t
 ick labels; missing features). Consider writing \pgfplotsset{compat=1.16} into 
 your preamble.
- on input line 35.
+ on input line 33.
 
-LaTeX Font Info:    Try loading font information for T1+phv on input line 46.
+LaTeX Font Info:    Try loading font information for T1+phv on input line 44.
 (/usr/share/texlive/texmf-dist/tex/latex/psnfss/t1phv.fd
 File: t1phv.fd 2001/06/04 scalable font definitions for T1/phv.
 )
 LaTeX Font Info:    Font shape `T1/ptm/bx/n' in size <14.4> not available
-(Font)              Font shape `T1/ptm/b/n' tried instead on input line 46.
+(Font)              Font shape `T1/ptm/b/n' tried instead on input line 44.
 LaTeX Font Info:    Font shape `T1/phv/bx/n' in size <14.4> not available
-(Font)              Font shape `T1/phv/b/n' tried instead on input line 46.
+(Font)              Font shape `T1/phv/b/n' tried instead on input line 44.
 LaTeX Font Info:    Font shape `T1/ptm/bx/n' in size <24.88> not available
-(Font)              Font shape `T1/ptm/b/n' tried instead on input line 46.
+(Font)              Font shape `T1/ptm/b/n' tried instead on input line 44.
 LaTeX Font Info:    Font shape `T1/phv/bx/n' in size <24.88> not available
-(Font)              Font shape `T1/phv/b/n' tried instead on input line 46.
-LaTeX Font Info:    Try loading font information for U+msa on input line 46.
+(Font)              Font shape `T1/phv/b/n' tried instead on input line 44.
+LaTeX Font Info:    Try loading font information for U+msa on input line 44.
 
 (/usr/share/texlive/texmf-dist/tex/latex/amsfonts/umsa.fd
 File: umsa.fd 2013/01/14 v3.01 AMS symbols A
 )
-LaTeX Font Info:    Try loading font information for U+msb on input line 46.
+LaTeX Font Info:    Try loading font information for U+msb on input line 44.
 
 (/usr/share/texlive/texmf-dist/tex/latex/amsfonts/umsb.fd
 File: umsb.fd 2013/01/14 v3.01 AMS symbols B
 ) [1
 
 {/var/lib/texmf/fonts/map/pdftex/updmap/pdftex.map}]
-LaTeX Font Info:    Try loading font information for T1+pcr on input line 49.
+LaTeX Font Info:    Try loading font information for T1+pcr on input line 47.
 
 (/usr/share/texlive/texmf-dist/tex/latex/psnfss/t1pcr.fd
 File: t1pcr.fd 2001/06/04 font definitions for T1/pcr.
@@ -1053,9 +1062,9 @@ Poglavlje 1.
 ] [2]
 Poglavlje 2.
 LaTeX Font Info:    Font shape `T1/ptm/bx/n' in size <17.28> not available
-(Font)              Font shape `T1/ptm/b/n' tried instead on input line 76.
+(Font)              Font shape `T1/ptm/b/n' tried instead on input line 74.
 
-Overfull \hbox (1.93619pt too wide) in paragraph at lines 81--82
+Overfull \hbox (1.93619pt too wide) in paragraph at lines 79--80
 \T1/ptm/m/n/12 Cohn-Kanade po-dat-kovni skup sas-toji se od 593 sek-venci slika
  od 123 su-bjekta (osoba).
  []
@@ -1067,32 +1076,32 @@ Overfull \hbox (1.93619pt too wide) in paragraph at lines 81--82
 File: lib/pics/2020-06-08-22-16-22.jpeg Graphic file (type jpg)
 <use lib/pics/2020-06-08-22-16-22.jpeg>
 Package pdftex.def Info: lib/pics/2020-06-08-22-16-22.jpeg  used on input line 
-87.
+85.
 (pdftex.def)             Requested size: 412.56497pt x 415.80193pt.
 LaTeX Font Info:    Font shape `T1/ptm/bx/n' in size <10.95> not available
-(Font)              Font shape `T1/ptm/b/n' tried instead on input line 88.
+(Font)              Font shape `T1/ptm/b/n' tried instead on input line 86.
  [4 <./lib/pics/2020-06-08-22-16-22.jpeg>] [5] [6] [7]
 <lib/pics/numpy_slika_emocija.png, id=55, 803.0pt x 335.2525pt>
 File: lib/pics/numpy_slika_emocija.png Graphic file (type png)
 <use lib/pics/numpy_slika_emocija.png>
 Package pdftex.def Info: lib/pics/numpy_slika_emocija.png  used on input line 2
-05.
+03.
 (pdftex.def)             Requested size: 206.28249pt x 86.12003pt.
 LaTeX Font Info:    Font shape `T1/ptm/bx/n' in size <10> not available
-(Font)              Font shape `T1/ptm/b/n' tried instead on input line 206.
+(Font)              Font shape `T1/ptm/b/n' tried instead on input line 204.
 <lib/pics/numpy_imgdata_emo.png, id=57, 803.0pt x 200.75pt>
 File: lib/pics/numpy_imgdata_emo.png Graphic file (type png)
 <use lib/pics/numpy_imgdata_emo.png>
-Package pdftex.def Info: lib/pics/numpy_imgdata_emo.png  used on input line 210
+Package pdftex.def Info: lib/pics/numpy_imgdata_emo.png  used on input line 208
 .
 (pdftex.def)             Requested size: 206.28249pt x 51.56886pt.
 
-Overfull \hbox (2.28003pt too wide) in paragraph at lines 203--213
+Overfull \hbox (2.28003pt too wide) in paragraph at lines 201--211
 [][] [] 
  []
 
 
-Overfull \hbox (1.34674pt too wide) in paragraph at lines 219--220
+Overfull \hbox (1.34674pt too wide) in paragraph at lines 217--218
 \T1/ptm/m/n/12 Umjesto pre-uzi-ma-nja jedne po jedne slike ko-ri-²tena je googl
 e-images-download skripta
  []
@@ -1106,43 +1115,58 @@ Poglavlje 3.
 NOTE: coordinate (5Y0.0e0],0Y0.0e0]) has been dropped because it is unbounded (
 in x). (see also unbounded coords=jump). 
 [14] [15] [16] [17]
-Overfull \hbox (33.27962pt too wide) in paragraph at lines 506--507
+Overfull \hbox (33.27962pt too wide) in paragraph at lines 504--505
 \T1/ptm/m/n/12 .npy po-datke u£i-tani su iz struk-ture de-fi-ni-rane na 2.9[]. 
 Pa-ra-me-trima GO-OGLE_TRAIN_SPLIT
  []
 
-[18] [19] [20]
+[18] [19] [20] [21]
 Poglavlje 4.
-[21
+[22
 
 ]
 Poglavlje 5.
-(./zavrsni.bbl [22
+(./zavrsni.bbl [23
 
 ]
-Overfull \hbox (135.70166pt too wide) in paragraph at lines 29--33
+Underfull \hbox (badness 10000) in paragraph at lines 9--12
+[]\T1/ptm/m/n/12 Imagenet nor-ma-li-za-tion.  URL $\T1/pcr/m/n/12 https : / /
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 9--12
+\T1/pcr/m/n/12 github . com / pytorch / examples / blob /
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 9--12
+\T1/pcr/m/n/12 97304e232807082c2e7b54c597615dc0ad8f6173 / imagenet /
+ []
+
+
+Overfull \hbox (135.70166pt too wide) in paragraph at lines 38--42
 \T1/pcr/m/n/12 what-[]is-[]one-[]hot-[]encoding-[]why-[]and-[]when-[]do-[]you-[
 ]have-[]to-[]use-[]it-[]e3c6186d008f$\T1/ptm/m/n/12 . 
  []
 
 
-Underfull \hbox (badness 1097) in paragraph at lines 35--38
+Underfull \hbox (badness 1097) in paragraph at lines 44--47
 []\T1/ptm/m/n/12 Hardik Vasa.  google-images-download.  URL $\T1/pcr/m/n/12 htt
 ps : / / github . com /
  []
 
-) [23
+) [24
 
-] [24] (./zavrsni.aux)
+] [25] (./zavrsni.aux)
 
 LaTeX Warning: There were multiply-defined labels.
 
  ) 
 Here is how much of TeX's memory you used:
- 28775 strings out of 492609
- 680908 string characters out of 6131462
+ 28782 strings out of 492609
+ 681069 string characters out of 6131462
  895392 words of memory out of 5000000
- 32149 multiletter control sequences out of 15000+600000
+ 32156 multiletter control sequences out of 15000+600000
  68327 words of font info for 94 fonts, out of 8000000 for 9000
  1141 hyphenation exceptions out of 8191
  69i,19n,100p,1747b,2279s stack positions out of 5000i,500n,10000p,200000b,80000s
@@ -1168,10 +1192,10 @@ elvetic/uhvb8a.pfb></usr/share/texlive/texmf-dist/fonts/type1/urw/helvetic/uhvr
 are/texlive/texmf-dist/fonts/type1/urw/times/utmr8a.pfb></usr/share/texlive/tex
 mf-dist/fonts/type1/urw/times/utmr8a.pfb></usr/share/texlive/texmf-dist/fonts/t
 ype1/urw/times/utmri8a.pfb>
-Output written on zavrsni.pdf (29 pages, 460896 bytes).
+Output written on zavrsni.pdf (30 pages, 466090 bytes).
 PDF statistics:
- 200 PDF objects out of 1000 (max. 8388607)
- 139 compressed objects within 2 object streams
+ 203 PDF objects out of 1000 (max. 8388607)
+ 141 compressed objects within 2 object streams
  0 named destinations out of 1000 (max. 500000)
  28 words of extra memory for PDF output out of 10000 (max. 10000000)
 
