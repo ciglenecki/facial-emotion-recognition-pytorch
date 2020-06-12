@@ -91,6 +91,9 @@
 \RequirePackage{booktabs}
 \RequirePackage{listings}
 \RequirePackage{tikz,pgfplots}
+\RequirePackage{fancyvrb}
+\RequirePackage{varwidth}
+
 
 
 

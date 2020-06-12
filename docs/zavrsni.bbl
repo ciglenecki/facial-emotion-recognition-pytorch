@@ -1,4 +1,4 @@
-\begin{thebibliography}{4}
+\begin{thebibliography}{5}
 \providecommand{\natexlab}[1]{#1}
 \providecommand{\url}[1]{\texttt{#1}}
 \expandafter\ifx\csname urlstyle\endcsname\relax
@@ -9,6 +9,12 @@
 Numpy array.
 \newblock URL
   \url{https://numpy.org/doc/stable/reference/generated/numpy.array.html}.
+
+\bibitem[Deng et~al.(2009)Deng, Dong, Socher, Li, Li, i
+  Fei-Fei]{imagenet_cvpr09}
+J.~Deng, W.~Dong, R.~Socher, L.-J. Li, K.~Li, i L.~Fei-Fei.
+\newblock {ImageNet: A Large-Scale Hierarchical Image Database}.
+\newblock U \emph{CVPR09}, 2009.
 
 \bibitem[Lucey et~al.(2010)Lucey, Cohn, Kanade, Saragih, Ambadar, i
   Matthews]{ck}

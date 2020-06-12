@@ -54,10 +54,16 @@
 \tableofcontents
 
 \chapter{Uvod}
+
+Većina komunikacije među ljudima je neverbalna. Ton glasa, geste, govor tijela i izrazi lica često vjernije prenose informacije od riječi. Običaji, način govora i kontekst trenutačne situacije govor čine podložnim mnoštvu različitih interpretacija dok je neverbalna komunikacija intuitivnija i univerzalnija. Ljudski dojmovi o drugim ljudima stvoreni su iz naoko suptilnih ali itekako važnih oblika neverbalne komunikacije. Saznanja i objašnjenja kognitivnih procesa iza ovih krajnje uobičajenih pojava još uvijek se aktivno istražuju. 
+
+Strojno učenje se zadnjih godina počelo primjenjivati na probleme poput razumijevanje govora, raspoznavanje objekata na slikama i ostalim područjima koje su za čovjeka intuitivne i lake. Računalni vid kao novija grana znanosti u nekoliko godina naišla je na mnoštvo otkrića i inovacija. Susret sa računalnim vidom događa se gotovo svakodnevno, od kamera i sustava sposobnih za prepoznavanje lica koji su se počeli implementirati od strane mnogih država do personaliziranih filtara za lice popularne na društvenim mrežama. Jedan od takvih izazova računalnog vida je raspoznavanje ljudskih emocija na temelju izraza lica. Iako uporaba ove tehnologije još nije izašla u širu primjenu trenutno već postoje slučajevi gdje se ova tehnologija pokazala korisnom. Automobil s mogućnošću prepoznavanjem emocija može upozoriti vozača kad je umoran ili pod većim nesvjesnim stresom kako ne bi dovodio sebe i druge sudionike u prometu u opasnost. Raspoznavanje emocija nalazi primjeni i u razgovorima za posao. Kvalitetno treniran model objektivniji je od ljudskog ispitivača koji može imati subjektivne predrasude zbog čega u nekim slučajevima model može točnije procijeniti emocije osobe koju se ispituje, rezultirajući u bolji uvid u ponašanje i karakteristike osobe. Nadalje, ovakva se tehnologija može koristiti i u istraživanju tržišta. Mišljenjem korisnika o proizvodima dobivena putem razgovora i anketa često su netočna ili iskrivljena zbog nedostatka spomenute neverbalne komunikacije. Analiza emocija korisnika za vrijeme interakcije s proizvodom puno je reprezentativniji pokazatelj korisnikovog mišljenja. 
+
 **Poreba za prepoznavanjem emocija**
 **što emocije govore**
 **gdje se koristi prepozavanje emocija**
 **korištena metoda za klasifikaciju emcoija**
+
 
 
 %Prijenosnim učenjem moguće je istrenirani model koji može klasificirati ljudske emocije uz određenu točnost, ovisno o pristupu kojeg koristimo prilikom odabira skupa podataka pomoću kojeg treniramo model.
@@ -86,7 +92,7 @@ Slike CK+ podatkovnog skupa slikane su u istom okruženju (ista prostorija u koj
 Rezultati ovog upita su slike veće raznolikosti (različit scenarij i drugačiji kut gledanja) što pridonosi apstrakciji emocije u ukupnom podatkovnom skupu. Dobivene slike ne odgovaraju uvijek nužno zadanom upitu zbog čega je potrebno dodatno provjeriti valjanost pojedine slike. Proces filtriranja objašnjen je u poglavlju \ref{google_npy_filter}
 
 
-\section{Priprema podatkovnih skupova}
+\section{Priprema podatkovnih skupova}\label{priprema_ck}
 \subsection{Priprema Cohn-Kanade podatkovnog skupa}
 \subsubsection{Struktura podataka}
 
@@ -208,7 +214,7 @@ Za daljnje korištenje svaka slika i njezin vektor emocije će pretvorena u nump
 \end{figure}
 
 
-\subsection{Priprema Google podatkovnog skupa}
+\subsection{Priprema Google podatkovnog skupa}\label{priprema_google}
 \subsubsection{Prikupljeni podaci}
 Umjesto preuzimanja jedne po jedne slike korištena je google-images-download skripta \cite{google-images-download} koja preuzima sve moguće slike na temelju zadanog upita. Upiti korišteni za pronalaženje odgovarajućih emocija nalaze se na slici \ref{cb:google_queries} a svi su popraćeni dodatnim "Google search" parametrom koji pretražuje slike samo ljudskih lica. Svaka slika spremljena je u direktoriji čije je ime upit koji je bio korišten prilikom preuzimanje te slike. 
 
@@ -305,7 +311,7 @@ Nakon dodjele vektora emocije za pojedinu sliku potrebno je pretvoriti sliku i v
 
 
 \subsection{Objedinjavanje podatkovnih skupova}
-Nakon obrade CK+ i Google podatkovnog skupa svi .npy podaci bit će spremljeni u direktoriji "ck" ili "Google" ovisno o tome iz kojeg je podatkovnog skupa slika dobivena. Struktura svih .npy podataka prikazana je na slici \ref{pic:npy_structure}. Ovom strukturom moguće je definirati udio svakog podatkovnog skupa koji će biti korišten za treniranje modela.
+Nakon obrade CK+ i Google podatkovnog skupa svi .npy podaci bit će spremljeni u direktoriji "ck" ili "Google" ovisno o tome iz kojeg je podatkovnog skupa slika dobivena. Struktura svih .npy podataka prikazana je na slici \ref{pic:npy_structure}. Ovom strukturom moguće je definirati udio svakog podatkovnog skupa koji će biti korišten za treniranje modela. Poslije podjele u zasebne direktorije potrebno je odvojiti dio .npy podataka u test pod-direktoriji. U njemu će se nalaziti 10\% svih .npy podataka koji će modelu biti neviđeni prilikom treniranja. Tih 10\% .npy podataka koristit će se pri evaluaciji točnosti modela.
 
 
 \begin{figure}[H]
@@ -313,13 +319,21 @@ Nakon obrade CK+ i Google podatkovnog skupa svi .npy podaci bit će spremljeni u
 \begin{Verbatim}[fontsize=\small]
 numpy
 ├── ck
+│   ├── test
+│   │	├── test_slika_i_emocija_0001.npy
+│   │	├── ...
+│   │	└── test_slika_i_emocija_0570.npy
 │   ├── slika_i_emocija_0001.npy
 │   ├── ...
-│   └── slika_i_emocija_5703.npy
+│   └── slika_i_emocija_5133.npy
 └── google
+    ├── test
+    │	├── test_slika_i_emocija_0001.npy
+	│	├── ...
+	│	└── test_slika_i_emocija_0316.npy
     ├── slika_i_emocija_0001.npy
     ├── ...
-    └── slika_i_emocija_3160.npy
+    └── slika_i_emocija_2844.npy
     
 
 \end{Verbatim}
@@ -448,45 +462,114 @@ Funkcija gubitka \engl{Loss function} je funkcija koja govori koliko je neuronsk
 
 \subsection{Treniranje neuronske mreže}
 
-Neuronska mreža predstavlja nelinearnu funkciju koja se sastoji od mnogo parametara. To su spomenuti parametri pojedinog neurona spomenuti na formuli \ref{eq:neuron_z}, težišta neurona $\vect{w}$2 i sklonost neurona $b$. Mijenjanje tih parametra parametra na način da se rezultat funkcije gubitka smanjuje naziva se treniranje. Cilj treniranja je minimizirati gubitak na način da se pronađe lokalni minimum u $n$ dimenzionalnom prostoru, gdje je broj $n$ broj težina u neuronskoj mreži. Metoda pronalaska minimuma zove se spuštanje gradijentom \engl{gradient descent}. Računanje spusta svodi se na izračun derivacije parametra neuronske mreže prema \ref{eq:graident_der} gdje je greška neuronskog sloja $E$, $a$ aktivacijski izlaz  i $w$ težina sloja
+Neuronska mreža predstavlja nelinearnu funkciju koja se sastoji od mnogo parametara. To su spomenuti parametri pojedinog neurona spomenuti na formuli \ref{eq:neuron_z}, težišta neurona $\vect{w}$2 i sklonost neurona $b$. Mijenjanje tih parametra parametra na način da se rezultat funkcije gubitka smanjuje naziva se treniranje. Cilj treniranja je minimizirati gubitak na način da se pronađe lokalni minimum u $n$ dimenzionalnom prostoru, gdje je broj $n$ broj težina u neuronskoj mreži. Metoda pronalaska minimuma zove se spuštanje gradijentom \engl{gradient descent}. Računanje spusta svodi se na izračun derivacije parametra neuronske mreže prema \ref{eq:graident_der} gdje je greška neuronskog sloja $E$, $a$ aktivacijski izlaz  i $w$ težina sloja.
 
 \begin{equation}\label{eq:graident_der}
 	\frac{\partial E}{\partial w} = \frac{\partial E}{\partial a} \cdot \frac{\partial a}{\partial w}
 \end{equation}
 
-Ovom jednadžbom dobiven je smjer negativnog gradijenta koji vodi ka minimumu. Gradient se računa prilikom svake iteracije treniranja, tj. nakon svakog dovođenja slike na ulaz mreže. 
+Ovom jednadžbom dobiven je smjer negativnog gradijenta koji vodi ka minimumu n dimenzionalne plohe. Brzina kojom neuronska mreža konvergira prema minimumu označena sa $lr$ zove se stopa učenja \engl{learning rate}. Gradijent se računa prilikom svake iteracije treniranja, tj. nakon svakog dovođenja slike na ulaz mreže. Izračunati gradijent na sloju $l_i$ pomnožen sa stopom učenja $lr$ povratnom vezom se šalje na prethodni sloj $l_{i-1}$. Sloj $l_{i-1}$ koristiti će dobivenu vrijednost da ažurira svoja težišta sljedećim izračunom:
 
+\begin{equation}\label{eq:gradient_backprop_layer}
+	 w_{l_{i-1}} - lr \frac{\partial E_{l_i}}{\partial w_{l_i}} \rightarrow w_{l_{i-1}}
+\end{equation}
+
+Ovaj postupak naziva se backpropagration i primjenjuje se na sve slojeve neurona u neuronskoj mreži.
 
 ..........
 **stohasitcki ne ide uvijek prema minimumum**
 **nakon svakog ulaza se racuna**
 **lokalni minimum =/= pravi**
 
-
+c
 
 **općenito**2
 **problem treniranja dubokih mreža**	
 **gradient degradation problem**
 
-
+4
 \subsection{Rezidualna neuronska mreža}
 
-\subsection{ResNet 50}
-**probleme koje riješava**
+Problem prilikom treniranja duboke neuronske mreže je mogućnost nestajućeg gradijenta \engl{vanishing gradient} pri ranim neuronskim slojevima mreže. Prilikom backprogragation algoritma sloj $l_i$ ažurirat će svoja težišta danom formulom \ref{eq:gradient_backprop_layer}. Bitno je naglasiti da vrijednost koja će ažurirati njegovo težište $lr \frac{\partial E_{l_n}}{\partial w_{l_n}}$ je gradijent izračunat od svih prethodnih slojeva $l_i+1, ..., l_n$
 
-**kako funckionira**
 
 \subsection{Prijenosno učenje}
-**transfered learning**
 
-**zasto ga koristimo umjesto cijelokupnog treniranja**
+Prijenosno učenje je tehnika u području strojnog gdje je naučenost modela za predviđanje jednog cilja prenesena na predviđanje drugog cilja. Potreba za ovom tehnikom javlja se iz nedovoljno velikog skupa podataka korištenog za treniranje. Zbog toga što podatkovni skup nije dovoljno velik, neuronska mreža neće biti dovoljno trenirana da predviđa emocija za neviđene slike. Unaprijed trenirana neuronska mreža ResNet 50, koja je trenirana na ImageNet podatkovnom skupu \cite{imagenet_cvpr09}, omogućava mreži da od početka prepoznaje bitne značajke neviđene slike. Time je izbjegnuta potreba za treniranjem modela od početka jer su početni neuronski slojevi mreže već dobro naučeni za prepoznavanje bitnih značajki u slici, poput istaknutih objekta i uočljivijih oblika.
 
-**nedostatak labeliranih slika**
+Zadnji slojevi unaprijed trenirane ResNet 50 mreže mogu predviđati 1000 različitih značajki. Broj mogućih klasifikacijskih emocija je 8 zbog čega će biti potrebno dodati zadnji neuronski sloj na postojeću neuronsku mrežu tako da izlaz mreže bude dimenzije 8, a ne 1000 što odgovara broju različitih klasa korištenih u ImageNet podatkovnom skupu. Korištenjem većeg i apstraktnijeg podatkovnog skupa ova se tehnika može izostaviti.
 
 \section{Implementacija treniranja u PyTorch-u}
+U poglavlju \ref{priprema_ck} i \ref{priprema_google} objašnjeno su iz oba podatkovna skupa dobiveni .npy podaci koji sadrže podatke slike i odgovarajućeg vektora emocije te slike. Sljedeći korak je iskoristiti te podatke za treniranje neuronske mreže koja će klasificirati emocije neviđenih slika ljudskih lica.
+
 \subsection{Priprema podataka}
-\subsubsection{Augmentacija slika}
+.npy podatke učitani su iz strukture definirane na \ref{pic:npy_structure}. Parametrima GOOGLE\_TRAIN\_SPLIT i CK\_TRAIN\_SPLIT moguće je kontrolirati koji će udio slika iz pojedinog podatkovnog skupa biti zastupljen u ukupnom skupu za treniranje.
+
+\begin{figure}[H]
+\centering
+\begin{Verbatim}[fontsize=\small]
+GOOGLE_TRAIN_SPLIT = 1
+CK_TRAIN_SPLIT = 1
+\end{Verbatim}
+\caption{Udio .npy podataka pojedinog podatkovnog skupa}
+\label{pic:split_dataset}
+\end{figure}
+\noindent
+Sljedeći korak je implementacija klase Dataset iz PyTorch biblioteke. Stvaranjem klase FERDataset iz klase Dataset poslana su tri argumenta: lokacija .npy podataka i funkcija za transformaciju slika. FERDataset sad ima pristup lokaciji .npy podataka i preko te lokacije će dohvaćati .npy podatke prilikom treniranja.
+
+
+\begin{figure}[H]
+\centering
+
+\begin{Verbatim}[fontsize=\small]
+class FERDataset(Dataset):
+    def __init__(self, filepaths_numpy, transform_image=None):
+        self.filepaths_numpy = filepaths_numpy
+        self.transform_image = transform_image
+\end{Verbatim}
+\caption{Definiranje FERDataset inicijalizacije}
+\label{pic:init_dataset}
+
+\end{figure}
+
+\noindent
+Nakon dohvata .npy podataka preko funkcije \_\_getitem\_\_ potrebno ga je raspakirati u sliku lica i vektor emocije te slike. Ukoliko je zadana transformacija slike ona će se primijeniti nakon raspakiravanja .npy podataka. Više o transformaciji slika bit će rečeno kasnije. 
+
+\begin{figure}[H]
+\centering
+
+\begin{Verbatim}[fontsize=\small]
+def __getitem__(self, idx):
+        name_npy = filepaths_npy(idx)
+        image, emotion = load_npy(name_npy)
+        image = transform(image)
+        return image, emotion
+\end{Verbatim}
+\caption{Pojednostavljeni dohvat i raspakiravanje .npy podataka}
+\label{pic:init_dataset}
+\end{figure}
+
+\subsubsection{Podjela skupa}
+Nakon stvaranja objekta tipa Dataset, u ovom slučaju FERDataset potrebno je taj podatkovni skup podijeliti u skup za treniranje i skup za evaluaciju. Kako je taj posao već napravljen kao što je prikazano na slici \ref{pic:npy_structure} jedino što je potrebno je inicijalizirati zaseban skup za treniranje i evaluaciju kao što je prikazano na sljedećoj slici:
+
+
+\begin{figure}[H]
+\centering
+
+\begin{Verbatim}[fontsize=\small]
+train_dataset = FERDataset(filepaths_numpy=FILEPATHS_NUMPY,
+                     transform_image=transform_image_train)
+test_dataset = FERDataset(filepaths_numpy=FILEPATHS_NUMPY_TEST,
+                          transform_image=transform_image_val)
+\end{Verbatim}
+\caption{Implementacija FERDataset klasa}
+\label{pic:init_dataset}
+\end{figure}
+
 \subsubsection{Transformacija podataka}
+Prije nego što se podaci dobiveni iz "train_dataseta" mogu slobodno koristiti za treniranje neuronske mreže potrebno ih je transformirati u pravilan oblik. 
+\subsubsection{Augmentacija slika}
+
 
 
 \subsection{ResNet 50}
@@ -498,25 +581,25 @@ Ovom jednadžbom dobiven je smjer negativnog gradijenta koji vodi ka minimumu. G
 \chapter{Testiranje/evaluacija}
 
 \chapter{Zaključak}
-Zaključak.
+Korištenjem dva podatkovna skupa i alata PyTorch istrenirani model može do određene točnosti predviđati koju emociju izražava slika ljudskog lica. Uvođenjem dodatnog ručno generiranog Google podatkovnog skupa poboljšana je apstrakcija prepoznavanja emocija koja dopušta modelu da bolje predviđa emocije sa neviđenih slika lica koje nisu slične slikama iz podatkovnog skupa CK+. Točnost predviđanja emocija može biti poboljšana uvođenjem većeg i apstraktnijeg podatkovnog skupa koji sadrži raznolike slike ljudskih lica. 
 
 \bibliography{literatura}
 \bibliographystyle{fer}
 
-\begin{sazetak}
-Sažetak na hrvatskom jeziku.
 
-\kljucnerijeci{Ključne riječi, odvojene zarezima.}
+
+\begin{sazetak}
+Ljudske emocije temeljni dio svih mogućih ljudskih radnji. Treniranjem modela pomoću strojnog učenja koji može klasificirati emocije na temelju slika ljudskih lica otvaraju se mogućnosti za objektivno analiziranje ljudskog ponašanja i razmišljanja u široko primjenjivim situacijama. Uz dva podatkovna skupa ljudskih lica, ResNet 50 mrežu i prijenosnim učenjem ponovno istrenirani model može klasificirati neviđene slike ljudskog lica sa 60\% točnosti.
+
+\kljucnerijeci{strojno učenje, duboko učenje, rezidualne neuronske mreže, emocija, lice}
 \end{sazetak}
 
-
-
 % TODO: Navedite naslov na engleskom jeziku.
-\engtitle{Title}
+\engtitle{Recognizing Emotions From Facial Expressions Using Machine Learning}
 \begin{abstract}
-Abstract.
+Human emotions are the base of all human activities. Training a model by using a machine learning method which can later classify emotions given an image of a human facial expression opens up a possibility for an objective analysis of human behaviour and thought process in diverse situations. With two datasets containing images of human facial expressions, ResNet 50 network and transferred learning method the trained model can classify emotions given an unseen image of human facial expression with an accuracy of 60%
 
-\keywords{Keywords.}
+\keywords{machine learning, deep learning, residual neural network, emotion, face}
 \end{abstract}
 
 \end{document}
