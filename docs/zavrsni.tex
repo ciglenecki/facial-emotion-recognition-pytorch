@@ -26,6 +26,9 @@
 
 %command for vector boldness
 \newcommand{\vect}[1]{\boldsymbol{#1}}
+%\newcommand{\engl}[1]{\textit{#1}}
+%
+%\engl{treast}
 
 \lstset{style=mystyle}
 
@@ -330,27 +333,27 @@ numpy
 Treniranje je proces u kojem model postupno mijenja svoje parametre ne bi li došao do idealnih parametara, čime bi model optimalno služio onome čemu je namijenjen. U slučaju klasifikacije za treniranje je potrebno imati skup podataka nad kojim će se provoditi treniranje i labele tih podataka koje govore klasu podataka. U slučaju klasifikacije emocija, skup podataka nad kojim se trenira su slike ljudskih lica dok je klasa emocija koja je prikazana na pojedinoj sliku. Kad treniranje započne, u model se pošalju podaci za koje model pokušava predvidjeti koje su klase ubačeni podaci. Nakon toga potrebno je usporediti predviđanja klasa koje je stvorio model sa pravim klasa. Pogrešku koju je model napravio prilikom predviđanja potrebno je javiti modelu ne bi li ispravio parametre. Mijenjanjem modela parametra model postaje sve bolji za predviđanje predviđanje rezultata na skupu za treniranje. Bitno je naglasiti da daljnjim treniranjem model ne postaje bolji za općeniti slučaj predviđanja. Treniranjem model se prilagođava podatkovnom skupu za treniranje. Podatkovni skup za treniranje je podskup svih podataka za koje je model namijenjen a to znači da skup za treniranje nije nužno najbolja mjera općenitog slučaja za podatke. 
 
 
-Treniranje modela nakon određenog trenutka može pogoršati sposobnost modela da predviđa klase na općenitom slučaju. Uzrok toga je što treniranjem nakon točke TODO:NAME model ima veću točnost na skupu za treniranje ali točnost na općenitim, neviđenim slučajevima postaje sve manja. Zbog toga je potrebno pronaći optimalan trenutak u kojem treba prekinuti treniranje modela. Prekidanje treniranja modela nije moguće odrediti pomoću točnosti modela na skupu za treniranje jer ta točnost neprestano raste daljnjim treniranjem. Zbog toga je potrebno uvesti validacijski skup koji neće biti korišten prilikom treniranja. Validacijski skup o tom slučaju igra ulogu neviđenih podataka nad kojima se mjeri točnost. Prilikom treniranja točnost nad validacijskim skupom će rasti do točke TODO:ANME. U tom trenutku točnost nad validacijskim skupom će biti maksimalna a daljnjim treniranjem točnost će se smanjivati jer model postaje previše prilagođen skupu za treniranje \textit{(engl. overfitting)}. 
+Treniranje modela nakon određenog trenutka može pogoršati sposobnost modela da predviđa klase na općenitom slučaju. Uzrok toga je što treniranjem nakon točke TODO:NAME model ima veću točnost na skupu za treniranje ali točnost na općenitim, neviđenim slučajevima postaje sve manja. Zbog toga je potrebno pronaći optimalan trenutak u kojem treba prekinuti treniranje modela. Prekidanje treniranja modela nije moguće odrediti pomoću točnosti modela na skupu za treniranje jer ta točnost neprestano raste daljnjim treniranjem. Zbog toga je potrebno uvesti validacijski skup koji neće biti korišten prilikom treniranja. Validacijski skup o tom slučaju igra ulogu neviđenih podataka nad kojima se mjeri točnost. Prilikom treniranja točnost nad validacijskim skupom će rasti do točke TODO:ANME. U tom trenutku točnost nad validacijskim skupom će biti maksimalna a daljnjim treniranjem točnost će se smanjivati jer model postaje previše prilagođen skupu za treniranje \engl{overfitting}. 
 
 TODO: slika - skup podataka  
 **načini treniranja**
 
 \section{Duboke neuronske mreže za analizu slika}
 \subsection{Neuron}
-Neuron je osnovni dio neuronske mreže. Svaki neuron na svoj ulaz prima vektor $x$ vrijednosti za koje neuron predviđa $\hat{y}$ izlaz. Skup $x$ vrijednosti je također pomnožen sa vektorom $w$ koji predstavlja težine \textit{(engl. weights)} i zbrojen sa vrijednošću $b$ koja predstavlja sklonost \textit{(engl. bias)}
+Neuron je osnovni dio neuronske mreže. Svaki neuron na svoj ulaz prima vektor $x$ vrijednosti za koje neuron predviđa $\hat{y}$ izlaz. Skup $x$ vrijednosti je također pomnožen sa vektorom $w$ koji predstavlja težine \engl{weights} i zbrojen sa vrijednošću $b$ koja predstavlja sklonost \engl{bias}
 
 
-\begin{equation}\label{eq:neuron}
+\begin{equation}\label{eq:neuron_z}
 	\vect{z}=w_1x_1+w_2x_2+...+w_nx_n=\vect{w^{T}} \cdot \vect{x}
 \end{equation}
 
-\begin{equation}\label{eq:neuron}
+\begin{equation}\label{eq:neuron_func}
 	\hat{y} = g(vect{z})
 \end{equation}
 
 \subsubsection{Aktivacijska funckija}
 
-Nakon zbrajanja kroz neuron izlaz je potrebno provesti kroz aktivacijsku funkciju određuje koliko je signal tog neurona bio zastupljen u ukupnom izlazu, tj. koliko je "aktiviran". Cilj koji se postiže tom funkcijom je da ukupan izlaz neurona bude između vrijednosti 0 i 1. Dakle to su funkcije za koje vrijedi \ref{eq:activation_fun_general}. Primjer takvih funckija je sigmoid prikazan na slici \ref{fig:sigmoid} i ispravljač \textit{(ReLU - engl. Rectifier)} prikazan na slici \ref{fig:relu}
+Nakon zbrajanja kroz neuron izlaz je potrebno provesti kroz aktivacijsku funkciju određuje koliko je signal tog neurona bio zastupljen u ukupnom izlazu, tj. koliko je "aktiviran". Cilj koji se postiže tom funkcijom je da ukupan izlaz neurona bude između vrijednosti 0 i 1. Dakle to su funkcije za koje vrijedi \ref{eq:activation_fun_general}. Primjer takvih funckija je sigmoid prikazan na slici \ref{fig:sigmoid} i rektifikacijska funckija \textit{(ReLU - engl. Rectifier)} prikazana na slici \ref{fig:relu}. Prilikom aktivacije neurona koristiti će se rektifikacijska funckija
 
 \begin{equation}\label{eq:activation_fun_general}
 	f:\mathbb{R} \rightarrow [0,1]
@@ -411,7 +414,7 @@ Nakon zbrajanja kroz neuron izlaz je potrebno provesti kroz aktivacijsku funkcij
 			   \legend{$f(x)$,$f'(x)$}
 			\end{axis}
 			\end{tikzpicture}
-		\caption{ReLU}
+		\caption{Linearna rektifikacijska funkcija}
 		\label{fig:relu}
 \end{figure}
 
@@ -420,14 +423,44 @@ Nakon zbrajanja kroz neuron izlaz je potrebno provesti kroz aktivacijsku funkcij
 Sloj neurona sastoji se od skupa neurona. Sloj neurona sastoji se od vektora $a$ koji označava aktivaciju sloja neurona. U slučaju prvog sloja vrijedi $a = x$. Račun izlaza sloja neurona računa se slično kao i kod pojedinog neurona. Za svaki sloj neurona $l$ izlaz $z$ jednak je umnošku prethodne aktivacije $a_{l-1}$ sa trenutnim težinama sloja neurona $w_l$ zbrojen sa sklonošću $b_l$
 
 
-
 \begin{equation}\label{eq:neuron_layer}
 	\boldsymbol{\vect{z_l}} = \vect{w_l} \cdot \vect{a_{l-1}} + \vect{b_l}
 \end{equation}
 
-\begin{equation}\label{eq:neuron}
+\begin{equation}\label{eq:neuron_layer_func}
 	\hat{y} = g(z)
 \end{equation}
+
+\subsection{Neuronska mreža}
+
+
+
+Neuronska mreža sastoji se od više slojeva neurona koji su međusobno povezani. Slojevi su povezani tako da je svaki neuronski sloj razine $l$ povezan sa svakim neuronskim slojem razine $l+1$. Povezani su na način da se izlaz neuronskog sloja $l$ dovodi na ulaz neuronskog sloja $l+1$. Ovaj algoritam prijenosa podataka s jednog sloja na drugi zove se \textit{feedforward} algoritam. TODO: slika slojeva. Slojevi se dijele u tri različite grupe: ulazni, skriveni i izlazni sloj. Ulazni sloj je prvi sloj na koji se dovodi ulazni podataka, slika. Izlazni sloj je sloj koji na izlazu daje klasifikaciju ulazne slike, u ovom slučaju vektor predviđenih emocija. Skriveni slojevi su među-slojevi koji obrađuju podatke prethodnog izlaznog sloja neurona. Što je neuronski sloj dublje razine to je apstrakcija podataka koju on računa veća. Izlaz skrivenog sloja poslat će se na ulaz sljedećeg skrivenog sloja a tim prijelazom apstrakcija podataka će biti uvećana. Uloga svakog neuronskog sloja je da obrađuje podatke na razini apstrakcije definiranje njegovom dubinom. Većim brojem slojeva neurona stvara se dublja neuronska mreža koja može računati na većoj razini apstrakcije. Interpretacija razine apstrakcije u slučaju slika svodi se na promatranje različitih djelova slike različite veličine. Iako se promatraju različiti dijelovi slike, međuzavisnost neuronskih slojeva omogućava neuronskoj mreži da zna koje je svojstvo slike proizašlo iz prethodnog svojstva slike. Primjer bi bio pronalaženje ruba usnice i ruba oka na slici. Iako ta dva rubovi izgledom mogu biti slični bitna je spoznaja da jedan rub proizlazi iz slike usnice a drugi iz slike oka. TODO: slika usnica oko, sličan rub.
+
+
+\subsection{Funkcija gubitka}
+Funkcija gubitka \engl{Loss function} je funkcija koja govori koliko je neuronska mreža daleko ili blizu rezultata koji se želi postići. Rezultat funkcije gubitka bit će pogreška koju je mreža napravila prilikom predviđanja vektora emocije određene slike. Taj rezultat bit će korišten za ispravljanje parametara neuronske mreže. Funkcija gubitka treba ukazati na kojim je predviđanjima neuronska mreža pogriješila i za koliko. Križni entropijski gubitak \engl{Cross Entropy Loss} je funkcija gubitka dana sa \ref{eq:cross_entropy} koja će biti korištena prilikom određivanja gubitka. Funkcija prima dva parametra, ispravna vrijednost označenu kao vektor $x$ je i predviđenu vrijednost označenu kao vektor $y$. U slučaju predviđanja emocija $x$ je stvaran vektor emocije za pojedinu sliku dok je $y$ previđen vektor emocije stvoren kao izlaz neuronske mreže. Vektor $w$ predstavlja težišta za pojedini element vektora $x$ i $y$. Elementi vektora $w$ su $w_1, w_2, ..., w_n$ gdje svaki $w_i$ predstavlja koeficijent koji će biti pomnožen sa rezultatom gubitka. Razlog uvođenja težišta je neravnomjerna zastupljenost klasa u podatkovnom skupu za treniranje. Klase s manjim brojem uzoraka imat će veće težište prilikom računanja gubitka i samim time će biti "bitnije" prilikom treniranja. Kazna pogreške predviđanja za tu klasu tj. emociju bit će veća nego u slučaju ne korištenja težišta.
+
+\begin{equation}\label{eq:cross_entropy}
+	CrossEntropyWeighted\left(\vect{x}, \vect{y},\vect{w}\right) =
+		-\sum_i w_i \left( x_i log\left(y_i \right)\right)
+\end{equation}
+
+\subsection{Treniranje neuronske mreže}
+
+Neuronska mreža predstavlja nelinearnu funkciju koja se sastoji od mnogo parametara. To su spomenuti parametri pojedinog neurona spomenuti na formuli \ref{eq:neuron_z}, težišta neurona $\vect{w}$2 i sklonost neurona $b$. Mijenjanje tih parametra parametra na način da se rezultat funkcije gubitka smanjuje naziva se treniranje. Cilj treniranja je minimizirati gubitak na način da se pronađe lokalni minimum u $n$ dimenzionalnom prostoru, gdje je broj $n$ broj težina u neuronskoj mreži. Metoda pronalaska minimuma zove se spuštanje gradijentom \engl{gradient descent}. Računanje spusta svodi se na izračun derivacije parametra neuronske mreže prema \ref{eq:graident_der} gdje je greška neuronskog sloja $E$, $a$ aktivacijski izlaz  i $w$ težina sloja
+
+\begin{equation}\label{eq:graident_der}
+	\frac{\partial E}{\partial w} = \frac{\partial E}{\partial a} \cdot \frac{\partial a}{\partial w}
+\end{equation}
+
+Ovom jednadžbom dobiven je smjer negativnog gradijenta koji vodi ka minimumu. Gradient se računa prilikom svake iteracije treniranja, tj. nakon svakog dovođenja slike na ulaz mreže. 
+
+
+..........
+**stohasitcki ne ide uvijek prema minimumum**
+**nakon svakog ulaza se racuna**
+**lokalni minimum =/= pravi**
 
 
 

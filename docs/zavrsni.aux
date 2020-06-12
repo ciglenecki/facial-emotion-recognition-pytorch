@@ -30,7 +30,7 @@
 \citation{google-images-download}
 \@writefile{toc}{\contentsline {subsubsection}{Spremanje slike i vektora emocije u .npy podatak}{7}\protected@file@percent }
 \newlabel{self:npy_save}{{2.4.1}{7}}
-\newlabel{fig:npy_array}{{\caption@xref {fig:npy_array}{ on input line 193}}{7}}
+\newlabel{fig:npy_array}{{\caption@xref {fig:npy_array}{ on input line 196}}{7}}
 \@writefile{lof}{\contentsline {figure}{\numberline {2.5}{\ignorespaces .npy podatak\relax }}{7}\protected@file@percent }
 \@writefile{toc}{\contentsline {subsection}{\numberline {2.4.2}Priprema Google podatkovnog skupa}{7}\protected@file@percent }
 \@writefile{toc}{\contentsline {subsubsection}{Prikupljeni podaci}{7}\protected@file@percent }
@@ -53,34 +53,39 @@
 \@writefile{lot}{\addvspace {10\p@ }}
 \@writefile{toc}{\contentsline {section}{\numberline {3.1}Duboke neuronske mre\IeC {\v z}e za analizu slika}{13}\protected@file@percent }
 \@writefile{toc}{\contentsline {subsection}{\numberline {3.1.1}Neuron}{13}\protected@file@percent }
-\newlabel{eq:neuron}{{3.1}{13}}
-\newlabel{eq:neuron}{{3.2}{13}}
+\newlabel{eq:neuron_z}{{3.1}{13}}
+\newlabel{eq:neuron_func}{{3.2}{13}}
 \@writefile{toc}{\contentsline {subsubsection}{Aktivacijska funckija}{13}\protected@file@percent }
 \newlabel{eq:activation_fun_general}{{3.3}{13}}
 \@writefile{lof}{\contentsline {figure}{\numberline {3.1}{\ignorespaces Sigmoid\relax }}{13}\protected@file@percent }
 \newlabel{fig:sigmoid}{{3.1}{13}}
-\@writefile{lof}{\contentsline {figure}{\numberline {3.2}{\ignorespaces ReLU\relax }}{14}\protected@file@percent }
+\@writefile{lof}{\contentsline {figure}{\numberline {3.2}{\ignorespaces Linearna rektifikacijska funkcija\relax }}{14}\protected@file@percent }
 \newlabel{fig:relu}{{3.2}{14}}
 \@writefile{toc}{\contentsline {subsection}{\numberline {3.1.2}Sloj neurona}{14}\protected@file@percent }
 \newlabel{eq:neuron_layer}{{3.4}{14}}
-\newlabel{eq:neuron}{{3.5}{14}}
-\@writefile{toc}{\contentsline {subsection}{\numberline {3.1.3}Rezidualna neuronska mre\IeC {\v z}a}{14}\protected@file@percent }
-\@writefile{toc}{\contentsline {subsection}{\numberline {3.1.4}ResNet 50}{14}\protected@file@percent }
-\@writefile{toc}{\contentsline {subsection}{\numberline {3.1.5}Prijenosno u\IeC {\v c}enje}{14}\protected@file@percent }
-\@writefile{toc}{\contentsline {section}{\numberline {3.2}Implementacija treniranja u PyTorch-u}{15}\protected@file@percent }
-\@writefile{toc}{\contentsline {subsection}{\numberline {3.2.1}Priprema podataka}{15}\protected@file@percent }
-\@writefile{toc}{\contentsline {subsubsection}{Augmentacija slika}{15}\protected@file@percent }
-\@writefile{toc}{\contentsline {subsubsection}{Transformacija podataka}{15}\protected@file@percent }
-\@writefile{toc}{\contentsline {subsection}{\numberline {3.2.2}ResNet 50}{15}\protected@file@percent }
-\@writefile{toc}{\contentsline {subsection}{\numberline {3.2.3}Adam optimizator}{15}\protected@file@percent }
-\@writefile{toc}{\contentsline {subsection}{\numberline {3.2.4}Funckija gubitka}{15}\protected@file@percent }
-\@writefile{toc}{\contentsline {subsubsection}{kri\IeC {\v z}ni entropijski gubitak}{15}\protected@file@percent }
-\@writefile{toc}{\contentsline {subsection}{\numberline {3.2.5}Treniranje}{15}\protected@file@percent }
-\@writefile{toc}{\contentsline {chapter}{\numberline {4}Testiranje/evaluacija}{16}\protected@file@percent }
+\newlabel{eq:neuron_layer_func}{{3.5}{14}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {3.1.3}Neuronska mre\IeC {\v z}a}{14}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {3.1.4}Funkcija gubitka}{15}\protected@file@percent }
+\newlabel{eq:cross_entropy}{{3.6}{15}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {3.1.5}Treniranje neuronske mre\IeC {\v z}e}{15}\protected@file@percent }
+\newlabel{eq:graident_der}{{3.7}{16}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {3.1.6}Rezidualna neuronska mre\IeC {\v z}a}{16}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {3.1.7}ResNet 50}{16}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {3.1.8}Prijenosno u\IeC {\v c}enje}{16}\protected@file@percent }
+\@writefile{toc}{\contentsline {section}{\numberline {3.2}Implementacija treniranja u PyTorch-u}{17}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {3.2.1}Priprema podataka}{17}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsubsection}{Augmentacija slika}{17}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsubsection}{Transformacija podataka}{17}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {3.2.2}ResNet 50}{17}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {3.2.3}Adam optimizator}{17}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {3.2.4}Funckija gubitka}{17}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsubsection}{kri\IeC {\v z}ni entropijski gubitak}{17}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {3.2.5}Treniranje}{17}\protected@file@percent }
+\@writefile{toc}{\contentsline {chapter}{\numberline {4}Testiranje/evaluacija}{18}\protected@file@percent }
 \@writefile{lof}{\addvspace {10\p@ }}
 \@writefile{lot}{\addvspace {10\p@ }}
 \bibdata{literatura}
-\@writefile{toc}{\contentsline {chapter}{\numberline {5}Zaklju\IeC {\v c}ak}{17}\protected@file@percent }
+\@writefile{toc}{\contentsline {chapter}{\numberline {5}Zaklju\IeC {\v c}ak}{19}\protected@file@percent }
 \@writefile{lof}{\addvspace {10\p@ }}
 \@writefile{lot}{\addvspace {10\p@ }}
 \bibcite{numpy_array}{{1}{}{{num}}{{}}}
@@ -88,4 +93,4 @@
 \bibcite{one_hot_encoding}{{3}{}{{rakshithvasudev}}{{}}}
 \bibcite{google-images-download}{{4}{}{{Vasa}}{{}}}
 \bibstyle{fer}
-\@writefile{toc}{\contentsline {chapter}{Literatura}{18}\protected@file@percent }
+\@writefile{toc}{\contentsline {chapter}{Literatura}{20}\protected@file@percent }
