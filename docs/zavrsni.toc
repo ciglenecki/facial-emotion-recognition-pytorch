@@ -33,13 +33,13 @@
 \contentsline {subsection}{\numberline {3.2.1}Priprema podataka}{24}% 
 \contentsline {subsubsection}{Podjela skupa}{25}% 
 \contentsline {subsubsection}{Transformacija slike}{26}% 
-\contentsline {subsubsection}{Augmentacija slike}{27}% 
+\contentsline {subsubsection}{Augmentacija slike}{26}% 
 \contentsline {subsection}{\numberline {3.2.2}ResNet 50}{28}% 
 \contentsline {subsection}{\numberline {3.2.3}Hiperparametri}{28}% 
 \contentsline {subsubsection}{Epoha}{28}% 
 \contentsline {subsubsection}{Veli\IeC {\v c}ina serija}{28}% 
-\contentsline {subsubsection}{Optimizator}{29}% 
-\contentsline {chapter}{\numberline {4}Evaluacija}{30}% 
-\contentsline {subsection}{\numberline {4.0.1}Konfuzijska matrica}{31}% 
-\contentsline {chapter}{\numberline {5}Zaklju\IeC {\v c}ak}{32}% 
-\contentsline {chapter}{Literatura}{33}% 
+\contentsline {subsubsection}{Optimizator}{28}% 
+\contentsline {chapter}{\numberline {4}Evaluacija}{29}% 
+\contentsline {subsection}{\numberline {4.0.1}Konfuzijska matrica}{30}% 
+\contentsline {chapter}{\numberline {5}Zaklju\IeC {\v c}ak}{31}% 
+\contentsline {chapter}{Literatura}{32}% 

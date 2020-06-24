@@ -94,7 +94,7 @@
 \RequirePackage{tikz,pgfplots}
 \RequirePackage{fancyvrb}
 \RequirePackage{varwidth}
-\RequirePackage{todonotes}
+\RequirePackage[textsize=scriptsize]{todonotes}
 \RequirePackage{mathtools}
 
 

@@ -653,8 +653,9 @@ Prijenosno učenje je tehnika u području strojnog gdje je naučenost modela za 
 Zadnji slojevi unaprijed trenirane ResNet 50 mreže mogu predviđati 1000 različitih značajki. Broj mogućih klasifikacijskih emocija je 8 zbog čega će biti potrebno dodati zadnji neuronski sloj na postojeću neuronsku mrežu tako da izlaz mreže bude dimenzije 8, a ne 1000 što odgovara broju različitih klasa korištenih u ImageNet podatkovnom skupu. Korištenjem većeg i apstraktnijeg podatkovnog skupa ova se tehnika može izostaviti.
 
 
-\section{Implementacija treniranja u PyTorch-u}
+\section{Implementacija treniranja u PyTorch-u} \todo{opisati detaljnije pytorch}
 U poglavlju \ref{priprema_ck} i \ref{priprema_google} objašnjeno su iz oba podatkovna skupa dobiveni .npy podaci koji sadrže podatke slike i odgovarajućeg vektora emocije te slike. Sljedeći korak je iskoristiti te podatke za treniranje neuronske mreže koja će klasificirati emocije neviđenih slika ljudskih lica.
+
 
 \subsection{Priprema podataka}
 .npy podatke učitani su iz strukture definirane na \ref{pic:npy_structure}. Parametrima GOOGLE\_TRAIN\_SPLIT i CK\_TRAIN\_SPLIT moguće je kontrolirati koji će udio slika iz pojedinog podatkovnog skupa biti zastupljen u ukupnom skupu za treniranje.
@@ -720,21 +721,15 @@ test_dataset = FERDataset(filepaths_numpy=FILEPATHS_NUMPY_TEST,
 \label{pic:init_dataset}
 \end{figure}
 
-
-\begin{figure}[H]
-	\centering
-	\includegraphics[width=\linewidth, height=0.3\paperheight, keepaspectratio]{fullset.png}
-	\caption{Vizualni prikaz cijelog podatkovnog skupa}
-	\label{fullset}
-\end{figure}
-
-
+\todo{piechar slika}
 \begin{figure}[H]
 	\centering
 	\includegraphics[width=\linewidth, height=0.3\paperheight, keepaspectratio]{splitset.png}
 	\caption{Vizualni prikaz podijeljenog podatkovnog skupa}
 	\label{splitset}
 \end{figure}
+
+
 \subsubsection{Transformacija slike}
 
 Prije nego što se podaci dobiveni iz "train\_dataseta" mogu slobodno koristiti za treniranje neuronske mreže potrebno ih je transformirati u pravilan oblik. Sliku ljudskog lica potrebno je pretvoriti u PyTorch Tensor \cite{pytorch_tensor}. Pretvorbom podatka u ovaj tip omogućava PyTorch-u nastavlja koristiti ovaj podataka u svojoj domeni uz moguće korištenje PyTorch funckija. Korak prije slanja podataka slike u model je normalizacija. Kako se koristi unaprijed trenirana neuronska mreža ResNet 50 potrebno je provesti normalizaciju koja je matematički ispravna nad skupom koji je korišten prilikom treniranja. Ta normalizacija dana je od strane ImageNet-a čiji je podatkovni skup korišten prilikom treniranja ResNet 50 neuronske mreže \cite{normalize_imagenet} a ona glasi:
@@ -751,7 +746,7 @@ transforms.Normalize(
 \label{pic:init_dataset}
 \end{figure}
 
-\subsubsection{Augmentacija slike}
+\subsubsection{Augmentacija slike} \todo{počistiti strukturu poglavlja}
 
 Dodatne i opcionalne transformacije su transformacije koje povećavaju ukupnu apstraktnost podataka \engl{data augmentation}. Ove transformacije igraju ulogu simuliranja raznolikijeg podatkovnog skupa na način da rade manje promjene na pojedinoj slici. Primjerice, nasumično povećavanje svjetline slike ili nasumično okretanje slike za kut $\alpha$. Na ovaj način model će naučiti klasificirati slike i u okolnostima stvorenim okolnostima gdje je slika svjetlija ili blago zarotirana čime se proširuje primjena modela na veći skup različitih slika.
 
@@ -799,6 +794,10 @@ resnet50 = models.resnet50(pretrained=True,  progress=True)
 \end{figure}
 
 \subsection{Hiperparametri}
+\todo{navesti ostale hiperparametre:
+stopa učenja\\
+arhitektura mreže\\
+loss funkcija}
 \subsubsection{Epoha}
 Broj epoha \engl{epoch} je broj koji predstavlja koji će se puta treniranje izvršiti nad cijelim skupom za treniranje. Odabrana vrijednost je 100. 
 \subsubsection{Veličina serija}
@@ -812,6 +811,14 @@ Optimizator koji će utjecati na mijenjanje težišta neurona prilikom backpropa
 %\subsection{Treniranje}
 
 \chapter{Evaluacija}
+
+\textcolor{red}{Opisati postupak evaluacija}\\
+\textcolor{red}{Opisati prestanak treniranja}\\
+\textcolor{red}{Opisati spremanje modela}\\
+\textcolor{red}{Opisati razlike  Ck+ vs. CK+ Google} \\
+\textcolor{red}{Generirati sliku konfuzijske matrice (podjeliti sa najvećim brojem prije toga}\\
+\textcolor{red}{Opisati razlike  Ck+ vs. CK+ Google} 
+
 
 \begin{figure}[H]
 	\centering
