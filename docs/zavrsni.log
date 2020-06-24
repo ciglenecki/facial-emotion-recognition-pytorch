@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.14159265-2.6-1.40.20 (TeX Live 2019/Debian) (preloaded format=pdflatex 2020.5.24)  12 JUN 2020 22:36
+This is pdfTeX, Version 3.14159265-2.6-1.40.20 (TeX Live 2019/Debian) (preloaded format=pdflatex 2020.5.24)  24 JUN 2020 03:54
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
@@ -871,6 +871,71 @@ Package: varwidth 2009/03/30 ver 0.92;  Variable-width minipages
 \@vwid@loff=\dimen272
 \@vwid@roff=\dimen273
 )
+(/usr/share/texlive/texmf-dist/tex/latex/todonotes/todonotes.sty
+Package: todonotes 2019/01/24 v1.1.2 Todonotes source and documentation.
+Package: todonotes 2018/11/22
+
+(/usr/share/texlive/texmf-dist/tex/latex/xkeyval/xkeyval.sty
+Package: xkeyval 2014/12/03 v2.7a package option processing (HA)
+
+(/usr/share/texlive/texmf-dist/tex/generic/xkeyval/xkeyval.tex
+(/usr/share/texlive/texmf-dist/tex/generic/xkeyval/xkvutils.tex
+\XKV@toks=\toks44
+\XKV@tempa@toks=\toks45
+)
+\XKV@depth=\count158
+File: xkeyval.tex 2014/12/03 v2.7a key=value parser (HA)
+))
+(/usr/share/texlive/texmf-dist/tex/generic/pgf/frontendlayer/tikz/libraries/tik
+zlibrarypositioning.code.tex
+File: tikzlibrarypositioning.code.tex 2019/05/09 v3.1.3 (3.1.3)
+)
+(/usr/share/texlive/texmf-dist/tex/generic/pgf/frontendlayer/tikz/libraries/tik
+zlibraryshadows.code.tex
+File: tikzlibraryshadows.code.tex 2019/05/09 v3.1.3 (3.1.3)
+
+(/usr/share/texlive/texmf-dist/tex/generic/pgf/frontendlayer/tikz/libraries/tik
+zlibraryfadings.code.tex
+File: tikzlibraryfadings.code.tex 2019/05/09 v3.1.3 (3.1.3)
+
+(/usr/share/texlive/texmf-dist/tex/generic/pgf/libraries/pgflibraryfadings.code
+.tex
+File: pgflibraryfadings.code.tex 2019/05/09 v3.1.3 (3.1.3)
+))) (/usr/share/texlive/texmf-dist/tex/latex/tools/calc.sty
+Package: calc 2017/05/25 v4.3 Infix arithmetic (KKT,FJ)
+\calc@Acount=\count159
+\calc@Bcount=\count160
+\calc@Adimen=\dimen274
+\calc@Bdimen=\dimen275
+\calc@Askip=\skip47
+\calc@Bskip=\skip48
+LaTeX Info: Redefining \setlength on input line 80.
+LaTeX Info: Redefining \addtolength on input line 81.
+\calc@Ccount=\count161
+\calc@Cskip=\skip49
+)
+\c@@todonotes@numberoftodonotes=\count162
+)
+(/usr/share/texlive/texmf-dist/tex/latex/mathtools/mathtools.sty
+Package: mathtools 2018/01/08 v1.21 mathematical typesetting tools
+
+(/usr/share/texlive/texmf-dist/tex/latex/mathtools/mhsetup.sty
+Package: mhsetup 2017/03/31 v1.3 programming setup (MH)
+)
+LaTeX Info: Thecontrolsequence`\('isalreadyrobust on input line 129.
+LaTeX Info: Thecontrolsequence`\)'isalreadyrobust on input line 129.
+LaTeX Info: Thecontrolsequence`\['isalreadyrobust on input line 129.
+LaTeX Info: Thecontrolsequence`\]'isalreadyrobust on input line 129.
+\g_MT_multlinerow_int=\count163
+\l_MT_multwidth_dim=\dimen276
+\origjot=\skip50
+\l_MT_shortvdotswithinadjustabove_dim=\dimen277
+\l_MT_shortvdotswithinadjustbelow_dim=\dimen278
+\l_MT_above_intertext_sep=\dimen279
+\l_MT_below_intertext_sep=\dimen280
+\l_MT_above_shortintertext_sep=\dimen281
+\l_MT_below_shortintertext_sep=\dimen282
+)
 (/usr/share/texlive/texmf-dist/tex/latex/tocbibind/tocbibind.sty
 Package: tocbibind 2010/10/13 v1.5k extra ToC listings
 Package tocbibind Info: The document has chapter divisions on input line 50.
@@ -883,18 +948,27 @@ Package: times 2005/04/12 PSNFSS-v9.2a (SPQR)
 )
 (/usr/share/texlive/texmf-dist/tex/latex/natbib/natbib.sty
 Package: natbib 2010/09/13 8.31b (PWD, AO)
-\bibhang=\skip47
-\bibsep=\skip48
+\bibhang=\skip51
+\bibsep=\skip52
 LaTeX Info: Redefining \cite on input line 694.
-\c@NAT@ctr=\count158
+\c@NAT@ctr=\count164
 )
-\listindentation=\dimen274
+\listindentation=\dimen283
 )
 
 LaTeX Warning: Unused global option(s):
     [pstricks].
 
 (./zavrsni.aux
+
+LaTeX Warning: Label `pic:ck_example' multiply defined.
+
+
+LaTeX Warning: Label `fig:npy_array' multiply defined.
+
+
+LaTeX Warning: Label `fig:npy_array' multiply defined.
+
 
 LaTeX Warning: Label `pic:init_dataset' multiply defined.
 
@@ -968,17 +1042,17 @@ File: t1ptm.fd 2001/06/04 font definitions for T1/ptm.
 
 (/usr/share/texlive/texmf-dist/tex/context/base/mkii/supp-pdf.mkii
 [Loading MPS to PDF converter (version 2006.09.02).]
-\scratchcounter=\count159
-\scratchdimen=\dimen275
+\scratchcounter=\count165
+\scratchdimen=\dimen284
 \scratchbox=\box48
-\nofMPsegments=\count160
-\nofMParguments=\count161
-\everyMPshowfont=\toks44
-\MPscratchCnt=\count162
-\MPscratchDim=\dimen276
-\MPnumerator=\count163
-\makeMPintoPDFobject=\count164
-\everyMPtoPDFconversion=\toks45
+\nofMPsegments=\count166
+\nofMParguments=\count167
+\everyMPshowfont=\toks46
+\MPscratchCnt=\count168
+\MPscratchDim=\dimen285
+\MPnumerator=\count169
+\makeMPintoPDFobject=\count170
+\everyMPtoPDFconversion=\toks47
 ) (/usr/share/texlive/texmf-dist/tex/latex/oberdiek/epstopdf-base.sty
 Package: epstopdf-base 2016/05/15 v2.6 Base part for package epstopdf
 
@@ -1008,7 +1082,7 @@ Package caption Info: Begin \AtBeginDocument code.
 Package caption Info: float package is loaded.
 Package caption Info: listings package is loaded.
 Package caption Info: End \AtBeginDocument code.
-\c@lstlisting=\count165
+\c@lstlisting=\count171
 
 ABD: EveryShipout initializing macros
 
@@ -1016,6 +1090,12 @@ Package pgfplots Warning: running in backwards compatibility mode (unsuitable t
 ick labels; missing features). Consider writing \pgfplotsset{compat=1.16} into 
 your preamble.
  on input line 33.
+
+
+Package todonotes Warning: The length marginparwidth is less than 2cm and will 
+most likely cause issues with the appearance of inserted todonotes. The issue c
+an be solved by adding a line like \setlength {\marginparwidth }{2cm} prior to 
+loading the todonotes package. on input line 33.
 
 LaTeX Font Info:    Try loading font information for T1+phv on input line 44.
 (/usr/share/texlive/texmf-dist/tex/latex/psnfss/t1phv.fd
@@ -1059,74 +1139,180 @@ LaTeX Font Info:    Font shape `T1/ptm/bx/n' in size <12> not available
 Poglavlje 1.
 [1
 
-] [2]
+]
 Poglavlje 2.
 LaTeX Font Info:    Font shape `T1/ptm/bx/n' in size <17.28> not available
-(Font)              Font shape `T1/ptm/b/n' tried instead on input line 74.
+(Font)              Font shape `T1/ptm/b/n' tried instead on input line 69.
 
-Overfull \hbox (1.93619pt too wide) in paragraph at lines 79--80
+Overfull \hbox (1.93619pt too wide) in paragraph at lines 74--75
 \T1/ptm/m/n/12 Cohn-Kanade po-dat-kovni skup sas-toji se od 593 sek-venci slika
  od 123 su-bjekta (osoba).
  []
 
-[3
+<lib/pics/ck_example.png, id=55, 642.4pt x 491.8375pt>
+File: lib/pics/ck_example.png Graphic file (type png)
+<use lib/pics/ck_example.png>
+Package pdftex.def Info: lib/pics/ck_example.png  used on input line 77.
+(pdftex.def)             Requested size: 331.12886pt x 253.52052pt.
+LaTeX Font Info:    Font shape `T1/ptm/bx/n' in size <10.95> not available
+(Font)              Font shape `T1/ptm/b/n' tried instead on input line 78.
+[2
 
 ]
-<lib/pics/2020-06-08-22-16-22.jpeg, id=37, 673.01437pt x 678.28406pt>
+<lib/pics/2020-06-08-22-16-22.jpeg, id=60, 673.01437pt x 678.28406pt>
 File: lib/pics/2020-06-08-22-16-22.jpeg Graphic file (type jpg)
 <use lib/pics/2020-06-08-22-16-22.jpeg>
 Package pdftex.def Info: lib/pics/2020-06-08-22-16-22.jpeg  used on input line 
-85.
-(pdftex.def)             Requested size: 412.56497pt x 415.80193pt.
-LaTeX Font Info:    Font shape `T1/ptm/bx/n' in size <10.95> not available
-(Font)              Font shape `T1/ptm/b/n' tried instead on input line 86.
- [4 <./lib/pics/2020-06-08-22-16-22.jpeg>] [5] [6] [7]
-<lib/pics/numpy_slika_emocija.png, id=55, 803.0pt x 335.2525pt>
+87.
+(pdftex.def)             Requested size: 251.53767pt x 253.5072pt.
+ [3 <./lib/pics/ck_example.png (PNG copy)>] [4 <./lib/pics/2020-06-08-22-16-22.
+jpeg>] [5] [6]
+<lib/pics/numpy_slika_emocija.png, id=78, 803.0pt x 335.2525pt>
 File: lib/pics/numpy_slika_emocija.png Graphic file (type png)
 <use lib/pics/numpy_slika_emocija.png>
 Package pdftex.def Info: lib/pics/numpy_slika_emocija.png  used on input line 2
-03.
-(pdftex.def)             Requested size: 206.28249pt x 86.12003pt.
+06.
+(pdftex.def)             Requested size: 206.27551pt x 86.12003pt.
 LaTeX Font Info:    Font shape `T1/ptm/bx/n' in size <10> not available
-(Font)              Font shape `T1/ptm/b/n' tried instead on input line 204.
-<lib/pics/numpy_imgdata_emo.png, id=57, 803.0pt x 200.75pt>
+(Font)              Font shape `T1/ptm/b/n' tried instead on input line 207.
+<lib/pics/numpy_imgdata_emo.png, id=80, 803.0pt x 200.75pt>
 File: lib/pics/numpy_imgdata_emo.png Graphic file (type png)
 <use lib/pics/numpy_imgdata_emo.png>
-Package pdftex.def Info: lib/pics/numpy_imgdata_emo.png  used on input line 208
+Package pdftex.def Info: lib/pics/numpy_imgdata_emo.png  used on input line 211
 .
-(pdftex.def)             Requested size: 206.28249pt x 51.56886pt.
+(pdftex.def)             Requested size: 206.27551pt x 51.56886pt.
 
-Overfull \hbox (2.28003pt too wide) in paragraph at lines 201--211
-[][] [] 
- []
-
-
-Overfull \hbox (1.34674pt too wide) in paragraph at lines 217--218
+Overfull \hbox (1.34674pt too wide) in paragraph at lines 221--222
 \T1/ptm/m/n/12 Umjesto pre-uzi-ma-nja jedne po jedne slike ko-ri-²tena je googl
 e-images-download skripta
  []
 
-[8 <./lib/pics/numpy_slika_emocija.png> <./lib/pics/numpy_imgdata_emo.png>]
-[9] [10] [11] [12]
+[7 <./lib/pics/numpy_slika_emocija.png> <./lib/pics/numpy_imgdata_emo.png>]
+[8] [9] [10] [11]
 Poglavlje 3.
-[13
+[12
 
 ]
+<lib/pics/overfitting.png, id=102, 462.528pt x 346.896pt>
+File: lib/pics/overfitting.png Graphic file (type png)
+<use lib/pics/overfitting.png>
+Package pdftex.def Info: lib/pics/overfitting.png  used on input line 356.
+(pdftex.def)             Requested size: 338.02373pt x 253.51779pt.
+ [13 <./lib/pics/overfitting.png>]
 NOTE: coordinate (5Y0.0e0],0Y0.0e0]) has been dropped because it is unbounded (
 in x). (see also unbounded coords=jump). 
-[14] [15] [16] [17]
-Overfull \hbox (33.27962pt too wide) in paragraph at lines 504--505
-\T1/ptm/m/n/12 .npy po-datke u£i-tani su iz struk-ture de-fi-ni-rane na 2.9[]. 
-Pa-ra-me-trima GO-OGLE_TRAIN_SPLIT
+[14]
+<lib/pics/neuron_layers.png, id=115, 821.0675pt x 885.3075pt>
+File: lib/pics/neuron_layers.png Graphic file (type png)
+<use lib/pics/neuron_layers.png>
+Package pdftex.def Info: lib/pics/neuron_layers.png  used on input line 459.
+(pdftex.def)             Requested size: 235.1217pt x 253.51753pt.
+ [15]
+<lib/pics/usna_corner.png, id=123, 35.13126pt x 20.075pt>
+File: lib/pics/usna_corner.png Graphic file (type png)
+<use lib/pics/usna_corner.png>
+Package pdftex.def Info: lib/pics/usna_corner.png  used on input line 469.
+(pdftex.def)             Requested size: 206.3183pt x 117.89613pt.
+<lib/pics/oko_corner.png, id=124, 30.1125pt x 20.075pt>
+File: lib/pics/oko_corner.png Graphic file (type png)
+<use lib/pics/oko_corner.png>
+Package pdftex.def Info: lib/pics/oko_corner.png  used on input line 474.
+(pdftex.def)             Requested size: 206.30328pt x 137.53548pt.
+
+Overfull \hbox (2.28003pt too wide) in paragraph at lines 467--477
+[][] [] 
  []
 
-[18] [19] [20] [21]
-Poglavlje 4.
-[22
+[16 <./lib/pics/neuron_layers.png>]
+<lib/pics/usna.png, id=129, 80.3pt x 71.26625pt>
+File: lib/pics/usna.png Graphic file (type png)
+<use lib/pics/usna.png>
+Package pdftex.def Info: lib/pics/usna.png  used on input line 489.
+(pdftex.def)             Requested size: 206.28894pt x 183.0814pt.
+<lib/pics/oko.png, id=130, 80.3pt x 80.3pt>
+File: lib/pics/oko.png Graphic file (type png)
+<use lib/pics/oko.png>
+Package pdftex.def Info: lib/pics/oko.png  used on input line 494.
+(pdftex.def)             Requested size: 206.28894pt x 206.28894pt.
 
-]
+Overfull \hbox (2.28003pt too wide) in paragraph at lines 487--497
+[][] [] 
+ []
+
+[17 <./lib/pics/usna_corner.png> <./lib/pics/oko_corner.png> <./lib/pics/usna.p
+ng> <./lib/pics/oko.png>]
+
+LaTeX Warning: Reference `eq:neuron_z' on page 18 undefined on input line 514.
+
+[18]
+<lib/pics/deep_plain_error.jpeg, id=138, 797.22844pt x 291.33844pt>
+File: lib/pics/deep_plain_error.jpeg Graphic file (type jpg)
+<use lib/pics/deep_plain_error.jpeg>
+Package pdftex.def Info: lib/pics/deep_plain_error.jpeg  used on input line 544
+.
+(pdftex.def)             Requested size: 412.56616pt x 150.76779pt.
+ [19]
+<lib/pics/resnet_block.jpeg, id=145, 542.025pt x 314.67563pt>
+File: lib/pics/resnet_block.jpeg Graphic file (type jpg)
+<use lib/pics/resnet_block.jpeg>
+Package pdftex.def Info: lib/pics/resnet_block.jpeg  used on input line 570.
+(pdftex.def)             Requested size: 412.58011pt x 239.52567pt.
+ [20 <./lib/pics/deep_plain_error.jpeg>]
+<lib/pics/resnet_50_block.jpeg, id=150, 638.385pt x 569.12625pt>
+File: lib/pics/resnet_50_block.jpeg Graphic file (type jpg)
+<use lib/pics/resnet_50_block.jpeg>
+Package pdftex.def Info: lib/pics/resnet_50_block.jpeg  used on input line 593.
+
+(pdftex.def)             Requested size: 284.36778pt x 253.51657pt.
+ [21 <./lib/pics/resnet_block.jpeg>]
+<lib/pics/resnet_arh.jpeg, id=155, 1337.74782pt x 579.66562pt>
+File: lib/pics/resnet_arh.jpeg Graphic file (type jpg)
+<use lib/pics/resnet_arh.jpeg>
+Package pdftex.def Info: lib/pics/resnet_arh.jpeg  used on input line 600.
+(pdftex.def)             Requested size: 412.55424pt x 178.76576pt.
+LaTeX Font Info:    Try loading font information for OMS+ptm on input line 612.
+
+ (/usr/share/texlive/texmf-dist/tex/latex/psnfss/omsptm.fd
+File: omsptm.fd 
+)
+LaTeX Font Info:    Font shape `OMS/ptm/m/n' in size <12> not available
+(Font)              Font shape `OMS/cmsy/m/n' tried instead on input line 612.
+ [22 <./lib/pics/resnet_50_block.jpeg> <./lib/pics/resnet_arh.jpeg>] [23]
+Overfull \hbox (39.27962pt too wide) in paragraph at lines 660--661
+\T1/ptm/m/n/12 .npy po-datke u£i-tani su iz struk-ture de-fi-ni-rane na 2.10[].
+ Pa-ra-me-trima GO-OGLE_TRAIN_SPLIT
+ []
+
+[24]
+<lib/pics/fullset.png, id=165, 333.245pt x 507.8975pt>
+File: lib/pics/fullset.png Graphic file (type png)
+<use lib/pics/fullset.png>
+Package pdftex.def Info: lib/pics/fullset.png  used on input line 726.
+(pdftex.def)             Requested size: 166.33733pt x 253.51413pt.
+ [25]
+<lib/pics/splitset.png, id=169, 454.69875pt x 420.57124pt>
+File: lib/pics/splitset.png Graphic file (type png)
+<use lib/pics/splitset.png>
+Package pdftex.def Info: lib/pics/splitset.png  used on input line 734.
+(pdftex.def)             Requested size: 274.09102pt x 253.51907pt.
+ [26 <./lib/pics/fullset.png> <./lib/pics/splitset.png>] [27] [28]
+[29]
+Poglavlje 4.
+<lib/pics/val_ck.png, id=185, 462.528pt x 346.896pt>
+File: lib/pics/val_ck.png Graphic file (type png)
+<use lib/pics/val_ck.png>
+Package pdftex.def Info: lib/pics/val_ck.png  used on input line 818.
+(pdftex.def)             Requested size: 338.02373pt x 253.51779pt.
+<lib/pics/val_go_ck.png, id=186, 462.528pt x 346.896pt>
+File: lib/pics/val_go_ck.png Graphic file (type png)
+<use lib/pics/val_go_ck.png>
+Package pdftex.def Info: lib/pics/val_go_ck.png  used on input line 825.
+(pdftex.def)             Requested size: 338.02373pt x 253.51779pt.
+[30
+
+ <./lib/pics/val_ck.png>] [31 <./lib/pics/val_go_ck.png>]
 Poglavlje 5.
-(./zavrsni.bbl [23
+(./zavrsni.bbl [32
 
 ]
 Underfull \hbox (badness 10000) in paragraph at lines 9--12
@@ -1144,58 +1330,63 @@ Underfull \hbox (badness 10000) in paragraph at lines 9--12
  []
 
 
-Overfull \hbox (135.70166pt too wide) in paragraph at lines 38--42
+Overfull \hbox (135.70166pt too wide) in paragraph at lines 44--48
 \T1/pcr/m/n/12 what-[]is-[]one-[]hot-[]encoding-[]why-[]and-[]when-[]do-[]you-[
 ]have-[]to-[]use-[]it-[]e3c6186d008f$\T1/ptm/m/n/12 . 
  []
 
 
-Underfull \hbox (badness 1097) in paragraph at lines 44--47
+Underfull \hbox (badness 1097) in paragraph at lines 50--53
 []\T1/ptm/m/n/12 Hardik Vasa.  google-images-download.  URL $\T1/pcr/m/n/12 htt
 ps : / / github . com /
  []
 
-) [24
+) [33
 
-] [25] (./zavrsni.aux)
+] [34] (./zavrsni.aux)
+
+LaTeX Warning: There were undefined references.
+
 
 LaTeX Warning: There were multiply-defined labels.
 
  ) 
 Here is how much of TeX's memory you used:
- 28782 strings out of 492609
- 681069 string characters out of 6131462
- 895392 words of memory out of 5000000
- 32156 multiletter control sequences out of 15000+600000
- 68327 words of font info for 94 fonts, out of 8000000 for 9000
+ 30008 strings out of 492609
+ 706525 string characters out of 6131462
+ 899589 words of memory out of 5000000
+ 33324 multiletter control sequences out of 15000+600000
+ 75108 words of font info for 101 fonts, out of 8000000 for 9000
  1141 hyphenation exceptions out of 8191
- 69i,19n,100p,1747b,2279s stack positions out of 5000i,500n,10000p,200000b,80000s
+ 69i,19n,100p,1669b,2291s stack positions out of 5000i,500n,10000p,200000b,80000s
 {/usr/share/texlive/texmf-dist/fonts/enc/dvips/base/8r.enc}</usr/share/texliv
-e/texmf-dist/fonts/type1/public/amsfonts/cmextra/cmbsy8.pfb></usr/share/texlive
-/texmf-dist/fonts/type1/public/amsfonts/cm/cmbx8.pfb></usr/share/texlive/texmf-
-dist/fonts/type1/public/amsfonts/cm/cmex10.pfb></usr/share/texlive/texmf-dist/f
-onts/type1/public/amsfonts/cm/cmmi12.pfb></usr/share/texlive/texmf-dist/fonts/t
-ype1/public/amsfonts/cm/cmmi6.pfb></usr/share/texlive/texmf-dist/fonts/type1/pu
-blic/amsfonts/cm/cmmi8.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/am
-sfonts/cm/cmmib10.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfont
-s/cmextra/cmmib8.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts
-/cm/cmr12.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmr
-6.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmr8.pfb></
-usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy10.pfb></usr/sh
-are/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy6.pfb></usr/share/tex
-live/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy8.pfb></usr/share/texlive/te
-xmf-dist/fonts/type1/public/amsfonts/symbols/msbm10.pfb></usr/share/texlive/tex
-mf-dist/fonts/type1/urw/courier/ucrr8a.pfb></usr/share/texlive/texmf-dist/fonts
-/type1/urw/courier/ucrro8a.pfb></usr/share/texlive/texmf-dist/fonts/type1/urw/h
-elvetic/uhvb8a.pfb></usr/share/texlive/texmf-dist/fonts/type1/urw/helvetic/uhvr
-8a.pfb></usr/share/texlive/texmf-dist/fonts/type1/urw/times/utmb8a.pfb></usr/sh
-are/texlive/texmf-dist/fonts/type1/urw/times/utmr8a.pfb></usr/share/texlive/tex
-mf-dist/fonts/type1/urw/times/utmr8a.pfb></usr/share/texlive/texmf-dist/fonts/t
-ype1/urw/times/utmri8a.pfb>
-Output written on zavrsni.pdf (30 pages, 466090 bytes).
+e/texmf-dist/fonts/type1/public/amsfonts/cm/cmbsy10.pfb></usr/share/texlive/tex
+mf-dist/fonts/type1/public/amsfonts/cmextra/cmbsy8.pfb></usr/share/texlive/texm
+f-dist/fonts/type1/public/amsfonts/cm/cmbx12.pfb></usr/share/texlive/texmf-dist
+/fonts/type1/public/amsfonts/cm/cmbx8.pfb></usr/share/texlive/texmf-dist/fonts/
+type1/public/amsfonts/cm/cmex10.pfb></usr/share/texlive/texmf-dist/fonts/type1/
+public/amsfonts/cm/cmmi12.pfb></usr/share/texlive/texmf-dist/fonts/type1/public
+/amsfonts/cm/cmmi6.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfon
+ts/cm/cmmi8.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/c
+mmib10.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cmextra/c
+mmib6.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cmextra/cm
+mib8.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmr12.pf
+b></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmr6.pfb></usr/
+share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmr8.pfb></usr/share/te
+xlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy10.pfb></usr/share/texlive/
+texmf-dist/fonts/type1/public/amsfonts/cm/cmsy6.pfb></usr/share/texlive/texmf-d
+ist/fonts/type1/public/amsfonts/cm/cmsy8.pfb></usr/share/texlive/texmf-dist/fon
+ts/type1/urw/courier/ucrr8a.pfb></usr/share/texlive/texmf-dist/fonts/type1/urw/
+courier/ucrro8a.pfb></usr/share/texlive/texmf-dist/fonts/type1/urw/helvetic/uhv
+b8a.pfb></usr/share/texlive/texmf-dist/fonts/type1/urw/helvetic/uhvr8a.pfb></us
+r/share/texlive/texmf-dist/fonts/type1/urw/times/utmb8a.pfb></usr/share/texlive
+/texmf-dist/fonts/type1/urw/times/utmr8a.pfb></usr/share/texlive/texmf-dist/fon
+ts/type1/urw/times/utmr8a.pfb></usr/share/texlive/texmf-dist/fonts/type1/urw/ti
+mes/utmri8a.pfb>
+Output written on zavrsni.pdf (39 pages, 1582102 bytes).
 PDF statistics:
- 203 PDF objects out of 1000 (max. 8388607)
- 141 compressed objects within 2 object streams
+ 287 PDF objects out of 1000 (max. 8388607)
+ 177 compressed objects within 2 object streams
  0 named destinations out of 1000 (max. 500000)
- 28 words of extra memory for PDF output out of 10000 (max. 10000000)
+ 199 words of extra memory for PDF output out of 10000 (max. 10000000)
 

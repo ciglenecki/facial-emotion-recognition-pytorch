@@ -74,7 +74,7 @@ Podatkovni skup sastavni je dio u izvedbi treniranja modela. Treniranje se svodi
 Cohn-Kanade podatkovni skup sastoji se od 593 sekvenci slika od 123 subjekta (osoba). Pojedina sekvenca sastoji se od 10 do 60 slika. Početna slika u sekvenci je neutralna emocija dok je zadnja slika vrhunac izraza emocije. Subjekti na slikama imaju od 18 do 50 godina, 69\% su žene, 81\% euro-Amerikanci i 6\% su subjekti ostalih rase. Rezolucija pojedine slike iznosi 640x480 ili 640x490 piksela u 8-bitnom crno-bijelom ili 24 bitnom puno-bojnom formatu\cite{ck}.
 
 \begin{figure}[H]
-	\includegraphics[width=\linewidth, height=0.3\paperheight, keepaspectratio]{ck_example.png}
+	\includegraphics[width=\linewidth]{ck_example.png}
 	\caption{Primjer slike iz CK+ podatkovnog skupa}
 	\label{pic:ck_example}
 \end{figure}
@@ -83,8 +83,7 @@ Cohn-Kanade podatkovni skup sastoji se od 593 sekvenci slika od 123 subjekta (os
 Slike CK+ podatkovnog skupa slikane su u istom okruženju (ista prostorija u kojoj se slikaju subjekti, ista kamera, slična svjetlina slike...). Nedostatak raznolikosti među slikama stvara potrebu za uvođenjem apstraktnijih slika ljudskih lica ne bi li model klasificirao emocije ljudskih lica koja nisu slična samo CK+ podatkovnom skupu. Zbog toga se uvodi podatkovni skup Google slika. Google omogućuje pretraživanje slika po zadanom upitu te dodatnim parametrima koji olakšavaju pronalaženje ljudskog lica koji predstavlja određenu emociju. Npr. pronalazak ljudskih lica koji iskazuju tužnu emociju mogao bi biti "sad human face" sa tipom Google slike "lice". Rezultati tog upita prikazani su na slici \ref{pic:google_search_sad}.
 
 \begin{figure}[H]
-	\centering
-	\includegraphics[width=\linewidth, height=0.3\paperheight, keepaspectratio]{2020-06-08-22-16-22.jpeg}
+	\includegraphics[width=\linewidth]{2020-06-08-22-16-22.jpeg}
 	\caption{Rezultati Google upita "sad human face"}
 	\label{pic:google_search_sad}
 \end{figure}
@@ -199,20 +198,18 @@ Za daljnje korištenje svaka slika i njezin vektor emocije će pretvorena u nump
 
 
 
-\begin{figure}[H]
-	\centering
+\begin{figure}[H]\label{fig:npy_array}
 	\begin{subfigure}[b]{0.5\linewidth}
 	  	\centering
-		\includegraphics[width=\linewidth, height=0.3\paperheight, keepaspectratio]{numpy_slika_emocija.png}
+		\includegraphics[width=\linewidth]{numpy_slika_emocija.png}
 		\caption{Struktura .npy podatka}		
 	\end{subfigure}
 	\begin{subfigure}[b]{0.5\linewidth}
 	  	\centering
-		\includegraphics[width=\linewidth, height=0.3\paperheight, keepaspectratio]{numpy_imgdata_emo.png}
+		\includegraphics[width=\linewidth]{numpy_imgdata_emo.png}
 		\caption{Sadržaj .npy podatka}
 	\end{subfigure}	
 	\caption{.npy podatak}	
-	\label{fig:npy_array}
 \end{figure}
 
 
@@ -352,8 +349,7 @@ Treniranje je proces u kojem model postupno mijenja svoje parametre ne bi li do�
 Treniranje modela nakon određenog trenutka može pogoršati sposobnost modela da predviđa klase na općenitom slučaju. Uzrok toga je što treniranjem nakon određenog trenutka model ima veću točnost na skupu za treniranje ali točnost na općenitim, neviđenim slučajevima postaje sve manja. Zbog toga je potrebno pronaći optimalan trenutak u kojem treba prekinuti treniranje modela. Prekidanje treniranja modela nije moguće odrediti pomoću točnosti modela na skupu za treniranje jer ta točnost neprestano raste daljnjim treniranjem. Zbog toga je potrebno uvesti validacijski skup koji neće biti korišten prilikom treniranja. Validacijski skup o tom slučaju igra ulogu neviđenih podataka nad kojima se mjeri točnost. Prilikom treniranja točnost nad validacijskim skupom će rasti do optimalnog trenutka gdje je greška predviđanaj najmanja. U tom trenutku točnost nad validacijskim skupom će biti maksimalna a daljnjim treniranjem točnost će se smanjivati jer model postaje previše prilagođen skupu za treniranje \engl{overfitting}. Overfitting prikazan je na slici \ref{pic:overfitting}. Slika prikazuje overfitting zbog toga što prilikom treniranja greška validacija poslije optimalne točke greška nad validacijskim skupom postaje sve veća i veća.
 
 \begin{figure}[H]
-	\centering
-	\includegraphics[width=\linewidth, height=0.3\paperheight, keepaspectratio]{overfitting.png}
+	\includegraphics[width=\linewidth]{overfitting.png}
 	\caption{Primjer overfitting-a}
 	\label{pic:overfitting}
 \end{figure}
@@ -455,27 +451,25 @@ Sloj neurona sastoji se od skupa neurona. Matematički, sloj neurona sastoji se 
 Neuronska mreža sastoji se od više slojeva neurona koji su međusobno povezani. Slojevi su povezani tako što je svaki neuronski sloj razine $l$ povezan sa svakim neuronskim slojem razine $l+1$. Povezani su na način da se izlaz neuronskog sloja $l$ dovodi na ulaz neuronskog sloja $l+1$. Prije dovođenja na ulaz $l_{i+1}$ izlaz sloja $l_i$ proveden je kroz aktivacijsku funkciju čime je izlaz aktiviran. Ovaj algoritam prijenosa podataka s jednog sloja na drugi zove se \textit{feedforward} algoritam. Slojevi se dijele u tri različite grupe: ulazni, skriveni i izlazni sloj. Ulazni sloj je prvi sloj na koji se dovodi ulazni podataka, slika. Izlazni sloj je sloj koji na izlazu daje klasifikaciju ulazne slike, u ovom slučaju vektor predviđenih emocija. Skriveni slojevi su među-slojevi koji obrađuju podatke prethodnog izlaznog sloja neurona. U sredinom skrivenog područja obrađuje se najviše informacija 
 
 \begin{figure}[H]
-	\centering
-	\includegraphics[width=\linewidth, height=0.3\paperheight, keepaspectratio]{neuron_layers.png}
+	\includegraphics[width=\linewidth]{neuron_layers.png}
 	\caption{Različiti neuronski slojevi}
 	\label{pic:ck_example}
 \end{figure}
 
 Što je neuronski sloj dublje razine to je apstrakcija podataka koju on računa veća. Izlaz skrivenog $l_i$ sloja poslat će se na ulaz sljedećeg skrivenog sloja $l_{i+1}$ a tim prijelazom apstrakcija podataka će biti uvećana. Uloga svakog neuronskog sloja je da obrađuje podatke na razini apstrakcije definiranje njegovom dubinom. Većim brojem slojeva neurona stvara se dublja neuronska mreža koja može računati na većoj razini apstrakcije. Interpretacija razine apstrakcije u slučaju slika svodi se na promatranje različitih djelova slike različite veličine. Iako se promatraju različiti dijelovi slike, međuzavisnost neuronskih slojeva omogućava neuronskoj mreži da zna koje je svojstvo slike proizašlo iz prethodnog svojstva slike. Primjer bi bio pronalaženje ruba usnice i ruba oka na slici.
 
-\begin{figure}[H]
+\begin{figure}[H]\label{fig:npy_array}
 	\begin{subfigure}[b]{0.5\linewidth}
 	  	\centering
-		\includegraphics[width=\linewidth, height=0.3\paperheight, keepaspectratio]{usna_corner.png}
+		\includegraphics[width=\linewidth]{usna_corner.png}
 		\caption{Manji dio usnice, rub usnice}		
 	\end{subfigure}
 	\begin{subfigure}[b]{0.5\linewidth}
 	  	\centering
-		\includegraphics[width=\linewidth, height=0.3\paperheight, keepaspectratio]{oko_corner.png}
+		\includegraphics[width=\linewidth]{oko_corner.png}
 		\caption{Manji dio oka, rub oka}
 	\end{subfigure}	
 	\caption{Slični rubovi djelova lica}	
-	\label{fig:npy_array}
 \end{figure}
 
 Iako ta dva rubovi izgledom mogu biti slični bitna spoznaja za neuronsku mrežu je da jedan rub proizlazi iz slike usnice a drugi iz slike oka. Tako na primjer rub usnice usmjeren prema gore ukazuje na emociju sreće, dok to za rub oka ne mora biti slučaj. Ovakvo širenje konteksta bitno je za ispravno treniranje neuronske mreže.
@@ -483,19 +477,18 @@ Iako ta dva rubovi izgledom mogu biti slični bitna spoznaja za neuronsku mrežu
 
 
 
-\begin{figure}[H]
+\begin{figure}[H]\label{fig:npy_array}
 	\begin{subfigure}[b]{0.5\linewidth}
 	  	\centering
-		\includegraphics[width=\linewidth, height=0.3\paperheight, keepaspectratio]{usna.png}
+		\includegraphics[width=\linewidth]{usna.png}
 		\caption{Veći dio usnice}		
 	\end{subfigure}
 	\begin{subfigure}[b]{0.5\linewidth}
 	  	\centering
-		\includegraphics[width=\linewidth, height=0.3\paperheight, keepaspectratio]{oko.png}
+		\includegraphics[width=\linewidth]{oko.png}
 		\caption{Veći dio oka}
 	\end{subfigure}	
 	\caption{Dijelovi lica}	
-	\label{fig:npy_array}
 \end{figure}
 
 
@@ -529,129 +522,45 @@ Ovaj postupak naziva se backpropagration i primjenjuje se na sve slojeve neurona
 \subsubsection{Motivacija}
 Problem prilikom treniranja duboke neuronske mreže je mogućnost nestajućeg gradijenta \engl{vanishing gradient problem} pri ranim neuronskim slojevima mreže. Prilikom backprogragation algoritma sloj $l_i$ ažurirat će svoja težišta danom formulom \ref{eq:gradient_backprop_layer}. Bitno je naglasiti da vrijednost koja će ažurirati njegovo težište $lr \frac{\partial E_{l_n}}{\partial w_{l_n}}$ je gradijent izračunat od svih prethodnih slojeva $l_{i+1}, ..., l_n$. Ukoliko iznos gradijenta u više slučajeva bude manji od $1$ težište neurona će s vremenom početi konvergirati prema $0$. Što težište više konvergira prema $0$ to je teže ažurirati njegovu vrijednost.
 
-Prilikom treniranja neuronske mreže ulaz $x$ koji prolazi kroz jedan neuronski sloj $l$ bit će izračunat formulom \ref{eq:neuron}. U nekim iteracijama treniranja poželjno je i izostaviti utjecaj nekog sloja $l$ jer njegov utjecaj ne mora nužno biti potreban za iteraciju treniranja. Drugim riječima ulaz $x$ prolazom kroz sloj $l$ treba ostati nepromijenjen, čime bi izlaz $y$ sloja $l$ bio jednak $x$. Funkcija čija je vrijednost za argument $x$ jednaka $x$ zove se funkcija identiteta dana na \ref{eq:identitiy_function}.
-
-\begin{equation}\label{eq:identitiy_function}
-f(x) = x
-\end{equation}
-
-U praksi neuronski sloj ne pronalazi funkcija identiteta s lakoćom jer metoda pronalaska funkcije identiteta zahtjeva računalnu snagu koja je aproksimacija funkcije identiteta.
+Prilikom treniranja neuronske mreže ulaz $x$ koji prolazi kroz jedan neuronski sloj $l$ bit će izračunat formulom \ref{eq:neuron}. U nekim iteracijama treniranja poželjno je i izostaviti utjecaj nekog sloja $l$ jer njegov utjecaj ne mora nužno biti potreban za iteraciju treniranja. Drugim riječima ulaz $x$ prolazom kroz sloj $l$ treba ostati nepromijenjen, čime bi izlaz $y$ sloja $l$ bio jedan $x$. Funkcija čija je vrijednost za argument $x$ jednaka $x$ zove se funkcija identiteta dana na \ref{eq:identitiy_function}. U praksi neuronski sloj ne pronalazi funkcija identiteta s lakoćom jer metoda pronalaska funkcije identiteta zahtjeva računalnu snagu koja je aproksimacija funkcije identiteta.
 
 Opisan postupak je posebno problematičan kad je neuronska mreža velike dubine. Suprotno intuiciji, dodavanjem većeg broja slojeva na neuronsku mrežu gubitak neće uvijek nužno biti smanjen. Nakon određenog broja slojeva dodavanjem novih slojeva gubitak prilikom treniranja postaje sve veći a time točnost predviđanja manja. Primjer ovog problema dan je na slici \ref{fig:deep_plain_error}.
 
-\begin{figure}[H]
+\begin{figure}[H]\label{fig:deep_plain_error}
 	\centering
-	\includegraphics[width=\linewidth, height=0.3\paperheight, keepaspectratio]{deep_plain_error.jpeg}
-	\caption{Pogreška prilikom treniranja obične duboke neuronske mreže ovisno o dubini mreže \cite{residual}}	
-	\label{fig:deep_plain_error}
+	\includegraphics[width=\linewidth]{deep_plain_error.jpeg}
+	\caption{Pogreška prilikom treniranja obične duboke neuronske mreže ovisno o dubini mreže}	
 \end{figure}
 
 \subsubsection{Rezidualni blok}
 
-Rješenje problema spomenutog u motivaciji može se izbjeći korištenjem rezidualnog bloka. Taj prijedlog dan je prema  \cite{residual}. Umjesto aproksimiranja identifikacijske funkcije $f(x) = x$ uvodi se izraz pomoću kojeg se funkcija identiteta lako izračuna. 
+Rješenje problema spomenutog u motivaciji može se izbjeći korištenjem rezidualnog bloka. Taj prijedlog dan je prema \cite{residual}. Umjesto pronalaženja identifikacijske funkcije \ref{eq:identitiy_function} nju je moguće direktno izračunati uvođenjem izraza gdje je $H$  \ref{eq:residual_identity}
 
 \begin{equation}\label{eq:residual_identity}
-f(x) \coloneqq h(x) + x
+H(x) \coloneqq f(x)
 \end{equation}
-\noindent
-Sad je za neuronsku mrežu lako pronaći funkciju identiteta na način da se postavi $f(x) = 0$ čime se dobiva:
+
+\begin{equation}\label{eq:residual_identity}
+H(x) \coloneqq f(x) + x
+\end{equation}
+
 
 \begin{align*}
-	& h(x) = f(x) + x \\
-	& h(x) = x 
+	& a_{l_{i+2}}  = g(z_{l_{i+2}} + a_{l_i}) \\
+	& a_{l_{i+2}}  = g(\underbrace{w_{l_{i+2}} a_{l_{i+1}} + b_{l_{i+2}}}_{0} + a_{l_i}) \\
+	& a_{l_{i+2}}  = g(a_{l_i})
 \end{align*}
-\noindent
-Ovime je osigurano da je originalan podatak $x$ moguće proslijediti sljedećem neuronskom sloju $l_{i+2}$ kroz neuronski sloj čak i ukoliko težišta $w$ sloja $l_i$ budu jednaka $0$. Čak i ako neuronski sloj ne djeluje na podatak $x$ on će ostati nepromijenjen čime je doprinos na buduće slojeve uvijek jednak ili bolji, što nije slučaj za obične duboke neuronske mreže. Ova činjenica omogućava dodavanje slojeva bez ikakvog gubitka točnosti. 
-
-Implementacija rezidualnog bloka prikazan na \ref{fig:residual_block} ostvaruje se dodavanjem prečaca \engl{skip connection} između bloka $l_i$ i bloka $l_{i_2}$ koji služi da se podatak $\vect{x}$ koji se zbraja sa izlazom $f(x)$. 
-
-\begin{figure}[H]
-	\centering
-	\includegraphics[width=\linewidth, height=0.3\paperheight,keepaspectratio]{resnet_block.jpeg}
-	\caption{Pogreška prilikom treniranja obične duboke neuronske mreže ovisno o dubini mreže  \cite{residual}}
-	\label{fig:residual_block}
-\end{figure}
 
 
-\noindent
-Primjer izračuna izlaza korištenjem rezidualnog bloka za aktiviran ulaz $\vect{a_{l_i}}$, ReLU aktivacijsku funkciju $g$, težište $\vect{w_{l_i}}$ te prinos $\vect{b_{l_i}}$ gdje $l_i$ redni broj neuronskog sloja.
-\begin{align*}
-	& \vect{a}_{l_{i+2}}  = g(\vect{z}_{l_{i+2}} + \vect{a}_{l_i}) \\
-	& \vect{a}_{l_{i+2}}  = g(\underbrace{\vect{w}_{l_{i+2}} \vect{a}_{l_{i+1}} + \vect{b}_{l_{i+2}}}_{0} + \vect{a}_{l_i}) \\
-	& \vect{a}_{l_{i+2}}  = g(\vect{a}_{l_i}),\quad\text{$g$ je aktivacijska funckija ReLU}\\
-	& \vect{a}_{l_{i+2}}  = \vect{a}_{l_i}
-\end{align*}
-\noindent
-Ovime je pokazano da se po potrebi ulazni podatak lako može dobiti i na izlazu bez kompliciranih računskih operacija čime se izbjegava problema nestajućih gradijenta uz smanjenje korištenje računalne snage.
-
-\subsubsection{Arhitektura mreže ResNet50}
-
-Za stvaranje rezidualne neuronske mreže potrebno je ulančati više rezidualnih blokova. Konkretan rezidualan blok koji je korišten u ResNet50 arhitekturi prikazan je na slici \ref{fig:residual_block_50}. Cijela arhitektura ResNet50 mreže prikazana je na slici \ref{fig:resnet_arh} označena sa stupcem "50-layer". 
-
-\begin{figure}[H]
-	\centering
-	\includegraphics[width=\linewidth, height=0.3\paperheight,keepaspectratio]{resnet_50_block.jpeg}
-	\caption{Rezidualni blok korišten u ResNet50 arhitekturi \cite{residual}}
-	\label{fig:residual_block_50}
-\end{figure}
-
-\begin{figure}[H]
-	\centering
-	\includegraphics[width=\linewidth, height=0.3\paperheight,keepaspectratio]{resnet_arh.jpeg}
-	\caption{ResNet50 arhitektura \cite{residual}}
-	\label{fig:resnet_arh}
-\end{figure}
-
-
-Podaci dovedeni na ulaz ResNet50 mreže prolaze kroz nju sljedećim redoslijedom:
-\begin{itemize}
-	\item 1 sloj - Konvolucijski filter veličine $7\times7$ sa veličinom pomaka 2 koji slijedi konvolucijskim filterom veličine $3\times3$ uz maxpool metodu sa veličinom pomaka 2
-	
-	\item 9 slojeva
-		\begin{itemize}
-			\item Konvolucijski filter $1\times1$ ulaza veličine 64
-			\item Konvolucijski filter $3\times3$ ulaza veličine 64
-			\item Konvolucijski filter $1\times1$ ulaza veličine 256
-			\item slojevi su ponovljeni 3 puta
-		\end{itemize}
-		
-	\item 12 slojeva
-		\begin{itemize}
-			\item Konvolucijski filter $1\times1$ ulaza veličine 128
-			\item Konvolucijski filter $3\times3$ ulaza veličine 128
-			\item Konvolucijski filter $1\times1$ ulaza veličine 512
-			\item slojevi su ponovljeni 4 puta
-		\end{itemize}
-		
-	\item 18 slojeva
-		\begin{itemize}
-			\item Konvolucijski filter $1\times1$ ulaza veličine 256
-			\item Konvolucijski filter $3\times3$ ulaza veličine 256
-			\item Konvolucijski filter $1\times1$ ulaza veličine 1024
-			\item slojevi su ponovljeni 6 puta
-		\end{itemize}
-		
-	\item 9 slojeva
-		\begin{itemize}
-			\item Konvolucijski filter $1\times1$ ulaza veličine 512
-			\item Konvolucijski filter $3\times3$ ulaza veličine 512
-			\item Konvolucijski filter $1\times1$ ulaza veličine 2048
-			\item slojevi su ponovljeni 3 puta
-		\end{itemize}
-		
-		
-\item 1 sloj - zadnji sloj je sloj prosječnog sažimanja čiji je izlaz veličine 1000 na koji djeluje funkcija "softmax" koja izlazne veličine pojedine klase pretvara u vjerojatnost prisutnosti klase. 
-\end{itemize}
-
-Ukupan broj navedenih slojeva je 50
-
+\begin{equation}\label{eq:identitiy_function}
+	f(x) + x = g(X)
+\end{equation}
 
 \subsection{Prijenosno učenje}
 
 Prijenosno učenje je tehnika u području strojnog gdje je naučenost modela za predviđanje jednog cilja prenesena na predviđanje drugog cilja. Potreba za ovom tehnikom javlja se iz nedovoljno velikog skupa podataka korištenog za treniranje. Zbog toga što podatkovni skup nije dovoljno velik, neuronska mreža neće biti dovoljno trenirana da predviđa emocija za neviđene slike. Unaprijed trenirana neuronska mreža ResNet 50, koja je trenirana na ImageNet podatkovnom skupu \cite{imagenet_cvpr09}, omogućava mreži da od početka prepoznaje bitne značajke neviđene slike. Time je izbjegnuta potreba za treniranjem modela od početka jer su početni neuronski slojevi mreže već dobro naučeni za prepoznavanje bitnih značajki u slici, poput istaknutih objekta i uočljivijih oblika.
 
 Zadnji slojevi unaprijed trenirane ResNet 50 mreže mogu predviđati 1000 različitih značajki. Broj mogućih klasifikacijskih emocija je 8 zbog čega će biti potrebno dodati zadnji neuronski sloj na postojeću neuronsku mrežu tako da izlaz mreže bude dimenzije 8, a ne 1000 što odgovara broju različitih klasa korištenih u ImageNet podatkovnom skupu. Korištenjem većeg i apstraktnijeg podatkovnog skupa ova se tehnika može izostaviti.
-
 
 \section{Implementacija treniranja u PyTorch-u}
 U poglavlju \ref{priprema_ck} i \ref{priprema_google} objašnjeno su iz oba podatkovna skupa dobiveni .npy podaci koji sadrže podatke slike i odgovarajućeg vektora emocije te slike. Sljedeći korak je iskoristiti te podatke za treniranje neuronske mreže koja će klasificirati emocije neviđenih slika ljudskih lica.
@@ -722,16 +631,14 @@ test_dataset = FERDataset(filepaths_numpy=FILEPATHS_NUMPY_TEST,
 
 
 \begin{figure}[H]
-	\centering
-	\includegraphics[width=\linewidth, height=0.3\paperheight, keepaspectratio]{fullset.png}
+	\includegraphics[width=\linewidth]{fullset.png}
 	\caption{Vizualni prikaz cijelog podatkovnog skupa}
 	\label{fullset}
 \end{figure}
 
 
 \begin{figure}[H]
-	\centering
-	\includegraphics[width=\linewidth, height=0.3\paperheight, keepaspectratio]{splitset.png}
+	\includegraphics[width=\linewidth]{splitset.png}
 	\caption{Vizualni prikaz podijeljenog podatkovnog skupa}
 	\label{splitset}
 \end{figure}
@@ -814,15 +721,13 @@ Optimizator koji će utjecati na mijenjanje težišta neurona prilikom backpropa
 \chapter{Evaluacija}
 
 \begin{figure}[H]
-	\centering
-	\includegraphics[width=\linewidth, height=0.3\paperheight, keepaspectratio]{val_ck.png}
+	\includegraphics[width=\linewidth]{val_ck.png}
 	\caption{Greška prilikom treniranja nad CK+ podatkovnim skupom}
 	\label{loss_ck}
 \end{figure}
 
 \begin{figure}[H]
-	\centering
-	\includegraphics[width=\linewidth, height=0.3\paperheight, keepaspectratio]{val_go_ck.png}
+	\includegraphics[width=\linewidth]{val_go_ck.png}
 	\caption{Greška prilikom treniranja nad Google i CK+ podatkovnim skupom}
 	\label{loss_duo}
 \end{figure}
