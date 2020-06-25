@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.14159265-2.6-1.40.20 (TeX Live 2019/Debian) (preloaded format=pdflatex 2020.5.24)  25 JUN 2020 03:23
+This is pdfTeX, Version 3.14159265-2.6-1.40.20 (TeX Live 2019/Debian) (preloaded format=pdflatex 2020.5.24)  26 JUN 2020 00:24
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
@@ -1146,7 +1146,7 @@ LaTeX Warning: Label `pic:init_dataset' multiply defined.
 LaTeX Warning: Label `pic:init_dataset' multiply defined.
 
 
-LaTeX Warning: Label `pic:init_resnet' multiply defined.
+LaTeX Warning: Label `pic:pytorch_transform_aug' multiply defined.
 
 )
 \openout1 = `zavrsni.aux'.
@@ -1374,19 +1374,18 @@ Package pdftex.def Info: lib/pics/overfitting.png  used on input line 365.
  [13 <./lib/pics/overfitting.png>]
 NOTE: coordinate (5Y0.0e0],0Y0.0e0]) has been dropped because it is unbounded (
 in x). (see also unbounded coords=jump). 
-[14]
-<lib/pics/neuron_layers.png, id=117, 821.0675pt x 885.3075pt>
+[14] [15]
+<lib/pics/neuron_layers.png, id=123, 821.0675pt x 885.3075pt>
 File: lib/pics/neuron_layers.png Graphic file (type png)
 <use lib/pics/neuron_layers.png>
 Package pdftex.def Info: lib/pics/neuron_layers.png  used on input line 468.
 (pdftex.def)             Requested size: 235.1217pt x 253.51753pt.
- [15]
-<lib/pics/usna_corner.png, id=125, 35.13126pt x 20.075pt>
+<lib/pics/usna_corner.png, id=124, 35.13126pt x 20.075pt>
 File: lib/pics/usna_corner.png Graphic file (type png)
 <use lib/pics/usna_corner.png>
 Package pdftex.def Info: lib/pics/usna_corner.png  used on input line 478.
 (pdftex.def)             Requested size: 206.3183pt x 117.89613pt.
-<lib/pics/oko_corner.png, id=126, 30.1125pt x 20.075pt>
+<lib/pics/oko_corner.png, id=125, 30.1125pt x 20.075pt>
 File: lib/pics/oko_corner.png Graphic file (type png)
 <use lib/pics/oko_corner.png>
 Package pdftex.def Info: lib/pics/oko_corner.png  used on input line 483.
@@ -1397,12 +1396,12 @@ Overfull \hbox (2.28003pt too wide) in paragraph at lines 476--486
  []
 
 [16 <./lib/pics/neuron_layers.png>]
-<lib/pics/usna.png, id=131, 80.3pt x 71.26625pt>
+<lib/pics/usna.png, id=130, 80.3pt x 71.26625pt>
 File: lib/pics/usna.png Graphic file (type png)
 <use lib/pics/usna.png>
 Package pdftex.def Info: lib/pics/usna.png  used on input line 498.
 (pdftex.def)             Requested size: 206.28894pt x 183.0814pt.
-<lib/pics/oko.png, id=132, 80.3pt x 80.3pt>
+<lib/pics/oko.png, id=131, 80.3pt x 80.3pt>
 File: lib/pics/oko.png Graphic file (type png)
 <use lib/pics/oko.png>
 Package pdftex.def Info: lib/pics/oko.png  used on input line 503.
@@ -1414,20 +1413,20 @@ Overfull \hbox (2.28003pt too wide) in paragraph at lines 496--506
 
 [17 <./lib/pics/usna_corner.png> <./lib/pics/oko_corner.png> <./lib/pics/usna.p
 ng> <./lib/pics/oko.png>] [18]
-<lib/pics/deep_plain_error.jpeg, id=140, 797.22844pt x 291.33844pt>
+<lib/pics/deep_plain_error.jpeg, id=139, 797.22844pt x 291.33844pt>
 File: lib/pics/deep_plain_error.jpeg Graphic file (type jpg)
 <use lib/pics/deep_plain_error.jpeg>
 Package pdftex.def Info: lib/pics/deep_plain_error.jpeg  used on input line 553
 .
 (pdftex.def)             Requested size: 412.56616pt x 150.76779pt.
  [19]
-<lib/pics/resnet_block.jpeg, id=147, 542.025pt x 314.67563pt>
+<lib/pics/resnet_block.jpeg, id=146, 542.025pt x 314.67563pt>
 File: lib/pics/resnet_block.jpeg Graphic file (type jpg)
 <use lib/pics/resnet_block.jpeg>
 Package pdftex.def Info: lib/pics/resnet_block.jpeg  used on input line 579.
 (pdftex.def)             Requested size: 412.58011pt x 239.52567pt.
  [20 <./lib/pics/deep_plain_error.jpeg>]
-<lib/pics/resnet_50_block.jpeg, id=152, 638.385pt x 569.12625pt>
+<lib/pics/resnet_50_block.jpeg, id=151, 638.385pt x 569.12625pt>
 File: lib/pics/resnet_50_block.jpeg Graphic file (type jpg)
 <use lib/pics/resnet_50_block.jpeg>
 Package pdftex.def Info: lib/pics/resnet_50_block.jpeg  used on input line 602.
@@ -1435,7 +1434,7 @@ Package pdftex.def Info: lib/pics/resnet_50_block.jpeg  used on input line 602.
 (pdftex.def)             Requested size: 284.36778pt x 253.51657pt.
 
 [21 <./lib/pics/resnet_block.jpeg>]
-<lib/pics/resnet_arh.jpeg, id=157, 1337.74782pt x 579.66562pt>
+<lib/pics/resnet_arh.jpeg, id=155, 1337.74782pt x 579.66562pt>
 File: lib/pics/resnet_arh.jpeg Graphic file (type jpg)
 <use lib/pics/resnet_arh.jpeg>
 Package pdftex.def Info: lib/pics/resnet_arh.jpeg  used on input line 609.
@@ -1472,23 +1471,33 @@ Overfull \hbox (3.63695pt too wide) in paragraph at lines 745--746
  u [][][][][]
  []
 
-[26] [27] [28] [29]
+[26] [27]
+Underfull \hbox (badness 10000) in paragraph at lines 808--809
+
+ []
+
+[28] [29] [30] [31]
 Poglavlje 4.
-<lib/pics/val_ck.png, id=183, 462.528pt x 346.896pt>
+
+Underfull \hbox (badness 10000) in paragraph at lines 898--899
+
+ []
+
+<lib/pics/val_ck.png, id=187, 462.528pt x 346.896pt>
 File: lib/pics/val_ck.png Graphic file (type png)
 <use lib/pics/val_ck.png>
-Package pdftex.def Info: lib/pics/val_ck.png  used on input line 859.
+Package pdftex.def Info: lib/pics/val_ck.png  used on input line 908.
 (pdftex.def)             Requested size: 338.02373pt x 253.51779pt.
-<lib/pics/val_go_ck.png, id=184, 462.528pt x 346.896pt>
+<lib/pics/val_go_ck.png, id=188, 462.528pt x 346.896pt>
 File: lib/pics/val_go_ck.png Graphic file (type png)
 <use lib/pics/val_go_ck.png>
-Package pdftex.def Info: lib/pics/val_go_ck.png  used on input line 866.
+Package pdftex.def Info: lib/pics/val_go_ck.png  used on input line 915.
 (pdftex.def)             Requested size: 338.02373pt x 253.51779pt.
-[30
+[32
 
- <./lib/pics/val_ck.png>] [31 <./lib/pics/val_go_ck.png>]
+ <./lib/pics/val_ck.png>] [33 <./lib/pics/val_go_ck.png>]
 Poglavlje 5.
-(./zavrsni.bbl [32
+(./zavrsni.bbl [34
 
 ]
 Underfull \hbox (badness 10000) in paragraph at lines 9--12
@@ -1529,9 +1538,9 @@ Underfull \hbox (badness 1097) in paragraph at lines 56--59
 ps : / / github . com /
  []
 
-[33
+[35
 
-]) [34] [35] (./zavrsni.aux)
+]) [36] [37] (./zavrsni.aux)
 
 LaTeX Warning: There were undefined references.
 
@@ -1542,39 +1551,37 @@ LaTeX Warning: There were multiply-defined labels.
 Here is how much of TeX's memory you used:
  40335 strings out of 492609
  909415 string characters out of 6131462
- 1066707 words of memory out of 5000000
+ 1068706 words of memory out of 5000000
  43631 multiletter control sequences out of 15000+600000
  605505 words of font info for 114 fonts, out of 8000000 for 9000
  1141 hyphenation exceptions out of 8191
  69i,19n,100p,1669b,2257s stack positions out of 5000i,500n,10000p,200000b,80000s
 {/usr/share/texlive/texmf-dist/fonts/enc/dvips/base/8r.enc}</usr/share/texliv
-e/texmf-dist/fonts/type1/public/amsfonts/cm/cmbsy10.pfb></usr/share/texlive/tex
-mf-dist/fonts/type1/public/amsfonts/cmextra/cmbsy8.pfb></usr/share/texlive/texm
-f-dist/fonts/type1/public/amsfonts/cm/cmbx12.pfb></usr/share/texlive/texmf-dist
-/fonts/type1/public/amsfonts/cm/cmbx8.pfb></usr/share/texlive/texmf-dist/fonts/
-type1/public/amsfonts/cm/cmex10.pfb></usr/share/texlive/texmf-dist/fonts/type1/
-public/amsfonts/cm/cmmi12.pfb></usr/share/texlive/texmf-dist/fonts/type1/public
-/amsfonts/cm/cmmi6.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfon
-ts/cm/cmmi8.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/c
-mmib10.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cmextra/c
-mmib6.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cmextra/cm
-mib8.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmr12.pf
-b></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmr6.pfb></usr/
-share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmr8.pfb></usr/share/te
-xlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy10.pfb></usr/share/texlive/
-texmf-dist/fonts/type1/public/amsfonts/cm/cmsy6.pfb></usr/share/texlive/texmf-d
-ist/fonts/type1/public/amsfonts/cm/cmsy8.pfb></usr/share/texlive/texmf-dist/fon
-ts/type1/urw/courier/ucrr8a.pfb></usr/share/texlive/texmf-dist/fonts/type1/urw/
-courier/ucrro8a.pfb></usr/share/texlive/texmf-dist/fonts/type1/urw/helvetic/uhv
-b8a.pfb></usr/share/texlive/texmf-dist/fonts/type1/urw/helvetic/uhvr8a.pfb></us
-r/share/texlive/texmf-dist/fonts/type1/urw/times/utmb8a.pfb></usr/share/texlive
-/texmf-dist/fonts/type1/urw/times/utmr8a.pfb></usr/share/texlive/texmf-dist/fon
-ts/type1/urw/times/utmr8a.pfb></usr/share/texlive/texmf-dist/fonts/type1/urw/ti
-mes/utmri8a.pfb>
-Output written on zavrsni.pdf (40 pages, 1582709 bytes).
+e/texmf-dist/fonts/type1/public/amsfonts/cmextra/cmbsy6.pfb></usr/share/texlive
+/texmf-dist/fonts/type1/public/amsfonts/cm/cmbx6.pfb></usr/share/texlive/texmf-
+dist/fonts/type1/public/amsfonts/cm/cmex10.pfb></usr/share/texlive/texmf-dist/f
+onts/type1/public/amsfonts/cm/cmmi12.pfb></usr/share/texlive/texmf-dist/fonts/t
+ype1/public/amsfonts/cm/cmmi6.pfb></usr/share/texlive/texmf-dist/fonts/type1/pu
+blic/amsfonts/cm/cmmi8.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/am
+sfonts/cm/cmmib10.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfont
+s/cmextra/cmmib6.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts
+/cmextra/cmmib8.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/
+cm/cmr12.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmr6
+.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmr8.pfb></u
+sr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy10.pfb></usr/sha
+re/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy6.pfb></usr/share/texl
+ive/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy8.pfb></usr/share/texlive/tex
+mf-dist/fonts/type1/urw/courier/ucrr8a.pfb></usr/share/texlive/texmf-dist/fonts
+/type1/urw/courier/ucrro8a.pfb></usr/share/texlive/texmf-dist/fonts/type1/urw/h
+elvetic/uhvb8a.pfb></usr/share/texlive/texmf-dist/fonts/type1/urw/helvetic/uhvr
+8a.pfb></usr/share/texlive/texmf-dist/fonts/type1/urw/times/utmb8a.pfb></usr/sh
+are/texlive/texmf-dist/fonts/type1/urw/times/utmr8a.pfb></usr/share/texlive/tex
+mf-dist/fonts/type1/urw/times/utmr8a.pfb></usr/share/texlive/texmf-dist/fonts/t
+ype1/urw/times/utmri8a.pfb>
+Output written on zavrsni.pdf (42 pages, 1578264 bytes).
 PDF statistics:
- 288 PDF objects out of 1000 (max. 8388607)
- 179 compressed objects within 2 object streams
+ 286 PDF objects out of 1000 (max. 8388607)
+ 177 compressed objects within 2 object streams
  0 named destinations out of 1000 (max. 500000)
  194 words of extra memory for PDF output out of 10000 (max. 10000000)
 

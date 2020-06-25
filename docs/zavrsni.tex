@@ -447,10 +447,10 @@ Nakon zbrajanja unutar neurona, izlaz neurona potrebno je provesti kroz aktivaci
 
 \subsection{Sloj neurona}
 
-Sloj neurona sastoji se od skupa neurona. Matematički, sloj neurona sastoji se od vektora $\vect{a_l-1}$ koji označava aktivaciju sloja neurona i vektora $\vect{w}$ koji pred. U slučaju prvog sloja vrijedi $\vect{a} = \vect{x}$. Račun izlaza sloja neurona računa se slično kao i kod pojedinog neurona. Za svaki sloj neurona $l$ izlaz $\vect{z}$ jednak je umnošku prethodne aktivacije $\vect{a_{l-1}}$ sa trenutnim težinama sloja neurona $\vect{w_l}$ zbrojen sa sklonošću $\vect{b_l}$
+Sloj neurona sastoji se od skupa neurona. Matematički, sloj neurona sastoji se od prethodno aktiviranog izlaza $\vect{a_{l_{i-1}}}$ sloja $l_{i-1}$ i vektora $\vect{w_{l_{i}}}$ koji označava težišta za trenutni sloj $l_i$. U slučaju prvog sloja vrijedi $\vect{a} = \vect{x}$ jer prvi sloj ne ovisi ni o kojem prethodnom aktiviranom sloju. Račun izlaza sloja neurona računa se slično kao i kod pojedinog neurona. Za svaki sloj neurona $l_i$ izlaz $\vect{z}$ jednak je umnošku prethodne aktivacije $\vect{a_{l_{i-1}}}$ sa trenutnim težinama sloja neurona $\vect{w_{l_i}}$ zbrojen sa sklonošću $\vect{b_{l_i}}$. Izlaz neurona $\hat{y}$ dobiva se tako da se vektor $\vect{z}$ aktivira aktivacijskom funkcijom $g$, u ovom slučaju $g$ je funkcija ReLU prikazana na slici \ref{fig:relu}. Tako dobiven izlaz šalje se na sljedeći sloj neurona.
 
 \begin{equation}\label{eq:neuron_layer}
-	\boldsymbol{\vect{z_l}} = \vect{w_l} \cdot \vect{a_{l-1}} + \vect{b_l}
+	\vect{z_{l_i}} = \vect{w_{l_i}} \cdot \vect{a_{l_{i-1}}} + \vect{b_{l_i}}
 \end{equation}
 
 \begin{equation}\label{eq:neuron_layer_activation}
@@ -461,7 +461,7 @@ Sloj neurona sastoji se od skupa neurona. Matematički, sloj neurona sastoji se 
 
 
 
-Neuronska mreža sastoji se od više slojeva neurona koji su međusobno povezani. Slojevi su povezani tako što je svaki neuronski sloj razine $l$ povezan sa svakim neuronskim slojem razine $l+1$. Povezani su na način da se izlaz neuronskog sloja $l$ dovodi na ulaz neuronskog sloja $l+1$. Prije dovođenja na ulaz $l_{i+1}$ izlaz sloja $l_i$ proveden je kroz aktivacijsku funkciju čime je izlaz aktiviran. Ovaj algoritam prijenosa podataka s jednog sloja na drugi zove se \textit{feedforward} algoritam. Slojevi se dijele u tri različite grupe: ulazni, skriveni i izlazni sloj. Ulazni sloj je prvi sloj na koji se dovodi ulazni podataka, slika. Izlazni sloj je sloj koji na izlazu daje klasifikaciju ulazne slike, u ovom slučaju vektor predviđenih emocija. Skriveni slojevi su među-slojevi koji obrađuju podatke prethodnog izlaznog sloja neurona. U sredinom skrivenog područja obrađuje se najviše informacija 
+Neuronska mreža sastoji se od više slojeva neurona koji su međusobno povezani. Slojevi su povezani tako što je svaki neuronski sloj razine $l_i$ povezan sa svakim neuronskim slojem razine $l_{i+1}$. Povezani su na način da se izlaz neuronskog sloja $l_i$ dovodi na ulaz neuronskog sloja $l_{i+1}$. Prije dovođenja na ulaz $l_{i+1}$ izlaz sloja $l_i$ proveden je kroz aktivacijsku funkciju $g$ čime je izlaz aktiviran. Ovaj algoritam prijenosa podataka s jednog sloja na drugi zove se \textit{feedforward} algoritam. Slojevi se dijele u tri različite grupe: ulazni, skriveni i izlazni sloj. Ulazni sloj je prvi sloj na koji se dovodi ulazni podataka, slika. Izlazni sloj je sloj koji na izlazu daje klasifikaciju ulazne slike, u ovom slučaju vektor predviđenih emocija. Skriveni slojevi su među-slojevi koji obrađuju podatke prethodnog izlaznog sloja neurona. U sredinom skrivenog područja obrađuje se najviše informacija 
 
 \begin{figure}[H]
 	\centering
@@ -511,7 +511,7 @@ Iako ta dva rubovi izgledom mogu biti slični bitna spoznaja za neuronsku mrežu
 
 
 \subsection{Funkcija gubitka}\label{loss_function}
-Funkcija gubitka \engl{Loss function} je funkcija koja govori koliko je neuronska mreža daleko ili blizu rezultata koji se želi postići. Rezultat funkcije gubitka bit će pogreška koju je mreža napravila prilikom predviđanja vektora emocije određene slike. Taj rezultat bit će korišten za ispravljanje parametara neuronske mreže. Funkcija gubitka treba ukazati na kojim je predviđanjima neuronska mreža pogriješila i za koliko. Križni entropijski gubitak \engl{Cross Entropy Loss} je funkcija gubitka dana sa \ref{eq:cross_entropy} koja će biti korištena prilikom određivanja gubitka. Funkcija prima dva parametra, ispravna vrijednost označenu kao vektor $\vect{x}$ je i predviđenu vrijednost označenu kao vektor $\vect{y}$. U slučaju predviđanja emocija $\vect{x}$ je stvaran vektor emocije za pojedinu sliku dok je $\vect{y}$ previđen vektor emocije stvoren na izlazu neuronske mreže. Vektor $\vect{w}$ predstavlja težišta za pojedini element vektora $\vect{x}$ i $\vect{y}$. Elementi vektora $\vect{w}$ su $w_1, w_2, ..., w_n$ gdje svaki $w_i$ predstavlja koeficijent koji će biti pomnožen sa rezultatom gubitka. Razlog uvođenja težišta je neravnomjerna zastupljenost klasa u podatkovnom skupu za treniranje. Klase s manjim brojem uzoraka imat će veće težište prilikom računanja gubitka i samim time će biti "bitnije" prilikom treniranja. Kazna pogreške predviđanja za klasu emocije manjeg brojem uzoraka bit će veća nego u slučaju ne korištenja težišta. 
+Funkcija gubitka \engl{loss function} je funkcija koja govori koliko je neuronska mreža daleko ili blizu rezultata koji se želi postići. Rezultat funkcije gubitka bit će pogreška koju je mreža napravila prilikom predviđanja vektora emocije određene slike. Taj rezultat bit će korišten za ispravljanje parametara neuronske mreže. Funkcija gubitka treba ukazati na kojim je predviđanjima neuronska mreža pogriješila i za koliko. Križni entropijski gubitak \engl{Cross Entropy Loss} je funkcija gubitka dana sa \ref{eq:cross_entropy} koja će biti korištena prilikom određivanja gubitka. Funkcija prima dva parametra, ispravna vrijednost označenu kao vektor $\vect{x}$ je i predviđenu vrijednost označenu kao vektor $\vect{y}$. U slučaju predviđanja emocija $\vect{x}$ je stvaran vektor emocije za pojedinu sliku dok je $\vect{y}$ previđen vektor emocije stvoren na izlazu neuronske mreže. Vektor $\vect{w}$ predstavlja težišta za pojedini element vektora $\vect{x}$ i $\vect{y}$. Elementi vektora $\vect{w}$ su $w_1, w_2, ..., w_n$ gdje svaki $w_i$ predstavlja koeficijent koji će biti pomnožen sa rezultatom gubitka. Razlog uvođenja težišta je neravnomjerna zastupljenost klasa u podatkovnom skupu za treniranje. Klase s manjim brojem uzoraka imat će veće težište prilikom računanja gubitka i samim time će biti "bitnije" prilikom treniranja. Kazna pogreške predviđanja za klasu emocije manjeg brojem uzoraka bit će veća nego u slučaju ne korištenja težišta. 
 
 \begin{equation}\label{eq:cross_entropy}
 	CrossEntropyWeighted\left(\vect{x}, \vect{y},\vect{w}\right) =
@@ -784,7 +784,6 @@ Kod za potpunu transformaciju izgleda ovako:
 
 \begin{figure}[H]
 \centering
-
 \begin{Verbatim}[fontsize=\small]
 transform_image_train = transforms.Compose([
     transforms.Resize(IMG_SIZE),
@@ -803,51 +802,103 @@ transform_image_train = transforms.Compose([
 
 
 
-
-
-\subsection{ResNet50}
-
-Spomenutu unaprijed treniranu mrežu ResNet50 potrebno je uvesti u projekt. Srećom, PyTorch već ima ugrađenu unaprijed treniranu ResNet50 mrežu treniranu nad bogatim podatkovnim skupom ImageNet \cite{imagenet}. ResNet50 inicijalizira se na sljedeći način:
-
-\begin{figure}[H]
-\centering
-
-\begin{Verbatim}[fontsize=\small]
-resnet50 = models.resnet50(pretrained=True,  progress=True)
-\end{Verbatim}
-\caption{Inicijalizacija ResNet50}
-\label{pic:init_resnet}
-\end{figure}
-
 \subsection{Hiperparametri}
 
 \subsubsection{Funkcija gubitka}
-Funkcija gubitka koja se koristi prilikom treniranja opisana je u poglavlju \ref{loss_function}
+Funkcija gubitka koja se koristi prilikom treniranja opisana je u poglavlju \ref{loss_function}\\
+\begin{Verbatim}[fontsize=\small]
+def CrossEntropyLossWeighted(pred, soft_targets, weights):        
+
+    # logsoftmax umjesto logaritma jer
+    # izlaz modela nije proveden kroz softmax
+    logsoftmax = nn.LogSoftmax(dim=1)  
+    
+    plain_loss = - soft_targets * logsoftmax(pred)
+    weighted_loss = weights * (plain_loss)
+    result = torch.mean(torch.sum(weighted_loss, dim=1))
+    return result
+\end{Verbatim}
+	
+\subsubsection{Stopa učenja}
+Definicija stope učenja napisana je u poglavlju \ref{nn_train} kao i područje na koje ona djeluje u formuli \ref{eq:gradient_backprop_layer}. Odabrana stopa učenja će biti postavljena na inicijalnu vrijednost 0.01 koja se dijeli sa 10 za svaku četvrtinu epohe, dakle vrijednosti su 0.01, 0.001, 0.0001, 0.00001. Razlog smanjivanja stope učenja prilikom treniranja je finija konvergencija prema minimumu. Ukoliko se ne koristi metoda smanjivanja stope učenja prilikom treniranja stopa učenja bit će postavljena na 0.0001.\\
+\lstinline"LEARNING_RATE = 0.0001"
 
 \subsubsection{Broj epoha}
-Broj epoha \engl{epoch} je broj koji predstavlja koji će se puta treniranje provesti nad cijelim skupom za treniranje. Odabrana vrijednost je 100. 
+Broj epoha \engl{epoch} je broj koji predstavlja koji će se puta treniranje provesti nad cijelim skupom za treniranje. Odabrana vrijednost je 100.\\
+\lstinline"EPOCHS = 100"
 
 \subsubsection{Veličina serije}
-Veličina serije \engl{batch size} je veličina grupe slika koje se odjednom šalju neuronskoj mreži. Odabrana vrijednost iznosit će 16. To znači da će model u jednoj seriji predviđati emocije za 16 slika. Korištenjem serija funkcija gubitka kao rezultat vraća pogrešku za cijelu seriju.
-
-\subsubsection{Optimizator}
-Optimizator koji će utjecati na mijenjanje težišta neurona prilikom backpropagation algoritma je optimizator Adam \cite{adam}. Za pronalaženje optimalnog rješenja, Adam koristi stohastički gradijentni spust uz moment djeluje na brzinu konvergencije prilikom iteracije. Moment djeluje na svaku varijablu koja se trenira. 
- 
-\subsubsection{Stopa učenja}
-
-Definicija stope učenja napisana je u poglavlju \ref{nn_train} kao i područje na koje ona djeluje u formuli \ref{eq:gradient_backprop_layer}. Odabrana stopa učenja će biti postavljena na inicijalnu vrijednost 0.01 koja se dijeli sa 10 za svaku četvrtinu epohe, dakle vrijednosti su 0.01, 0.001, 0.0001, 0.00001. Razlog smanjivanja stope učenja prilikom treniranja je finija konvergencija prema minimumu.
-
+Veličina serije \engl{batch size} je veličina grupe slika koje se odjednom šalju neuronskoj mreži. Odabrana vrijednost iznosit će 16. To znači da će model u jednoj seriji predviđati emocije za 16 slika. Korištenjem serija funkcija gubitka kao rezultat vraća pogrešku za cijelu seriju.\\ \lstinline"BATCH_SIZE = 100"
 
 \subsubsection{Slojevi ResNet50 mreže}
-Prilikom treniranja mreže koristi se metoda prijenosnog učenja, više u poglavlju \ref{transfered_learning}, gdje su svi slojevi mreže već unaprijed trenirani. Konvencija prilikom prijenosnog učenja je zamrznuti slojeve odgovorne za prepoznavanje početnih i temeljnih djelova slika, poput većih objekata, rubova i geometrijskih oblika. Težine preostalih slojeva bit će ažurirane prilikom treniranja za specifičan problem klasifikacije, u ovom slučaju klasifikacija emocije. Kako je ResNet50 trenirana na 1000 raznovrsnih klasa ima vrlo dobru mogućnost prepoznavanja raznolikih objekta na slici. U ovom slučaju slike lica su i dalje raznolika no postoje značajke na slikama lica koje su uvijek zajedničke (prisutnost različitih djelova lica). Zbog toga će zamrznuti slojevi biti svi osim zadnja tri sloja. Kad bi problem klasifikacije bio sličan podatkovnom skupu ImageNet zamrzavanje bi se provelo nad svim slojevima ResNet50 mreže.
+Spomenutu unaprijed treniranu mrežu ResNet50 potrebno je uvesti u projekt. Srećom, PyTorch već ima ugrađenu unaprijed treniranu ResNet50 mrežu treniranu nad bogatim podatkovnim skupom ImageNet \cite{imagenet}. Prilikom treniranja mreže koristi se metoda prijenosnog učenja, više u poglavlju \ref{transfered_learning}, gdje su svi slojevi mreže već unaprijed trenirani. Konvencija prilikom prijenosnog učenja je zamrznuti slojeve odgovorne za prepoznavanje početnih i temeljnih djelova slika, poput većih objekata, rubova i geometrijskih oblika. Težine preostalih slojeva bit će ažurirane prilikom treniranja za specifičan problem klasifikacije, u ovom slučaju klasifikacija emocije. Kako je ResNet50 trenirana na 1000 raznovrsnih klasa ima vrlo dobru mogućnost prepoznavanja raznolikih objekta na slici. U ovom slučaju slike lica su i dalje raznolika no postoje značajke na slikama lica koje su uvijek zajedničke (prisutnost različitih djelova lica). Zbog toga će zamrznuti slojevi biti svi osim zadnja tri sloja. Kad bi problem klasifikacije bio sličan podatkovnom skupu ImageNet zamrzavanje bi se provelo nad svim slojevima ResNet50 mreže.
+\begin{Verbatim}[fontsize=\small]
+resnet50 = models.resnet50(pretrained=True)
 
-%\subsection{Treniranje}
+# zamrzavanje svih slojeva osim zadnja 3
+for model_block in list(resnet50.children())[:-3]:
+        for param in model_block.parameters():
+            param.requires_grad = False
+\end{Verbatim}
+
+
+\subsubsection{Optimizator}
+Optimizator koji će utjecati na mijenjanje težišta neurona prilikom backpropagation algoritma je optimizator Adam \cite{adam}. Za pronalaženje optimalnog rješenja, Adam koristi stohastički gradijentni spust uz moment djeluje na brzinu konvergencije prilikom iteracije. Moment djeluje na svaku varijablu koja se trenira.\\
+\lstinline"optimizer = optim.Adam(resnet50.parameters(), lr=LEARNING_RATE)"
+
+
+
+\subsection{Treniranje}
+
+Inicijalizacijom svih potrebnih hiperparametara mreža je spremna za treniranje. Jedna iteracija treniranja izvršava se nad cijelim podatkovnim skupom za treniranje. Broj takvih iteracija bit će izvršen \lstinline"EPOCHS" puta. Prije početka treniranja potrebno je model prebaciti u stanje \lstinline"train" čime je označeno da će model mijenjati svoja težišta prilikom iteracija. Prilikom iteracija jedne epohe događa sljedeće:
+
+\lstinline"train_loader" dohvaća jednu seriju podataka \lstinline"batch". Iz serije se izvlače podaci \lstinline"face" i \lstinline"emotions". To su lista slika i emocija a obje liste sadržavaju \lstinline"BATCH_SIZE" tj. 16 unikatnih slika lica i odgovarajućih emocija koje više neće biti dohvaćene prilikom trenutne epohe. 16 slika lica šalju se u model koji kao izlaz vraća 16 predviđenih emocija na temelju slika koje je upravo vidio. Funkcija gubitka \engl{loss function} uspoređuje predviđanja modela sa istinitim vektorom emocija \lstinline"loss_func(...)" tako da računa gubitak koji je model proizveo svojim predviđanjem, točnije, koliko je model pogriješio prilikom predviđanja emocije za slike trenutne serije. Funkcija gubitka nakon toga računa derivacije gubitka za svaki parametar \lstinline"loss.backwards()" a optimizator Adam koristi izračunate derivacije i stopu učenja da ažurira težišta modela \lstinline"optimizer.step()". Prije izračuna derivacija optimizator izbriše prethodno izračunate derivacije prošle serije pozivom \lstinline"optimizer.zero_grad()".
+	
+\begin{figure}[H]
+\centering
+\begin{Verbatim}[fontsize=\small]
+for epoch in range(EPOCHS):
+
+        train_loss = 0.0
+        batch_loss = 0
+        val_loss = 0
+
+        model.train()
+        for batch in train_loader:
+            face, emotions = batch
+            optimizer.zero_grad()
+            outputs = model(face) # not softmaxed
+            emotions = emotions
+            loss = loss_func(pred=outputs.float(),
+                             soft_targets=emotions.float(),
+                             weights=WEIGHTS)
+            loss.backward()
+            optimizer.step()
+            # emotion size is same as batch size
+            train_loss += float(loss) * int(emotions.size(0)) 
+
+        train_loss = train_loss / train_size
+        train_losses.append(train_loss)
+\end{Verbatim}
+\caption{Pojednostavljen kod treniranja modela}
+\label{pic:pytorch_transform_aug}
+\end{figure}
+
+Treniranje modela prestaje nakon \lstinline"EPOCHS" epoha a sprema se svaki model koji je bolji od najboljeg prethodnog. Ovime do tad najbolji model biti spremljen čak i ukoliko treniranje prestane prerano. Najbolji model mjeren je po kriteriju točnosti nad testnim podatkovnim skupom koji će biti objašnjen u sljedećem poglavlju. 
+\begin{Verbatim}[fontsize=\small]
+if(epoch_acc > best_acc):
+	best_acc = epoch_acc
+	best_model = copy.deepcopy(resnet50.state_dict())
+	torch.save(best_model, filename)
+\end{Verbatim}
 
 \chapter{Rezultati}
 
+Trenirani model 
+
 \textcolor{red}{Opisati postupak evaluacija}\\
-\textcolor{red}{Opisati prestanak treniranja}\\
-\textcolor{red}{Opisati spremanje modela}\\
+
+
 \textcolor{red}{Opisati razlike  Ck+ vs. CK+ Google} \\
 \textcolor{red}{Generirati sliku konfuzijske matrice (podjeliti sa najvećim brojem prije toga}\\
 \textcolor{red}{Opisati razlike  Ck+ vs. CK+ Google} 
