@@ -8,7 +8,6 @@
 \contentsline {subsection}{\numberline {2.4.1}Priprema Cohn-Kanade podatkovnog skupa}{4}% 
 \contentsline {subsubsection}{Struktura podataka}{4}% 
 \contentsline {subsubsection}{Obrada podataka}{5}% 
-\contentsline {subsubsection}{Primjer vektora emocije za sekvencu "disgust" koja sadr\IeC {\v z}i 10 slika:}{6}% 
 \contentsline {subsubsection}{Spremanje slike i vektora emocije u .npy podatak}{7}% 
 \contentsline {subsection}{\numberline {2.4.2}Priprema Google podatkovnog skupa}{7}% 
 \contentsline {subsubsection}{Prikupljeni podaci}{7}% 
@@ -30,16 +29,20 @@
 \contentsline {subsubsection}{Arhitektura mre\IeC {\v z}e ResNet50}{21}% 
 \contentsline {subsection}{\numberline {3.1.8}Prijenosno u\IeC {\v c}enje}{23}% 
 \contentsline {section}{\numberline {3.2}Implementacija treniranja u PyTorch-u}{24}% 
-\contentsline {subsection}{\numberline {3.2.1}Priprema podataka}{24}% 
-\contentsline {subsubsection}{Podjela skupa}{25}% 
+\contentsline {subsection}{\numberline {3.2.1}Uvod}{24}% 
+\contentsline {subsection}{\numberline {3.2.2}Priprema podataka}{24}% 
+\contentsline {subsubsection}{Podjela podatkovnog skupa}{25}% 
 \contentsline {subsubsection}{Transformacija slike}{26}% 
-\contentsline {subsubsection}{Augmentacija slike}{26}% 
-\contentsline {subsection}{\numberline {3.2.2}ResNet 50}{28}% 
-\contentsline {subsection}{\numberline {3.2.3}Hiperparametri}{28}% 
-\contentsline {subsubsection}{Epoha}{28}% 
-\contentsline {subsubsection}{Veli\IeC {\v c}ina serija}{28}% 
-\contentsline {subsubsection}{Optimizator}{28}% 
-\contentsline {chapter}{\numberline {4}Evaluacija}{29}% 
-\contentsline {subsection}{\numberline {4.0.1}Konfuzijska matrica}{30}% 
-\contentsline {chapter}{\numberline {5}Zaklju\IeC {\v c}ak}{31}% 
-\contentsline {chapter}{Literatura}{32}% 
+\contentsline {subsubsection}{Augmentacija slike}{27}% 
+\contentsline {subsection}{\numberline {3.2.3}ResNet50}{28}% 
+\contentsline {subsection}{\numberline {3.2.4}Hiperparametri}{28}% 
+\contentsline {subsubsection}{Funkcija gubitka}{28}% 
+\contentsline {subsubsection}{Broj epoha}{28}% 
+\contentsline {subsubsection}{Veli\IeC {\v c}ina serije}{29}% 
+\contentsline {subsubsection}{Optimizator}{29}% 
+\contentsline {subsubsection}{Stopa u\IeC {\v c}enja}{29}% 
+\contentsline {subsubsection}{Slojevi ResNet50 mre\IeC {\v z}e}{29}% 
+\contentsline {chapter}{\numberline {4}Rezultati}{30}% 
+\contentsline {subsection}{\numberline {4.0.1}Konfuzijska matrica}{31}% 
+\contentsline {chapter}{\numberline {5}Zaklju\IeC {\v c}ak}{32}% 
+\contentsline {chapter}{Literatura}{33}% 

@@ -84,6 +84,7 @@
 % Matej Paketi
 \RequirePackage{listings}
 \RequirePackage{xcolor}
+\RequirePackage{xparse}
 \RequirePackage{pmboxdraw}
 \RequirePackage{fancyvrb}
 \RequirePackage{import}

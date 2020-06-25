@@ -19,7 +19,7 @@
     showspaces=false,                
     showstringspaces=false,
     showtabs=false,                  
-    tabsize=4  
+    tabsize=4 
 }
 
 %command for vector boldness
@@ -74,6 +74,7 @@ Podatkovni skup sastavni je dio u izvedbi treniranja modela. Treniranje se svodi
 Cohn-Kanade podatkovni skup sastoji se od 593 sekvenci slika od 123 subjekta (osoba). Pojedina sekvenca sastoji se od 10 do 60 slika. Početna slika u sekvenci je neutralna emocija dok je zadnja slika vrhunac izraza emocije. Subjekti na slikama imaju od 18 do 50 godina, 69\% su žene, 81\% euro-Amerikanci i 6\% su subjekti ostalih rase. Rezolucija pojedine slike iznosi 640x480 ili 640x490 piksela u 8-bitnom crno-bijelom ili 24 bitnom puno-bojnom formatu\cite{ck}.
 
 \begin{figure}[H]
+	\centering
 	\includegraphics[width=\linewidth, height=0.3\paperheight, keepaspectratio]{ck_example.png}
 	\caption{Primjer slike iz CK+ podatkovnog skupa}
 	\label{pic:ck_example}
@@ -92,7 +93,7 @@ Slike CK+ podatkovnog skupa slikane su u istom okruženju (ista prostorija u koj
 Rezultati ovog upita su slike veće raznolikosti (različit scenarij i drugačiji kut gledanja) što pridonosi apstrakciji emocije u ukupnom podatkovnom skupu. Dobivene slike ne odgovaraju uvijek nužno zadanom upitu zbog čega je potrebno dodatno provjeriti valjanost pojedine slike. Proces filtriranja objašnjen je u poglavlju \ref{google_npy_filter}
 
 
-\section{Priprema podatkovnih skupova}\label{priprema_ck}
+\section{Priprema podatkovnih skupova}\label{npy_preprocess}
 \subsection{Priprema Cohn-Kanade podatkovnog skupa}
 \subsubsection{Struktura podataka}
 
@@ -172,7 +173,8 @@ Znajući da je emocija za početnu sliku neutralna a za krajnju maksimalna sekve
 \end{split}
 \end{equation}
 
-\subsubsection{Primjer vektora emocije za sekvencu "disgust" koja sadrži 10 slika:}
+\noindent
+Primjer vektora emocije za sekvencu "disgust" koja sadrži 10 slika:
 
 \begin{figure}[H]
 \centering
@@ -286,7 +288,7 @@ Nakon filtriranja slika nepogodnih za treniranje potrebno je objediniti upite č
 \end{figure}
 
 \subsubsection{Obrada podataka}
-Obrada Google podatkovnog skupa bit će manje zahtjevna od CK+ podatkovnog skupa zbog toga što će se vektor emocije za pojedinu sliku odrediti samo na temelju upita korištenog za preuzimanje slike. Rezultat svakog vektora emocije bit će vektor dobiven metodom "One hot encoding". "One hot encoding" je metoda dodjele binarne vrijednosti za kategoriju u koju neki uzorak pripada ili ne pripada\cite{one_hot_encoding}. Ovom metodom uzorak (slika) može pripadati samo jednoj kategoriji (emocija). Slika koja pripada određenoj emociji za tu će emociju imati vrijednost 1 a za sve ostale 0. Na slici \ref{pic:google_emotion_emo_vector} prva kolumna označava ime direktorija u kojem se slike nalaze, druga kolumna predstavlja vektor emocije koje će slike u direktoriju poprimiti.
+Obrada Google podatkovnog skupa bit će manje zahtjevna od CK+ podatkovnog skupa zbog toga što će se vektor emocije za pojedinu sliku odrediti samo na temelju upita korištenog za preuzimanje slike. Rezultat svakog vektora emocije bit će vektor dobiven metodom "One hot encoding". "One hot encoding" je metoda dodjele binarne vrijednosti za kategoriju u koju neki uzorak pripada ili ne pripada \cite{one_hot_encoding}. Ovom metodom uzorak (slika) može pripadati samo jednoj kategoriji (emocija). Slika koja pripada određenoj emociji za tu će emociju imati vrijednost 1 a za sve ostale 0. Na slici \ref{pic:google_emotion_emo_vector} prva kolumna označava ime direktorija u kojem se slike nalaze, druga kolumna predstavlja vektor emocije koje će slike u direktoriju poprimiti.
 
 \begin{figure}[H]
 \centering
@@ -313,8 +315,15 @@ Nakon dodjele vektora emocije za pojedinu sliku potrebno je pretvoriti sliku i v
 
 
 \subsection{Objedinjavanje podatkovnih skupova}
-Nakon obrade CK+ i Google podatkovnog skupa svi .npy podaci bit će spremljeni u direktoriji "ck" ili "Google" ovisno o tome iz kojeg je podatkovnog skupa slika dobivena. Struktura svih .npy podataka prikazana je na slici \ref{pic:npy_structure}. Ovom strukturom moguće je definirati udio svakog podatkovnog skupa koji će biti korišten za treniranje modela. Poslije podjele u zasebne direktorije potrebno je odvojiti dio .npy podataka u test pod-direktoriji. U njemu će se nalaziti 10\% svih .npy podataka koji će modelu biti neviđeni prilikom treniranja. Tih 10\% .npy podataka koristit će se pri evaluaciji točnosti modela.
+Nakon obrade CK+ i Google podatkovnog skupa svi .npy podaci bit će spremljeni u direktoriji "ck" ili "Google" ovisno o tome iz kojeg je podatkovnog skupa slika dobivena. Struktura svih .npy podataka prikazana je na slici \ref{pic:npy_structure}. Ovom strukturom moguće je definirati udio svakog podatkovnog skupa koji će biti korišten za treniranje modela. Poslije podjele u zasebne direktorije potrebno je odvojiti dio .npy podataka u test pod-direktoriji. U njemu će se nalaziti 20\% svih .npy podataka koji će modelu biti neviđeni prilikom treniranja. Tih 20\% .npy podataka koristit će se pri evaluaciji točnosti modela. Prikaz podjele podatkovnog skupa prikazan je na slici \ref{todo:} Bitno je naglasiti da skup za evaluaciju ne smije ni u kojem trenutku biti izvor za treniranje mreže. Razlog toga je što model naučen na zadanom skupu slika će pri završetku treniranja biti u stanju sa vrlo visokom točnošću predvidjeti emociju slike koja je bila korištena prilikom treniranja. Evaluacija mora simulirati realnu situaciju u kojoj model nikad nije imao uvid u slike koje će biti korištene prilikom njegovog testiranja.
 
+\todo{piechar slika}
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=\linewidth, height=0.3\paperheight, keepaspectratio]{splitset.png}
+	\caption{Vizualni prikaz podijeljenog podatkovnog skupa}
+	\label{pic:dataset_split_percentages}
+\end{figure}
 
 \begin{figure}[H]
 \centering
@@ -501,7 +510,7 @@ Iako ta dva rubovi izgledom mogu biti slični bitna spoznaja za neuronsku mrežu
 
 
 
-\subsection{Funkcija gubitka}
+\subsection{Funkcija gubitka}\label{loss_function}
 Funkcija gubitka \engl{Loss function} je funkcija koja govori koliko je neuronska mreža daleko ili blizu rezultata koji se želi postići. Rezultat funkcije gubitka bit će pogreška koju je mreža napravila prilikom predviđanja vektora emocije određene slike. Taj rezultat bit će korišten za ispravljanje parametara neuronske mreže. Funkcija gubitka treba ukazati na kojim je predviđanjima neuronska mreža pogriješila i za koliko. Križni entropijski gubitak \engl{Cross Entropy Loss} je funkcija gubitka dana sa \ref{eq:cross_entropy} koja će biti korištena prilikom određivanja gubitka. Funkcija prima dva parametra, ispravna vrijednost označenu kao vektor $\vect{x}$ je i predviđenu vrijednost označenu kao vektor $\vect{y}$. U slučaju predviđanja emocija $\vect{x}$ je stvaran vektor emocije za pojedinu sliku dok je $\vect{y}$ previđen vektor emocije stvoren na izlazu neuronske mreže. Vektor $\vect{w}$ predstavlja težišta za pojedini element vektora $\vect{x}$ i $\vect{y}$. Elementi vektora $\vect{w}$ su $w_1, w_2, ..., w_n$ gdje svaki $w_i$ predstavlja koeficijent koji će biti pomnožen sa rezultatom gubitka. Razlog uvođenja težišta je neravnomjerna zastupljenost klasa u podatkovnom skupu za treniranje. Klase s manjim brojem uzoraka imat će veće težište prilikom računanja gubitka i samim time će biti "bitnije" prilikom treniranja. Kazna pogreške predviđanja za klasu emocije manjeg brojem uzoraka bit će veća nego u slučaju ne korištenja težišta. 
 
 \begin{equation}\label{eq:cross_entropy}
@@ -509,9 +518,9 @@ Funkcija gubitka \engl{Loss function} je funkcija koja govori koliko je neuronsk
 		-\sum_i w_i \left( x_i log\left(y_i \right)\right)
 \end{equation}
 
-\subsection{Treniranje neuronske mreže}
+\subsection{Treniranje neuronske mreže}\label{nn_train}
 
-Neuronska mreža predstavlja nelinearnu funkciju koja se sastoji od $n$ varijabli a parametri su spomenuti parametri pojedinog neurona spomenuti na formuli \ref{eq:neuron_z}, težišta neurona $\vect{w}$2 i sklonost neurona $b$. Mijenjanje tih parametra parametra na način da se rezultat funkcije gubitka smanjuje naziva se treniranje. Cilj treniranja je minimizirati gubitak tako da se pronađe lokalni minimum u $n$ dimenzionalnom prostoru, gdje je broj $n$ broj varijabli u neuronskoj mreži. Metoda pronalaska minimuma zove se spuštanje gradijentom \engl{gradient descent}. Računanje spusta svodi se na izračun derivacije parametra neuronske mreže prema \ref{eq:graident_der} gdje je greška neuronskog sloja $E$, $a$ aktivacijski izlaz  i $w$ težina sloja.
+Neuronska mreža predstavlja nelinearnu funkciju koja se sastoji od $n$ varijabli a parametri su spomenuti parametri pojedinog neurona spomenuti na formuli \ref{eq:neuron}, težišta neurona $\vect{w}$2 i sklonost neurona $b$. Mijenjanje tih parametra parametra na način da se rezultat funkcije gubitka smanjuje naziva se treniranje. Cilj treniranja je minimizirati gubitak tako da se pronađe lokalni minimum u $n$ dimenzionalnom prostoru, gdje je broj $n$ broj varijabli u neuronskoj mreži. Metoda pronalaska minimuma zove se spuštanje gradijentom \engl{gradient descent}. Računanje spusta svodi se na izračun derivacije parametra neuronske mreže prema \ref{eq:graident_der} gdje je greška neuronskog sloja $E$, $a$ aktivacijski izlaz  i $w$ težina sloja.
 
 \begin{equation}\label{eq:graident_der}
 	\frac{\partial E}{\partial w} = \frac{\partial E}{\partial a} \cdot \frac{\partial a}{\partial w}
@@ -646,19 +655,25 @@ Podaci dovedeni na ulaz ResNet50 mreže prolaze kroz nju sljedećim redoslijedom
 Ukupan broj navedenih slojeva je 50
 
 
-\subsection{Prijenosno učenje}
+\subsection{Prijenosno učenje}\label{transfered_learning}
 
-Prijenosno učenje je tehnika u području strojnog gdje je naučenost modela za predviđanje jednog cilja prenesena na predviđanje drugog cilja. Potreba za ovom tehnikom javlja se iz nedovoljno velikog skupa podataka korištenog za treniranje. Zbog toga što podatkovni skup nije dovoljno velik, neuronska mreža neće biti dovoljno trenirana da predviđa emocija za neviđene slike. Unaprijed trenirana neuronska mreža ResNet 50, koja je trenirana na ImageNet podatkovnom skupu \cite{imagenet_cvpr09}, omogućava mreži da od početka prepoznaje bitne značajke neviđene slike. Time je izbjegnuta potreba za treniranjem modela od početka jer su početni neuronski slojevi mreže već dobro naučeni za prepoznavanje bitnih značajki u slici, poput istaknutih objekta i uočljivijih oblika.
+Prijenosno učenje je tehnika u području strojnog gdje je naučenost modela za predviđanje jednog cilja prenesena na predviđanje drugog cilja. Potreba za ovom tehnikom javlja se iz nedovoljno velikog skupa podataka korištenog za treniranje. Zbog toga što podatkovni skup nije dovoljno velik, neuronska mreža neće biti dovoljno trenirana da predviđa emocija za neviđene slike. Unaprijed trenirana neuronska mreža ResNet50, koja je trenirana na ImageNet podatkovnom skupu \cite{imagenet}, omogućava mreži da od početka prepoznaje bitne značajke neviđene slike. Time je izbjegnuta potreba za treniranjem modela od početka jer su početni neuronski slojevi mreže već dobro naučeni za prepoznavanje bitnih značajki u slici, poput istaknutih objekta i uočljivijih oblika.
 
-Zadnji slojevi unaprijed trenirane ResNet 50 mreže mogu predviđati 1000 različitih značajki. Broj mogućih klasifikacijskih emocija je 8 zbog čega će biti potrebno dodati zadnji neuronski sloj na postojeću neuronsku mrežu tako da izlaz mreže bude dimenzije 8, a ne 1000 što odgovara broju različitih klasa korištenih u ImageNet podatkovnom skupu. Korištenjem većeg i apstraktnijeg podatkovnog skupa ova se tehnika može izostaviti.
+Zadnji slojevi unaprijed trenirane ResNet50 mreže mogu predviđati 1000 različitih značajki. Broj mogućih klasifikacijskih emocija je 8 zbog čega će biti potrebno dodati zadnji neuronski sloj na postojeću neuronsku mrežu tako da izlaz mreže bude dimenzije 8, a ne 1000 što odgovara broju različitih klasa korištenih u ImageNet podatkovnom skupu. Korištenjem većeg i apstraktnijeg podatkovnog skupa ova se tehnika može izostaviti.
 
 
-\section{Implementacija treniranja u PyTorch-u} \todo{opisati detaljnije pytorch}
-U poglavlju \ref{priprema_ck} i \ref{priprema_google} objašnjeno su iz oba podatkovna skupa dobiveni .npy podaci koji sadrže podatke slike i odgovarajućeg vektora emocije te slike. Sljedeći korak je iskoristiti te podatke za treniranje neuronske mreže koja će klasificirati emocije neviđenih slika ljudskih lica.
+\section{Implementacija treniranja u PyTorch-u}
+
+\subsection{Uvod}
+
+PyTorch okruženje je otvorenog koda \engl{open source} koja ubrzava proces implementacije strojnog učenja. Temeljne stvari strojnog učenja lakše je ostvariti u PyTorchu nego ručno pisati postupke nanovo. Iako PyTorch smanjuje kompleksnost koda i dalje je moguće po potrebi mijenjati detaljnije značajke i raditi promjene koje nisu nužno postojeće u trenutnom PyTorch okruženju pomoću nižeg Python okruženja. PyTorch će biti korišten prilikom učitavanja podataka, stvaranja podatkovnih skupova, inicijaliziranja hiperparametra, treniranja i testiranja.
+
 
 
 \subsection{Priprema podataka}
-.npy podatke učitani su iz strukture definirane na \ref{pic:npy_structure}. Parametrima GOOGLE\_TRAIN\_SPLIT i CK\_TRAIN\_SPLIT moguće je kontrolirati koji će udio slika iz pojedinog podatkovnog skupa biti zastupljen u ukupnom skupu za treniranje.
+U poglavlju \ref{npy_preprocess} objašnjeno je stvaranje .npy podataka koji sadrže podatke slike i odgovarajućeg vektora emocije te slike. Sljedeći korak je iskoristiti te podatke za treniranje neuronske mreže koja će klasificirati emocije neviđenih slika ljudskih lica.
+
+.npy podaci učitani su iz direktorija definiranog strukturom na slici \ref{pic:npy_structure}. Prilikom učitavanja .npy podataka koristiti će se parametri \lstinline"GOOGLE_TRAIN_SPLIT" i \lstinline"CK_TRAIN_SPLIT" pomoću kojih je moguće kontrolirati koji će udio slika iz pojedinog podatkovnog skupa biti zastupljen u skupu za treniranje.
 
 \begin{figure}[H]
 \centering
@@ -670,9 +685,7 @@ CK_TRAIN_SPLIT = 1
 \label{pic:split_dataset}
 \end{figure}
 \noindent
-Sljedeći korak je implementacija klase Dataset iz PyTorch biblioteke. Stvaranjem klase FERDataset iz klase Dataset poslana su tri argumenta: lokacija .npy podataka i funkcija za transformaciju slika. FERDataset sad ima pristup lokaciji .npy podataka i preko te lokacije će dohvaćati .npy podatke prilikom treniranja.
-
-
+Sljedeći korak je stvaranje klase FERDataset \engl{Facial Recognition Dataset} koja implementira sučelja Dataset definiranog u PyTorchu. FERDataset sadrži dva argumenta: lokacija .npy podataka i funkcija za transformaciju slika. FERDataset sad ima pristup lokaciji .npy podataka i preko te lokacije će dohvaćati .npy podatke prilikom treniranja.
 \begin{figure}[H]
 \centering
 
@@ -682,17 +695,16 @@ class FERDataset(Dataset):
         self.filepaths_numpy = filepaths_numpy
         self.transform_image = transform_image
 \end{Verbatim}
-\caption{Definiranje FERDataset inicijalizacije}
+\caption{Pojednostavljena inicijalizacija FERDataset}
 \label{pic:init_dataset}
 
 \end{figure}
-
 \noindent
-Nakon dohvata .npy podataka preko funkcije \_\_getitem\_\_ potrebno ga je raspakirati u sliku lica i vektor emocije te slike. Ukoliko je zadana transformacija slike ona će se primijeniti nakon raspakiravanja .npy podataka. Više o transformaciji slika bit će rečeno kasnije. 
+Prilikom dohvata .npy podataka preko funkcije \lstinline"__getitem__" .npy podatak je potrebno raspakirati u sliku lica i vektor emocije te slike. Ukoliko je zadana funkcija transformacije slike nju je potrebno primijeniti na sliku nakon raspakiravanja .npy podataka. Opis postupka transformacije slika nalazi se u poglavlju \ref{transform_image}. 
+
 
 \begin{figure}[H]
 \centering
-
 \begin{Verbatim}[fontsize=\small]
 def __getitem__(self, idx):
         name_npy = filepaths_npy(idx)
@@ -700,65 +712,75 @@ def __getitem__(self, idx):
         image = transform(image)
         return image, emotion
 \end{Verbatim}
-\caption{Pojednostavljeni dohvat i raspakiravanje .npy podataka}
+\caption{Pojednostavljeni kod dohvata i raspakiravanja .npy podataka}
 \label{pic:init_dataset}
 \end{figure}
 
-\subsubsection{Podjela skupa}
-Nakon stvaranja objekta tipa Dataset, u ovom slučaju FERDataset potrebno je taj podatkovni skup podijeliti u skup za treniranje i skup za evaluaciju. Kako je taj posao već napravljen kao što je prikazano na slici \ref{pic:npy_structure} jedino što je potrebno je inicijalizirati zaseban skup za treniranje i evaluaciju kao što je prikazano na sljedećoj slici:
-
+\subsubsection{Podjela podatkovnog skupa}
+Inicijalizacijom klase koja implementira PyTorch sučelje Dataset, u ovom slučaju FERDataset, omogućeno je korištenje metoda koje lako mogu podijeliti podatkovni skup u skup za treniranje i evaluaciju. Podjela zasebnih .npy podataka već je odrađena u poglavlju \ref{npy_preprocess} a struktura direktorija podijeljenih .npy podataka dana je na slici \ref{pic:npy_structure} i \ref{pic:dataset_split_percentages}. Pomoću te dvije strukture, čija je putanja definirana sa varijablama \lstinline"FILEPATHS_NUMPY" i \lstinline"FILEPATHS_NUMPY", potrebno je stvoriti zasebni podatkovni skup za treniranje i evaluaciju. Na svaku od tih putanja prethodno djeluju navedene varijable \lstinline"GOOGLE_TRAIN_SPLIT" i \lstinline"CK_TRAIN_SPLIT" koje određuju udio zastupljenosti pojedinog podatkovnog skupa.
 
 \begin{figure}[H]
 \centering
-
 \begin{Verbatim}[fontsize=\small]
 train_dataset = FERDataset(filepaths_numpy=FILEPATHS_NUMPY,
                      transform_image=transform_image_train)
 test_dataset = FERDataset(filepaths_numpy=FILEPATHS_NUMPY_TEST,
-                          transform_image=transform_image_val)
+                          transform_image=transform_image_test)
 \end{Verbatim}
 \caption{Implementacija FERDataset klasa}
 \label{pic:init_dataset}
 \end{figure}
 
-\todo{piechar slika}
-\begin{figure}[H]
-	\centering
-	\includegraphics[width=\linewidth, height=0.3\paperheight, keepaspectratio]{splitset.png}
-	\caption{Vizualni prikaz podijeljenog podatkovnog skupa}
-	\label{splitset}
-\end{figure}
+\subsubsection{Transformacija slike}\label{transform_image}
 
+Prije nego što se podaci dobiveni iz \lstinline"train_dataseta" mogu koristiti za treniranje neuronske mreže potrebno ih je transformirati u pravilan oblik. Postupci transformiranja slike navedeni su ispravnim poretkom: 
 
-\subsubsection{Transformacija slike}
+\begin{itemize}
+	\item{Promjena veličine} – iako je ovaj korak je već ostvaren u poglavlju \ref{npy_preprocess} promjena veličine slike bit će ponovno primijenjena iz sigurnosnih razloga. Sve slike lica su postavljene na fiksnu veličinu iznosa 224x224 piksela, \lstinline"IMG_SIZE = 224", zbog uzastopne mogućnosti dijeljenja broja sa 2, pogodna za ResNet50 arhitekturu u kojoj se dijelovi slike često prepolavljaju. Promjena veličine slike izvršava se s obzirom na centar slike.
+	\item{Crno-bijelo} – slike lica su u crno-bijele slike iz razloga što boje na slici ne trebaju igrati ulogu u predviđanju emocija slike lica. Oblik, kontrast i rubovi na slici lica su dovoljno značajni za prepoznavanje ekspresije ljudskog lica. Crno-bijela transformacija ne mijenja trodimenzionalnu dimenziju boja slike već samo postavlja svaku od tri RGB boja na jednaku vrijednost.
+	\item{Pretvorba u Tensor} – sliku ljudskog lica  potrebno je pretvoriti u tip podataka PyTorch Tensor \cite{pytorch_tensor} čime je PyTorch-u omogućeno da primjenjuje sve moguće ugrađene funkcije koje mogu djelovati na tip podataka PyTorch Tensor. Transformaciju koja slijedi inače nebi bilo moguće primijeniti.	 
+	\item{Normalizacija} – korak prije slanja slike u neuronsku mrežu je normalizacija. Kako se koristi unaprijed trenirana neuronska mreža ResNet50, potrebno je provesti normalizaciju čiji parametri ovise o podatkovnom skupu koji su bili korišteni prilikom treniranja ResNet50 mreže. Ta normalizacija dana je od strane ImageNet-a \cite{normalize_imagenet} čiji je podatkovni skup korišten prilikom treniranja ResNet50 neuronske mreže.
+\end{itemize}
 
-Prije nego što se podaci dobiveni iz "train\_dataseta" mogu slobodno koristiti za treniranje neuronske mreže potrebno ih je transformirati u pravilan oblik. Sliku ljudskog lica potrebno je pretvoriti u PyTorch Tensor \cite{pytorch_tensor}. Pretvorbom podatka u ovaj tip omogućava PyTorch-u nastavlja koristiti ovaj podataka u svojoj domeni uz moguće korištenje PyTorch funckija. Korak prije slanja podataka slike u model je normalizacija. Kako se koristi unaprijed trenirana neuronska mreža ResNet 50 potrebno je provesti normalizaciju koja je matematički ispravna nad skupom koji je korišten prilikom treniranja. Ta normalizacija dana je od strane ImageNet-a čiji je podatkovni skup korišten prilikom treniranja ResNet 50 neuronske mreže \cite{normalize_imagenet} a ona glasi:
+Transformacije slika u PyTorch-u implementira se tako da se u \lstinline"transform.Compose" zada lista željenih transformacija. Redoslijed transformacija izvršavat će se poretkom elemenata u listi transformacija. Cjelokupnu transformaciju, kao argument pod imenom \lstinline"transform_image_train", u svom konstruktoru prima \lstinline"FERDataset", koji od sad ima pristup cjelokupnoj transformaciji. Kod i parametri transformacija dani su na slici \ref{pic:pytorch_transform}
 
 \begin{figure}[H]
 \centering
 
 \begin{Verbatim}[fontsize=\small]
-transforms.Normalize(
-		mean = [0.485, 0.456, 0.406],
-		std = [0.229, 0.224, 0.225])
+transform_image_train = transforms.Compose([
+    transforms.Resize(IMG_SIZE),
+    transforms.Grayscale(num_output_channels=3),
+    transforms.ToTensor(),
+    transforms.Normalize(mean=[0.485, 0.456, 0.406], std=[
+        0.229, 0.224, 0.225])
+])
 \end{Verbatim}
-\caption{Implementacija FERDataset klasa}
-\label{pic:init_dataset}
+\caption{Postupak transformacije slike}
+\label{pic:pytorch_transform}
 \end{figure}
 
-\subsubsection{Augmentacija slike} \todo{počistiti strukturu poglavlja}
 
-Dodatne i opcionalne transformacije su transformacije koje povećavaju ukupnu apstraktnost podataka \engl{data augmentation}. Ove transformacije igraju ulogu simuliranja raznolikijeg podatkovnog skupa na način da rade manje promjene na pojedinoj slici. Primjerice, nasumično povećavanje svjetline slike ili nasumično okretanje slike za kut $\alpha$. Na ovaj način model će naučiti klasificirati slike i u okolnostima stvorenim okolnostima gdje je slika svjetlija ili blago zarotirana čime se proširuje primjena modela na veći skup različitih slika.
 
-Augmentacija slika primjenjivati će se nasumično za svaku sliku, čime se osigurava da model ne bude pretreniran za slike iste svjetline ili slike na kojima je ljudsko lice jednakog nagiba. Također, sve slike ćemo postaviti na fiksnu veličinu iznosa 224x224 pixela zbog lakšeg računanja konvolucije.
+\subsubsection{Augmentacija slike}
 
-Razlog broja IMG\_SIZE = 224 je uzastopna mogućnost djeljivosti sa brojem 2, pogodna za ResNet 50 neuronsku mrežu.
 
-Sliku ćemo pretvoriti u crno-bijelu iz razloga što ne želimo da boje igraju ulogu u predviđanju emocija. Oblik, kontrast i rubovi na slici su dovoljno značajni za prepoznavanje ekspresije ljudskog lica.
+Augmentacija podataka \engl{data augmentation} je skup ne obaveznih transformacije koje povećavaju ukupnu apstraktnost podataka a samim time mogu stvoriti nepostojeće ali korisne podatke u skupu za treniranje. Ove transformacije simuliraju raznolik podatkovni skup na način da rade manje promjene na pojedinoj slici. Primjerice, nasumično povećavanje svjetline slike ili nasumična rotacija slike za kut \lstinline"-AUG_DEGREE". Na ovaj način neuronska mreža će naučiti klasificirati slike čak i ako su značajke poput svjetline slike i rotacije slične na cijelom podatkovnom skupu. To je upravo i slučaj u CK+ podatkovnom skupu. Sva su lica horizontalno poravnata čime a svjetlina slika je konzistentna.  Treniranje takvog podatkovnog skupa bez augmentacije, neuronska mreža će imati lošija predviđanja  emocije za slike lica gdje je lice blago zarotirano ili za znatno svjetlije ili tamnije neviđene slike. Uvođenjem augmentacije prilikom treniranja proširuje se primjena neuronske mreže koja kao rezultat može predviđati emocije za širu i apstraktniju domenu neviđenih slika. Augmentacija slike mora se obaviti prije normalizacije slike jer se augmentacija izvršava na slici kao takvoj a ne na PyTorch Tensor-u. Pojedina augmentacija primjenjivati će se nasumičnim intenzitetom za svaku sliku čime se osigurava da model ne bude pretreniran za specifičnu vrijednost augmentacije. 
 
-Nasumično horizontalno zrcaljenje je još jedna od korisnih augmentacijskih transformacija koja će povećati apstrakciju. Model će bolje raditi za općenite slučajeve, neovisno o zrcaljenju kamere koja slika lice.
+ Augmentacije koje će biti korištene prilikom treniranja su:
 
-Transformacija i augmentacija slika u PyTorch-u implementira se na način da funkcija "transform.Compose" primi listu željenih transformacija koja se šalje u FERDataset pod imenom "transform\_image". Augmentacija slike mora se obaviti prije normalizacije slike. Kod za potpunu transformaciju je sljedeći:
+\begin{itemize}
+	\item{Nasumično horizontalno zrcaljenje} – često korištena augmentacija za koju će model bolje predviđati emocije za općenitije slike u kojima zrcaljenje slike ili kamere koja slika lice neće utjecati na rezultat predviđanja.
+		
+	\item{Promjena svjetline} - 
+	
+	\item{Rotacija slike} – nasumična rotacija između -15 i 15 stupnjeva
+\end{itemize}
+
+
+
+\noindent
+Kod za potpunu transformaciju izgleda ovako:
 
 \begin{figure}[H]
 \centering
@@ -768,20 +790,24 @@ transform_image_train = transforms.Compose([
     transforms.Resize(IMG_SIZE),
     transforms.Grayscale(num_output_channels=3),
     transforms.RandomHorizontalFlip(),
-    # transforms.RandomAffine(degrees=(-AUG_DEGREE, AUG_DEGREE)),
+    transforms.ColorJitter(brightness=1)
+    transforms.RandomAffine(degrees=(-AUG_DEGREE, AUG_DEGREE)),
     transforms.ToTensor(),
     transforms.Normalize(mean=[0.485, 0.456, 0.406], std=[
         0.229, 0.224, 0.225])
 ])
 \end{Verbatim}
 \caption{Implementacija FERDataset klasa}
-\label{pic:init_dataset}
+\label{pic:pytorch_transform_aug}
 \end{figure}
 
 
-\subsection{ResNet 50}
 
-Spomenutu unaprijed treniranu mrežu ResNet 50 potrebno je uvesti u projekt. Srećom PyTorch već ima ugrađenu unaprijed treniranu ResNet 50 mrežu koja se poziva na sljedeći način:
+
+
+\subsection{ResNet50}
+
+Spomenutu unaprijed treniranu mrežu ResNet50 potrebno je uvesti u projekt. Srećom, PyTorch već ima ugrađenu unaprijed treniranu ResNet50 mrežu treniranu nad bogatim podatkovnim skupom ImageNet \cite{imagenet}. ResNet50 inicijalizira se na sljedeći način:
 
 \begin{figure}[H]
 \centering
@@ -789,28 +815,35 @@ Spomenutu unaprijed treniranu mrežu ResNet 50 potrebno je uvesti u projekt. Sre
 \begin{Verbatim}[fontsize=\small]
 resnet50 = models.resnet50(pretrained=True,  progress=True)
 \end{Verbatim}
-\caption{Inicijalizacija ResNet 50}
+\caption{Inicijalizacija ResNet50}
 \label{pic:init_resnet}
 \end{figure}
 
 \subsection{Hiperparametri}
-\todo{navesti ostale hiperparametre:
-stopa učenja\\
-arhitektura mreže\\
-loss funkcija}
-\subsubsection{Epoha}
-Broj epoha \engl{epoch} je broj koji predstavlja koji će se puta treniranje izvršiti nad cijelim skupom za treniranje. Odabrana vrijednost je 100. 
-\subsubsection{Veličina serija}
-Veličina serije \engl{batch size} je veličina koja predstavlja koliko se od jednom slika šalje neuronskoj mreži. Odabrana vrijednost iznosit će 16. To znači da će model u jednoj seriji predviđati emocije za 16 slika.
+
+\subsubsection{Funkcija gubitka}
+Funkcija gubitka koja se koristi prilikom treniranja opisana je u poglavlju \ref{loss_function}
+
+\subsubsection{Broj epoha}
+Broj epoha \engl{epoch} je broj koji predstavlja koji će se puta treniranje provesti nad cijelim skupom za treniranje. Odabrana vrijednost je 100. 
+
+\subsubsection{Veličina serije}
+Veličina serije \engl{batch size} je veličina grupe slika koje se odjednom šalju neuronskoj mreži. Odabrana vrijednost iznosit će 16. To znači da će model u jednoj seriji predviđati emocije za 16 slika. Korištenjem serija funkcija gubitka kao rezultat vraća pogrešku za cijelu seriju.
+
 \subsubsection{Optimizator}
-Optimizator koji će utjecati na mijenjanje težišta neurona prilikom backpropagation algoritma je Adam algoritam. Koristi stohastički gradijentni spust.
+Optimizator koji će utjecati na mijenjanje težišta neurona prilikom backpropagation algoritma je optimizator Adam \cite{adam}. Za pronalaženje optimalnog rješenja, Adam koristi stohastički gradijentni spust uz moment djeluje na brzinu konvergencije prilikom iteracije. Moment djeluje na svaku varijablu koja se trenira. 
+ 
+\subsubsection{Stopa učenja}
+
+Definicija stope učenja napisana je u poglavlju \ref{nn_train} kao i područje na koje ona djeluje u formuli \ref{eq:gradient_backprop_layer}. Odabrana stopa učenja će biti postavljena na inicijalnu vrijednost 0.01 koja se dijeli sa 10 za svaku četvrtinu epohe, dakle vrijednosti su 0.01, 0.001, 0.0001, 0.00001. Razlog smanjivanja stope učenja prilikom treniranja je finija konvergencija prema minimumu.
 
 
-
+\subsubsection{Slojevi ResNet50 mreže}
+Prilikom treniranja mreže koristi se metoda prijenosnog učenja, više u poglavlju \ref{transfered_learning}, gdje su svi slojevi mreže već unaprijed trenirani. Konvencija prilikom prijenosnog učenja je zamrznuti slojeve odgovorne za prepoznavanje početnih i temeljnih djelova slika, poput većih objekata, rubova i geometrijskih oblika. Težine preostalih slojeva bit će ažurirane prilikom treniranja za specifičan problem klasifikacije, u ovom slučaju klasifikacija emocije. Kako je ResNet50 trenirana na 1000 raznovrsnih klasa ima vrlo dobru mogućnost prepoznavanja raznolikih objekta na slici. U ovom slučaju slike lica su i dalje raznolika no postoje značajke na slikama lica koje su uvijek zajedničke (prisutnost različitih djelova lica). Zbog toga će zamrznuti slojevi biti svi osim zadnja tri sloja. Kad bi problem klasifikacije bio sličan podatkovnom skupu ImageNet zamrzavanje bi se provelo nad svim slojevima ResNet50 mreže.
 
 %\subsection{Treniranje}
 
-\chapter{Evaluacija}
+\chapter{Rezultati}
 
 \textcolor{red}{Opisati postupak evaluacija}\\
 \textcolor{red}{Opisati prestanak treniranja}\\
@@ -818,6 +851,7 @@ Optimizator koji će utjecati na mijenjanje težišta neurona prilikom backpropa
 \textcolor{red}{Opisati razlike  Ck+ vs. CK+ Google} \\
 \textcolor{red}{Generirati sliku konfuzijske matrice (podjeliti sa najvećim brojem prije toga}\\
 \textcolor{red}{Opisati razlike  Ck+ vs. CK+ Google} 
+\textcolor{red}{dodatno opisati, 5 slika random} 
 
 
 \begin{figure}[H]
@@ -866,7 +900,7 @@ Korištenjem dva podatkovna skupa i alata PyTorch istrenirani model može do odr
 
 
 \begin{sazetak}
-Ljudske emocije temeljni dio svih mogućih ljudskih radnji. Treniranjem modela pomoću strojnog učenja koji može klasificirati emocije na temelju slika ljudskih lica otvaraju se mogućnosti za objektivno analiziranje ljudskog ponašanja i razmišljanja u široko primjenjivim situacijama. Uz dva podatkovna skupa ljudskih lica, ResNet 50 mrežu i prijenosnim učenjem ponovno istrenirani model može klasificirati neviđene slike ljudskog lica sa 60\% točnosti.
+Ljudske emocije temeljni dio svih mogućih ljudskih radnji. Treniranjem modela pomoću strojnog učenja koji može klasificirati emocije na temelju slika ljudskih lica otvaraju se mogućnosti za objektivno analiziranje ljudskog ponašanja i razmišljanja u široko primjenjivim situacijama. Uz dva podatkovna skupa ljudskih lica, ResNet50 mrežu i prijenosnim učenjem ponovno istrenirani model može klasificirati neviđene slike ljudskog lica sa 60\% točnosti.
 
 \kljucnerijeci{strojno učenje, duboko učenje, rezidualne neuronske mreže, emocija, lice}
 \end{sazetak}
@@ -875,7 +909,7 @@ Ljudske emocije temeljni dio svih mogućih ljudskih radnji. Treniranjem modela p
 \engtitle{Recognizing Emotions From Facial Expressions Using Machine Learning}
 \begin{abstract}
 Human emotions are the base of all human activities. Training a model 
-by using a machine learning method which can later classify emotions given an image of a human facial expression opens up a possibility for an objective analysis of human behaviour and thought process in diverse situations. With two datasets containing images of human facial expressions, ResNet 50 network and transferred learning method the trained model can classify emotions given an unseen image of human facial expression with an accuracy of 60\%
+by using a machine learning method which can later classify emotions given an image of a human facial expression opens up a possibility for an objective analysis of human behaviour and thought process in diverse situations. With two datasets containing images of human facial expressions, ResNet50 network and transferred learning method the trained model can classify emotions given an unseen image of human facial expression with an accuracy of 60\%
 
 \keywords{machine learning, deep learning, residual neural network, emotion, face}
 \end{abstract}
