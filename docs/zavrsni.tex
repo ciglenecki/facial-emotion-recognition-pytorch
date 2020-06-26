@@ -905,7 +905,7 @@ Nakon treniranja potrebno je detaljnije provjeriti rezultate i predviđanja koje
 Kao i kod treniranja, varijable \lstinline"GOOGLE_TRAIN_SPLIT" i \lstinline"CK_TRAIN_SPLIT" određuju udio pojedinog podatkovnog skupa prilikom treniranja. Ovime je omogućeno pojedinačno testiranja na svakom podatkovnom skupu kao i testiranje na oba podatkovna skupa.
 
 Točnost predviđanja će se provesti će se tako da se predviđa prvih n dominantnih emocija:
-za, n = 1 u slučaju Google podatkovnog skupa a n = 2 u slučaju CK+ podatkovnog skupa. Razlog toga je što istinite vrijednosti emocija za CK+ podatkovni skup predstavljaju dvije emocije čiji zbroj daje 1 dok je za Google podatkovni skup emocija određena jednom emocijom vrijednosti 1.
+za, n = 1 u slučaju Google podatkovnog skupa a n = 2 u slučaju CK+ podatkovnog skupa. Dominantna emocija je emocija koja ima najveći intenzitet. Razlog toga je što istinite vrijednosti emocija za CK+ podatkovni skup predstavljaju dvije emocije čiji zbroj daje 1 dok je za Google podatkovni skup emocija određena jednom emocijom vrijednosti 1. 
 
 Svaka emocija bit će kodirana sljedećim riječima:
 \begin{itemize}
@@ -922,7 +922,7 @@ Svaka emocija bit će kodirana sljedećim riječima:
 \end{itemize}
 \subsection{Rezultati za CK+ podatkovni skup}
 
-Mreža nije imala većih problema prilikom predviđanja emocije jer je CK+ bio dominantan skup prilikom treniranja. Iako su slike za testiranje bile neviđene prilikom treniranja, one su slične strukturom, slikane istom kamerom a svi subjekti se nalaze u uglađenim kontroliranim uvjetima i gledaju direktno u kameru. Sve navedene značajke omogućavaju modelu da lakše predviđa emocija za slike s tim značajkama. 
+Model nije imao većih problema prilikom predviđanja emocije jer je CK+ bio dominantan skup nad kojim se treniralo. Iako su slike za testiranje bile neviđene prilikom treniranja, one su slične strukturom, slikane istom kamerom a svi subjekti se nalaze u uglađenim uvjetima i gledaju direktno u kameru. Sve navedene značajke omogućavaju modelu da lakše predviđa emocija slika tih značajki. 
 
 \begin{figure}[H]
 \centering
@@ -1023,8 +1023,8 @@ Google podatkovni skup je mnogo apstraktniji što ste tiče sadržaja slika s ob
 					{|c|c|}\hline
 					Emocije & [neut, angr, cont, disg, fear, hppy, sadd, surp]\\
 					Istinita emocija & [0.00, 0.00, 0.00, 1.00, 0.00, 0.00, 0.00, 0.00]\\
-					Predviđena emocija	& [0.00, 0.00, 0.00, 0.39, 0.57, 0.00, 0.01, 0.00]\\								Pogođena dominantna emocija & 0\\
-					Preciznost [0-1] & 0.40\\
+					Predviđena emocija	& [0.00, 0.00, 0.00, 0.39, 0.57, 0.00, 0.04, 0.00]\\								Pogođena dominantna emocija & 0\\
+					Preciznost [0-1] & 0.39\\
 					\hline
 		\end{tabular}
 \end{figure}
@@ -1071,9 +1071,9 @@ Model je u potpunosti pogriješio previđenu emociju, s razlogom. Na temelju ist
 					{|c|c|}\hline
 					Emocije & [neut, angr, cont, disg, fear, hppy, sadd, surp]\\
 					Istinita emocija & [0.00, 1.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00]\\
-					Predviđena emocija	& [0.00, 0.84, 0.00, 0.14, 0.00, 0.00, 0.00, 0.00]\\
-					Pogođena dominantna emocija & 0\\
-					Preciznost [0-1] & 1\\
+					Predviđena emocija	& [0.00, 0.84, 0.00, 0.16, 0.00, 0.00, 0.00, 0.00]\\
+					Pogođena dominantna emocija & 1\\
+					Preciznost [0-1] & 0.84\\
 					\hline
 		\end{tabular}
 \end{figure}
