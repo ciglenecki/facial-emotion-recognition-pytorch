@@ -30,7 +30,7 @@
 \contentsline {subsection}{\numberline {3.1.8}Prijenosno u\IeC {\v c}enje}{23}% 
 \contentsline {section}{\numberline {3.2}Implementacija treniranja u PyTorch-u}{24}% 
 \contentsline {subsection}{\numberline {3.2.1}Uvod}{24}% 
-\contentsline {subsection}{\numberline {3.2.2}Priprema podataka}{24}% 
+\contentsline {subsection}{\numberline {3.2.2}Oblikovanje podatkovnih skupova}{24}% 
 \contentsline {subsubsection}{Podjela podatkovnog skupa}{25}% 
 \contentsline {subsubsection}{Transformacija slike}{26}% 
 \contentsline {subsubsection}{Augmentacija slike}{27}% 
@@ -42,7 +42,9 @@
 \contentsline {subsubsection}{Slojevi ResNet50 mre\IeC {\v z}e}{29}% 
 \contentsline {subsubsection}{Optimizator}{30}% 
 \contentsline {subsection}{\numberline {3.2.4}Treniranje}{30}% 
-\contentsline {chapter}{\numberline {4}Rezultati}{32}% 
-\contentsline {subsection}{\numberline {4.0.1}Konfuzijska matrica}{33}% 
-\contentsline {chapter}{\numberline {5}Zaklju\IeC {\v c}ak}{34}% 
-\contentsline {chapter}{Literatura}{35}% 
+\contentsline {chapter}{\numberline {4}Rezultati}{33}% 
+\contentsline {subsection}{\numberline {4.0.1}Rezultati za CK+ podatkovni skup}{34}% 
+\contentsline {subsection}{\numberline {4.0.2}Rezultati za Google podatkovni skup}{36}% 
+\contentsline {subsection}{\numberline {4.0.3}Rezultati za oba podatkovna skupa}{39}% 
+\contentsline {chapter}{\numberline {5}Zaklju\IeC {\v c}ak}{41}% 
+\contentsline {chapter}{Literatura}{42}% 

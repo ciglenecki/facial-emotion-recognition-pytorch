@@ -203,14 +203,14 @@ Za daljnje korištenje svaka slika i njezin vektor emocije će pretvorena u nump
 
 \begin{figure}[H]
 	\centering
-	\begin{subfigure}[b]{0.5\linewidth}
+	\begin{subfigure}[b]{0.4\linewidth}
 	  	\centering
-		\includegraphics[width=\linewidth, height=0.3\paperheight, keepaspectratio]{numpy_slika_emocija.png}
+		\includegraphics[width=\linewidth, keepaspectratio]{numpy_slika_emocija.png}
 		\caption{Struktura .npy podatka}		
 	\end{subfigure}
-	\begin{subfigure}[b]{0.5\linewidth}
+	\begin{subfigure}[b]{0.4\linewidth}
 	  	\centering
-		\includegraphics[width=\linewidth, height=0.3\paperheight, keepaspectratio]{numpy_imgdata_emo.png}
+		\includegraphics[width=\linewidth, keepaspectratio]{numpy_imgdata_emo.png}
 		\caption{Sadržaj .npy podatka}
 	\end{subfigure}	
 	\caption{.npy podatak}	
@@ -315,9 +315,8 @@ Nakon dodjele vektora emocije za pojedinu sliku potrebno je pretvoriti sliku i v
 
 
 \subsection{Objedinjavanje podatkovnih skupova}
-Nakon obrade CK+ i Google podatkovnog skupa svi .npy podaci bit će spremljeni u direktoriji "ck" ili "Google" ovisno o tome iz kojeg je podatkovnog skupa slika dobivena. Struktura svih .npy podataka prikazana je na slici \ref{pic:npy_structure}. Ovom strukturom moguće je definirati udio svakog podatkovnog skupa koji će biti korišten za treniranje modela. Poslije podjele u zasebne direktorije potrebno je odvojiti dio .npy podataka u test pod-direktoriji. U njemu će se nalaziti 20\% svih .npy podataka koji će modelu biti neviđeni prilikom treniranja. Tih 20\% .npy podataka koristit će se pri evaluaciji točnosti modela. Prikaz podjele podatkovnog skupa prikazan je na slici \ref{todo:} Bitno je naglasiti da skup za evaluaciju ne smije ni u kojem trenutku biti izvor za treniranje mreže. Razlog toga je što model naučen na zadanom skupu slika će pri završetku treniranja biti u stanju sa vrlo visokom točnošću predvidjeti emociju slike koja je bila korištena prilikom treniranja. Evaluacija mora simulirati realnu situaciju u kojoj model nikad nije imao uvid u slike koje će biti korištene prilikom njegovog testiranja.
+Nakon obrade CK+ i Google podatkovnog skupa svi .npy podaci bit će spremljeni u direktoriji "ck" ili "Google" ovisno o tome iz kojeg je podatkovnog skupa slika dobivena. Struktura svih .npy podataka prikazana je na slici \ref{pic:npy_structure}. Ovom strukturom moguće je definirati udio svakog podatkovnog skupa koji će biti korišten za treniranje modela. Poslije podjele u zasebne direktorije potrebno je odvojiti dio .npy podataka u test pod-direktoriji. U njemu će se nalaziti 20\% svih .npy podataka koji će modelu biti neviđeni prilikom treniranja. Tih 20\% .npy podataka koristit će se pri evaluaciji točnosti modela. Prikaz podjele podatkovnog skupa prikazan je na slici \ref{pic:dataset_split_percentages} Bitno je naglasiti da skup za evaluaciju ne smije ni u kojem trenutku biti izvor za treniranje mreže. Razlog toga je što model naučen na zadanom skupu slika će pri završetku treniranja biti u stanju sa vrlo visokom točnošću predvidjeti emociju slike koja je bila korištena prilikom treniranja. Evaluacija mora simulirati realnu situaciju u kojoj model nikad nije imao uvid u slike koje će biti korištene prilikom njegovog testiranja.
 
-\todo{piechar slika}
 \begin{figure}[H]
 	\centering
 	\includegraphics[width=\linewidth, height=0.3\paperheight, keepaspectratio]{splitset.png}
@@ -670,7 +669,7 @@ PyTorch okruženje je otvorenog koda \engl{open source} koja ubrzava proces impl
 
 
 
-\subsection{Priprema podataka}
+\subsection{Oblikovanje podatkovnih skupova}
 U poglavlju \ref{npy_preprocess} objašnjeno je stvaranje .npy podataka koji sadrže podatke slike i odgovarajućeg vektora emocije te slike. Sljedeći korak je iskoristiti te podatke za treniranje neuronske mreže koja će klasificirati emocije neviđenih slika ljudskih lica.
 
 .npy podaci učitani su iz direktorija definiranog strukturom na slici \ref{pic:npy_structure}. Prilikom učitavanja .npy podataka koristiti će se parametri \lstinline"GOOGLE_TRAIN_SPLIT" i \lstinline"CK_TRAIN_SPLIT" pomoću kojih je moguće kontrolirati koji će udio slika iz pojedinog podatkovnog skupa biti zastupljen u skupu za treniranje.
@@ -884,7 +883,7 @@ for epoch in range(EPOCHS):
 \label{pic:pytorch_transform_aug}
 \end{figure}
 
-Treniranje modela prestaje nakon \lstinline"EPOCHS" epoha a sprema se svaki model koji je bolji od najboljeg prethodnog. Ovime do tad najbolji model biti spremljen čak i ukoliko treniranje prestane prerano. Najbolji model mjeren je po kriteriju točnosti nad testnim podatkovnim skupom koji će biti objašnjen u sljedećem poglavlju. 
+Treniranje modela prestaje nakon \lstinline"EPOCHS" epoha a sprema se svaki model koji je bolji od najboljeg prethodnog. Ovime do tad najbolji model biti spremljen čak i ukoliko treniranje prestane prerano. Najbolji model mjeren je po kriteriju točnosti nad testnim podatkovnim skupom koji će biti objašnjen u sljedećem poglavlju.
 \begin{Verbatim}[fontsize=\small]
 if(epoch_acc > best_acc):
 	best_acc = epoch_acc
@@ -892,53 +891,266 @@ if(epoch_acc > best_acc):
 	torch.save(best_model, filename)
 \end{Verbatim}
 
-\chapter{Rezultati}
-
-Trenirani model 
-
-\textcolor{red}{Opisati postupak evaluacija}\\
-
-
-\textcolor{red}{Opisati razlike  Ck+ vs. CK+ Google} \\
-\textcolor{red}{Generirati sliku konfuzijske matrice (podjeliti sa najvećim brojem prije toga}\\
-\textcolor{red}{Opisati razlike  Ck+ vs. CK+ Google} 
-\textcolor{red}{dodatno opisati, 5 slika random} 
-
-
 \begin{figure}[H]
 	\centering
 	\includegraphics[width=\linewidth, height=0.3\paperheight, keepaspectratio]{val_ck.png}
-	\caption{Greška prilikom treniranja nad CK+ podatkovnim skupom}
+	\caption{Greška prilikom treniranja nad podatkovnim skupom Google i CK+. Vertikalna os predstavlja iznos greške, horizontalna os broj epohe}
 	\label{loss_ck}
 \end{figure}
 
+\chapter{Rezultati}
+
+Nakon treniranja potrebno je detaljnije provjeriti rezultate, tj. predviđanja koje trenirani model daje za testni podatkovni skup nad kojim se nije treniralo. Testni podatkovni skup čini spomenutih 20\% ukupnog podatkovnog skupa. Prilikom odabira modela uzet će se model čija je točnost bila najveća nad testnim podatkovnim skupom jer je to model koji je sigurno najtočniji. Model koji ima najmanji gubitak nije nužno najbolji zbog oscilacija koje se javljaju prilikom treniranja sa veličinom serije veće od 1. 
+
+Kao i kod treniranja, varijable \lstinline"GOOGLE_TRAIN_SPLIT" i \lstinline"CK_TRAIN_SPLIT" određuju udio pojedinog podatkovnog skupa prilikom treniranja. Ovime je omogućeno pojedinačno testiranja na svakom podatkovnom skupu kao i testiranje na oba podatkovna skupa.
+
+Točnost predviđanja će se provesti će se tako da se predviđa prvih n dominantnih emocija:
+za, n = 1 u slučaju Google podatkovnog skupa a n = 2 u slučaju CK+ podatkovnog skupa. Razlog toga je što istinite vrijednosti emocija za CK+ podatkovni skup predstavljaju dvije emocije čiji zbroj daje 1 dok je za Google podatkovni skup emocija određena jednom emocijom vrijednosti 1.
+
+Svaka emocija bit će kodirana sljedećim riječima:
+\begin{itemize}
+\item{neutralno $\rightarrow$ neut}
+\item{bijes $\rightarrow$ angr}
+\item{prezir $\rightarrow$ cont}
+\item{gađenje $\rightarrow$ disg}
+\item{strah $\rightarrow$ fear}
+\item{sreća $\rightarrow$ hppy}
+\item{tuga $\rightarrow$ sadd}
+\item{iznenađenje $\rightarrow$ surp}
+
+
+\end{itemize}
+\subsection{Rezultati za CK+ podatkovni skup}
+
+Mreža nije imala većih problema prilikom predviđanja emocije jer je CK+ bio dominantan skup prilikom treniranja. Iako su slike za testiranje bile neviđene prilikom treniranja, one su slične strukturom, slikane istom kamerom a svi subjekti se nalaze u uglađenim kontroliranim uvjetima i gledaju direktno u kameru. Sve navedene značajke omogućavaju modelu da lakše predviđa emocija za slike s tim značajkama. 
+
 \begin{figure}[H]
-	\centering
-	\includegraphics[width=\linewidth, height=0.3\paperheight, keepaspectratio]{val_go_ck.png}
-	\caption{Greška prilikom treniranja nad Google i CK+ podatkovnim skupom}
-	\label{loss_duo}
+\centering
+		\includegraphics[width=0.3\linewidth, keepaspectratio]{S055_004_00000015.png}
+		\begin{tabular}
+					{|c|c|}\hline
+					Emocije & [neut, angr, cont, disg, fear, hppy, sadd, surp]\\
+					Istinita emocija & [0.49, 0.51, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00]\\
+					Predviđena emocija	& [0.21, 0.79, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00]\\
+					Pogođena dominantna emocija & 1\\
+					Preciznost [0-1] & 0.72\\
+					\hline
+		\end{tabular}
 \end{figure}
 
+Predviđena emocija na slici iznad malo je izraženija nego što je istinita emocija iako je to i na slici čak i slučaj. Emocija nije u potpunosti izražena niti se sa sa sigurnošću može reći koliko je emocija neutralna. Intuicija mreže je da predvidi emociju kao intenzivnijom ako su promjene na licu znatnije.
 
-\subsection{Konfuzijska matrica}
+\begin{figure}[H]
+\centering
+		\includegraphics[width=0.3\linewidth, keepaspectratio]{S132_002_00000006.png}
+		\begin{tabular}
+					{|c|c|}\hline
+					Emocije & [neut, angr, cont, disg, fear, hppy, sadd, surp]\\
+					Istinita emocija & [0.70, 0.00, 0.00, 0.00, 0.00, 0.00, 0.29, 0.00]\\
+					Predviđena emocija	& [0.93, 0.00, 0.00, 0.00, 0.00, 0.00, 0.07, 0.00]\\
+					Pogođena dominantna emocija & 1\\
+					Preciznost [0-1] & 0.75\\
+					\hline
+		\end{tabular}
+\end{figure}
+Previđena emocija je opravdano neutralnija nego što istinita emocija pokazuje. Pogreška ovakvog tipa nije značajna.
+
+\begin{figure}[H]
+\centering
+		\includegraphics[width=0.3\linewidth, keepaspectratio]{S134_008_00000002.png}
+		\begin{tabular}
+					{|c|c|}\hline
+					Emocije & [neut, angr, cont, disg, fear, hppy, sadd, surp]\\
+					Istinita emocija & [0.90, 0.00, 0.00, 0.08, 0.02, 0.00, 0.00, 0.00] \\
+					Predviđena emocija	& [0.55, 0.00, 0.00, 0.45, 0.00, 0.00, 0.00, 0.00] \\
+					Pogođena dominantna emocija & 1\\
+					Preciznost [0-1] & 0.62\\
+					\hline
+		\end{tabular}
+	\caption{}
+	\label{aa}
+\end{figure}
+
+Emocija gađenja po prirodi nije intenzivna s obzirom na ostale emocije zbog čega ju neuronska mreža teže prepoznaje. Promjene na licu su blage zbog čega je dodijeljena vrlo neutralna emocija.
+
+\begin{figure}[H]
+\centering
+		\includegraphics[width=0.3\linewidth, keepaspectratio]{S501_001_00000065.png}
+		\begin{tabular}
+					{|c|c|}\hline
+					Emocije & [neut, angr, cont, disg, fear, hppy, sadd, surp]\\
+					Istinita emocija & [0.03, 0.97, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00] \\
+					Predviđena emocija	& [0.04, 0.96, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00] \\								Pogođena dominantna emocija & 1\\
+					Preciznost [0-1] & 0.98\\
+					\hline
+		\end{tabular}
+\end{figure}
+
+Struktura lica ukazuje na ljutito lice za koju je mreža uspjela odrediti klasifikaciju i intenzitet. 
+
+Model je za CK+ podatkovni točno predvidio emocije u 83\% slučajeva. Glavni razlog zbog kojeg točnost nije još i veća je što model teže prepoznaje granične slučajeve emocija kad emocija prelazi iz neutralne u jednu od preostalih sedam. Model ima sklonost da predvidi neutralnu emociju kao dominantnu iako to nije slučaj. Način odjeljivanja emocije linearnim rastom od neutralne do jedne od preostalih sedam nije nužno najbolja metoda određivanja pravih emocija. Aktivacija svake emocije može se za svakog subjekta dogoditi u drugačijem vremenskom trenutku. Najveći problem imala je emocija tuge a neutralna emocija bila je najviše puta pogođena. 
+
+
+
+
 
 
 \begin{figure}[H]
 \centering
-
-\begin{Verbatim}[fontsize=\small]
-[17, 1 , 4 , 4 , 3 , 0 , 11, 3]
-[4 , 19, 2 , 5 , 1 , 1 , 5 , 2]
-[3 , 0 , 6 , 4 , 3 , 0 , 3 , 0]
-[4 , 6 , 1 , 22, 4 , 2 , 4 , 1]
-[0 , 0 , 1 , 5 , 12, 1 , 5 , 6]
-[1 , 0 , 2 , 3 , 2 , 23, 1 , 3]
-[11, 5 , 2 , 3 , 3 , 4 , 31, 3]
-[1 , 2 , 1 , 2 , 2 , 1 , 0 ,26]
-\end{Verbatim}
-\caption{Konfuzijska matrica}
-\label{pic:init_resnet}
+		\begin{tabular}
+					{|c|c|}\hline
+					Emocije & [neut, angr, cont, disg, fear, hppy, sadd, surp]\\
+					Preciznost emocija& [0.98, 0.76, 0.72, 0.78, 0.73, 0.81, 0.61, 0.73] \\
+					Ukupna točnost predviđanja & 83\%\\
+					\hline
+		\end{tabular}
+		\caption{Rezultati testiranja CK+ podatkovnog skupa}
 \end{figure}
+
+
+\subsection{Rezultati za Google podatkovni skup}
+
+
+Google podatkovni skup je mnogo apstraktniji što ste tiče sadržaja slika s obzirom na CK+ podatkovni skup. Samim time je teže i trenirani model za predviđanje emocija takvih slika. Dodatan utjecaj na koji treba skrenuti pozornost su automatski preuzete slike na temelju ključnih riječi sa Googla. Iako su slike ručno filtrirane, i dalje postoje slike koje nužno ne odgovaraju ključnoj riječi pomoću koje su preuzete.
+
+
+
+
+\begin{figure}[H]
+\centering
+		\includegraphics[width=0.3\linewidth, keepaspectratio]{139a57640598.png}
+		\begin{tabular}
+					{|c|c|}\hline
+					Emocije & [neut, angr, cont, disg, fear, hppy, sadd, surp]\\
+					Istinita emocija & [0.00, 0.00, 0.00, 1.00, 0.00, 0.00, 0.00, 0.00]\\
+					Predviđena emocija	& [0.00, 0.00, 0.00, 0.39, 0.57, 0.00, 0.01, 0.00]\\								Pogođena dominantna emocija & 0\\
+					Preciznost [0-1] & 0.40\\
+					\hline
+		\end{tabular}
+\end{figure}
+
+
+Dio lica je prekriven zbog čega je odmah teže za model predvidjeti emociju. Iako začepljen nos ukazuje na emociju gađenja takva gesta nije bila često prisutna prilikom treniranja. Samim time model nije naučen da začepljen nos povezuje sa gađenjem. Strah koji dominantno predviđa temelji na spuštenim obrvama i blago zaokrenutim usnicama.
+
+\begin{figure}[H]
+\centering
+		\includegraphics[width=0.3\linewidth, keepaspectratio]{84apeople-man-making-sad-face-person-person-image.png}
+		\begin{tabular}
+					{|c|c|}\hline
+					Emocije & [neut, angr, cont, disg, fear, hppy, sadd, surp]\\
+					Istinita emocija & [0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 1.00, 0.00]\\
+					Predviđena emocija	& [0.00, 0.00, 0.06, 0.00, 0.00, 0.00, 0.94, 0.00]\\
+					Pogođena dominantna emocija & 1\\
+					Preciznost [0-1] & 0.94\\
+					\hline
+		\end{tabular}
+\end{figure}
+
+Na subjektu su crte lice blago spuštene prema dolje čime subjekt sam po sebi iskazuje emociju tuge na temelju same slike. Uz tužan pogled i usnice nakrivljene prema dolje model nije imao problema predvidjeti dominantnu emociju.
+
+\begin{figure}[H]
+\centering
+		\includegraphics[width=0.3\linewidth, keepaspectratio]{210aae2259c476fa427d9c75.png}
+		\begin{tabular}
+					{|c|c|}\hline
+					Emocije & [neut, angr, cont, disg, fear, hppy, sadd, surp]\\
+					Istinita emocija & [0.00, 0.00, 0.00, 1.00, 0.00, 0.00, 0.00, 0.00]\\
+					Predviđena emocija	& [0.40, 0.00, 0.00, 0.00, 0.00, 0.00, 0.58, 0.00]\\
+					Pogođena dominantna emocija & 0\\
+					Preciznost [0-1] & 0\\
+					\hline
+		\end{tabular}
+\end{figure}
+
+Model je u potpunosti pogriješio previđenu emociju, s razlogom. Na temelju istinite emocije lice bi trebalo predstavljati potpuno gađenje iako to nije slučaj. Iako je model pogriješio, njegov rezultat ima smisla. Spuštene oči gađenja zamijenio je sa tugom a neutralna emocija proizlazi iz blage emocije. Također, prekriven dio lica sigurno modelu otežava predviđanje emocije.
+
+\begin{figure}[H]
+\centering
+		\includegraphics[width=0.3\linewidth, keepaspectratio]{57aangry-main.png}
+		\begin{tabular}
+					{|c|c|}\hline
+					Emocije & [neut, angr, cont, disg, fear, hppy, sadd, surp]\\
+					Istinita emocija & [0.00, 1.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00]\\
+					Predviđena emocija	& [0.00, 0.84, 0.00, 0.14, 0.00, 0.00, 0.00, 0.00]\\
+					Pogođena dominantna emocija & 0\\
+					Preciznost [0-1] & 1\\
+					\hline
+		\end{tabular}
+\end{figure}
+
+Vrlo intenzivna emocija koju je model prepoznao na temelju otvorenih usta, ljutito spuštenih obrva i otvorenih očiju. Gađenje dijeli neke od ovih značajki sa bijesom zbog čega je model dio vjerojatnosti dodijelio toj emociji.
+
+\begin{figure}[H]
+\centering
+		\includegraphics[width=0.3\linewidth, keepaspectratio]{123apictures-sad-faces-162434-9053652}
+		\begin{tabular}
+					{|c|c|}\hline
+					Emocije & [neut, angr, cont, disg, fear, hppy, sadd, surp]\\
+					Istinita emocija & [0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 1.00, 0.00]\\
+					Predviđena emocija	& [0.45, 0.00, 0.00, 0.00, 0.04, 0.00, 0.51, 0.00]\\
+					Pogođena dominantna emocija & 1\\
+					Preciznost [0-1] & 0.51\\
+					\hline
+		\end{tabular}
+\end{figure}
+
+Model je ispravno predvidio dominantnu emociju prikazanu na slici iako je rezultat predviđanja zapravo smisleniji od istinite emocije. Istinita emocija ukazuje na potpunu tugu iako to nije slučaj. Crte na licu povlače lice prema dolje, oči sadržavaju tužan pogled a sjena na ustima dodatno naglašava usnice usmjerene prema dolje.
+
+\begin{figure}[H]
+\centering
+		\includegraphics[width=0.3\linewidth, keepaspectratio]{255ajose-mourinho.png}
+		\begin{tabular}
+					{|c|c|}\hline
+					Emocije & [neut, angr, cont, disg, fear, hppy, sadd, surp]\\
+					Istinita emocija & [0.00, 0.00, 0.00, 1.00, 0.00, 0.00, 0.00, 0.00]]\\
+					Predviđena emocija	& [0.01, 0.07, 0.00, 0.92, 0.00, 0.00, 0.00, 0.00]\\
+					Pogođena dominantna emocija & 1\\
+					Preciznost [0-1] & 0.92\\
+					\hline
+		\end{tabular}
+\end{figure}
+
+Podatkovni skup Google bio je puno zahtjevniji za obradu nego CK+ podatkovni skup. Već u početku ima nesavršenu oznaku emocija za odgovarajuću sliku što direktno utječe na uspješnost treniranja modela. Apstraktnije neviđene slike unutar skupa same su po sebi različite što se tiče osnovnih značajki slika. Za ispravnije korištenje slika preuzetih sa Google-a bilo bi potrebno detaljno proći kroz sve preuzete slike i eventualno promijeniti istinitu emociju za problematične slike. Ukupna točnost nad podatkovnim skupom Google iznosi 51\%. Problematična emocija bila je prezir koji je bio i najmanje zastupljen u Google podatkovnom skupu. Nedostatak slika za treniranje nije dopustio modelu da točnije nauči predviđati emociju prezira.
+
+\begin{figure}[H]
+\centering
+		\begin{tabular}
+					{|c|c|}\hline
+					Emocije & [neut, angr, cont, disg, fear, hppy, sadd, surp]\\
+					Preciznost emocija& [0.43, 0.63, 0.23, 0.48, 0.42, 0.65, 0.49, 0.55]\\
+					Ukupna točnost predviđanja & 51\%\\
+					\hline
+		\end{tabular}
+		\caption{Rezultati testiranja Google podatkovnog skupa}
+\end{figure}
+
+
+\subsection{Rezultati za oba podatkovna skupa}
+
+Zbrojena točnost nad oba podatkovna skupa iznosi 71\%. Oba su podatkovna skupa bila korištena prilikom treniranja da se poveća mogućnost predviđanja modela za neviđene slike ne slične onima iz korištenih podatkovnih skupova. Konfuzijska matrica prikazana na slici \ref{pic:matrix_full} prikazuje odnose emocija ovisno o emociji koja je bila ispravna s obzirom na previđenu emociju. Drugim riječima, slika ukazuje koju je emociju model predvidio s obzirom na istinitu emociju. Zbroj svakog stupca je 1. Redci prikazuju emocije koje su istinite a stupci predstavljaju emociju koju je model predvidio. Primjerice, za istinitu emociju iznenađenja \engl{surprise} model je 20\% (0.2) previdio emociju gađenja. Dijagonala matrice prikazuje ispravno previđene emocije.
+
+Miješanje neutralne emocije sa ostalim primarno proizlazi iz CK+ podatkovnog skupa gdje neutralna emocija ima značajniji utjecaj s obzirom na Google podatkovni skup. Prezir \engl{contempt} često je krivo previđen kao najblaža emocija od spomenutih osam koja je i brojčano najmanje zastupljena prilikom treniranja. Strah \engl{fear} je najčešće pogođena emocija koja je na slikama za model lako prepoznatljiva prema široko otvorenim ustima i očima. Ljutnja \engl{anger} također je laka za predvidjeti s obzirom na ostale emocije zbog često stisnutih zubiju i ukošenih obrva. Konfuzijska matrica govori više o samoj domeni predviđanja emocija i koje emocije dijele sličnosti po pitanju izraza ljudskog lica. Uvidom u problematične emocije moguće je nadograditi podatkovni skup za slikama i oznakama slika koje omogućiti modelu da raspoznaje značajke čija prisutnost nije bila dovoljna prilikom treniranja. 
+
+\begin{figure}[H]
+\centering
+		\begin{tabular}
+					{|c|c|}\hline
+					Emocije & [neut, angr, cont, disg, fear, hppy, sadd, surp]\\
+					Preciznost emocija& [0.88, 0.72, 0.48, 0.65, 0.59, 0.76, 0.53, 0.67]\\
+					Ukupna točnost predviđanja & 71\%\\
+					\hline
+		\end{tabular}
+		\caption{Rezultati testiranja nad oba podatkovna skupa}
+\end{figure}
+
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=\linewidth, height=0.3\paperheight, keepaspectratio]{matrix_full.png}
+\caption{Konfuzijska matrica za oba podatkovna skupa}
+\label{pic:matrix_full}
+\end{figure}
+
 
 
 
@@ -951,7 +1163,7 @@ Korištenjem dva podatkovna skupa i alata PyTorch istrenirani model može do odr
 
 
 \begin{sazetak}
-Ljudske emocije temeljni dio svih mogućih ljudskih radnji. Treniranjem modela pomoću strojnog učenja koji može klasificirati emocije na temelju slika ljudskih lica otvaraju se mogućnosti za objektivno analiziranje ljudskog ponašanja i razmišljanja u široko primjenjivim situacijama. Uz dva podatkovna skupa ljudskih lica, ResNet50 mrežu i prijenosnim učenjem ponovno istrenirani model može klasificirati neviđene slike ljudskog lica sa 60\% točnosti.
+Ljudske emocije temeljni dio svih mogućih ljudskih radnji. Treniranjem modela pomoću strojnog učenja koji može klasificirati emocije na temelju slika ljudskih lica otvaraju se mogućnosti za objektivno analiziranje ljudskog ponašanja i razmišljanja u široko primjenjivim situacijama. Uz dva podatkovna skupa ljudskih lica, ResNet50 mrežu i prijenosnim učenjem ponovno istrenirani model može klasificirati neviđene slike ljudskog lica sa 71\% točnosti.
 
 \kljucnerijeci{strojno učenje, duboko učenje, rezidualne neuronske mreže, emocija, lice}
 \end{sazetak}
@@ -960,7 +1172,7 @@ Ljudske emocije temeljni dio svih mogućih ljudskih radnji. Treniranjem modela p
 \engtitle{Recognizing Emotions From Facial Expressions Using Machine Learning}
 \begin{abstract}
 Human emotions are the base of all human activities. Training a model 
-by using a machine learning method which can later classify emotions given an image of a human facial expression opens up a possibility for an objective analysis of human behaviour and thought process in diverse situations. With two datasets containing images of human facial expressions, ResNet50 network and transferred learning method the trained model can classify emotions given an unseen image of human facial expression with an accuracy of 60\%
+by using a machine learning method which can later classify emotions given an image of a human facial expression opens up a possibility for an objective analysis of human behaviour and thought process in diverse situations. With two datasets containing images of human facial expressions, ResNet50 network and transferred learning method the trained model can classify emotions given an unseen image of human facial expression with an accuracy of 71\%
 
 \keywords{machine learning, deep learning, residual neural network, emotion, face}
 \end{abstract}

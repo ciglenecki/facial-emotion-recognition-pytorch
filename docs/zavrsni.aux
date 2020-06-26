@@ -49,10 +49,6 @@
 \newlabel{pic:google_emotion_emo_vector}{{2.9}{10}}
 \@writefile{toc}{\contentsline {subsubsection}{Spremanje slike i vektora emocije u .npy podatak}{10}\protected@file@percent }
 \@writefile{toc}{\contentsline {subsection}{\numberline {2.4.3}Objedinjavanje podatkovnih skupova}{10}\protected@file@percent }
-\@writefile{tdo}{\contentsline {todo}{piechar slika}{10}\protected@file@percent }
-\pgfsyspdfmark {pgfid1}{6526379}{9909550}
-\pgfsyspdfmark {pgfid4}{35645005}{9814782}
-\pgfsyspdfmark {pgfid5}{37070413}{9644130}
 \@writefile{lof}{\contentsline {figure}{\numberline {2.10}{\ignorespaces Vizualni prikaz podijeljenog podatkovnog skupa\relax }}{11}\protected@file@percent }
 \newlabel{pic:dataset_split_percentages}{{2.10}{11}}
 \@writefile{lof}{\contentsline {figure}{\numberline {2.11}{\ignorespaces Struktura .npy podataka\relax }}{11}\protected@file@percent }
@@ -116,7 +112,7 @@
 \newlabel{transfered_learning}{{3.1.8}{23}}
 \@writefile{toc}{\contentsline {section}{\numberline {3.2}Implementacija treniranja u PyTorch-u}{24}\protected@file@percent }
 \@writefile{toc}{\contentsline {subsection}{\numberline {3.2.1}Uvod}{24}\protected@file@percent }
-\@writefile{toc}{\contentsline {subsection}{\numberline {3.2.2}Priprema podataka}{24}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {3.2.2}Oblikovanje podatkovnih skupova}{24}\protected@file@percent }
 \@writefile{lof}{\contentsline {figure}{\numberline {3.11}{\ignorespaces Udio .npy podataka pojedinog podatkovnog skupa\relax }}{24}\protected@file@percent }
 \newlabel{pic:split_dataset}{{3.11}{24}}
 \@writefile{lof}{\contentsline {figure}{\numberline {3.12}{\ignorespaces Pojednostavljena inicijalizacija FERDataset\relax }}{25}\protected@file@percent }
@@ -147,18 +143,23 @@
 \@writefile{toc}{\contentsline {subsection}{\numberline {3.2.4}Treniranje}{30}\protected@file@percent }
 \@writefile{lof}{\contentsline {figure}{\numberline {3.17}{\ignorespaces Pojednostavljen kod treniranja modela\relax }}{31}\protected@file@percent }
 \newlabel{pic:pytorch_transform_aug}{{3.17}{31}}
-\@writefile{toc}{\contentsline {chapter}{\numberline {4}Rezultati}{32}\protected@file@percent }
+\@writefile{lof}{\contentsline {figure}{\numberline {3.18}{\ignorespaces Gre\IeC {\v s}ka prilikom treniranja nad podatkovnim skupom Google i CK+. Vertikalna os predstavlja iznos gre\IeC {\v s}ke, horizontalna os broj epohe\relax }}{32}\protected@file@percent }
+\newlabel{loss_ck}{{3.18}{32}}
+\@writefile{toc}{\contentsline {chapter}{\numberline {4}Rezultati}{33}\protected@file@percent }
 \@writefile{lof}{\addvspace {10\p@ }}
 \@writefile{lot}{\addvspace {10\p@ }}
-\@writefile{lof}{\contentsline {figure}{\numberline {4.1}{\ignorespaces Gre\IeC {\v s}ka prilikom treniranja nad CK+ podatkovnim skupom\relax }}{32}\protected@file@percent }
-\newlabel{loss_ck}{{4.1}{32}}
-\@writefile{lof}{\contentsline {figure}{\numberline {4.2}{\ignorespaces Gre\IeC {\v s}ka prilikom treniranja nad Google i CK+ podatkovnim skupom\relax }}{33}\protected@file@percent }
-\newlabel{loss_duo}{{4.2}{33}}
-\@writefile{toc}{\contentsline {subsection}{\numberline {4.0.1}Konfuzijska matrica}{33}\protected@file@percent }
-\@writefile{lof}{\contentsline {figure}{\numberline {4.3}{\ignorespaces Konfuzijska matrica\relax }}{33}\protected@file@percent }
-\newlabel{pic:init_resnet}{{4.3}{33}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {4.0.1}Rezultati za CK+ podatkovni skup}{34}\protected@file@percent }
+\@writefile{lof}{\contentsline {figure}{\numberline {4.1}{\ignorespaces \relax }}{35}\protected@file@percent }
+\newlabel{aa}{{4.1}{35}}
+\@writefile{lof}{\contentsline {figure}{\numberline {4.2}{\ignorespaces Rezultati testiranja CK+ podatkovnog skupa\relax }}{36}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {4.0.2}Rezultati za Google podatkovni skup}{36}\protected@file@percent }
+\@writefile{lof}{\contentsline {figure}{\numberline {4.3}{\ignorespaces Rezultati testiranja Google podatkovnog skupa\relax }}{39}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {4.0.3}Rezultati za oba podatkovna skupa}{39}\protected@file@percent }
+\@writefile{lof}{\contentsline {figure}{\numberline {4.4}{\ignorespaces Rezultati testiranja nad oba podatkovna skupa\relax }}{40}\protected@file@percent }
+\@writefile{lof}{\contentsline {figure}{\numberline {4.5}{\ignorespaces Konfuzijska matrica za oba podatkovna skupa\relax }}{40}\protected@file@percent }
+\newlabel{pic:matrix_full}{{4.5}{40}}
 \bibdata{literatura}
-\@writefile{toc}{\contentsline {chapter}{\numberline {5}Zaklju\IeC {\v c}ak}{34}\protected@file@percent }
+\@writefile{toc}{\contentsline {chapter}{\numberline {5}Zaklju\IeC {\v c}ak}{41}\protected@file@percent }
 \@writefile{lof}{\addvspace {10\p@ }}
 \@writefile{lot}{\addvspace {10\p@ }}
 \bibcite{normalize_imagenet}{{1}{}{{nor}}{{}}}
@@ -170,5 +171,5 @@
 \bibcite{ck}{{7}{2010}{{Lucey et~al.}}{{Lucey, Cohn, Kanade, Saragih, Ambadar, i Matthews}}}
 \bibcite{one_hot_encoding}{{8}{}{{rakshithvasudev}}{{}}}
 \bibcite{google-images-download}{{9}{}{{Vasa}}{{}}}
-\@writefile{toc}{\contentsline {chapter}{Literatura}{35}\protected@file@percent }
+\@writefile{toc}{\contentsline {chapter}{Literatura}{42}\protected@file@percent }
 \bibstyle{fer}

@@ -97,9 +97,8 @@
 \RequirePackage{varwidth}
 \RequirePackage[textsize=scriptsize]{todonotes}
 \RequirePackage{mathtools}
-
-
-
+\RequirePackage{caption}
+\RequirePackage{tabularx} % in the preamble
 
 % Numeriranje literature kod seminara
 \if@radseminar%
