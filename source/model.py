@@ -98,11 +98,15 @@ def get_model():
         # nn.Dropout(0.2),
         # nn.Linear(len(EMOTION_DECLARATION)**2, len(EMOTION_DECLARATION)),
     )
+
+    return model
+
+
+def get_optimizer(model):
     if OPTIMIZER == 0:
         optimizer = optim.SGD(model.parameters(), lr=LEARNING_RATE, momentum=0.9)
 
     elif OPTIMIZER == 1:
         optimizer = optim.Adam(model.parameters(), lr=LEARNING_RATE)
-
     exp_lr_scheduler = lr_scheduler.StepLR(optimizer, step_size=int(EPOCHS/4), gamma=0.1)
-    return model, optimizer, exp_lr_scheduler
+    return optimizer, exp_lr_scheduler

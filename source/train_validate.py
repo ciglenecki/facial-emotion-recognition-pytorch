@@ -33,7 +33,7 @@ def write_model_log(filename, train_losses, val_losses):
     filename = str(PATH_MODEL_TMP) + filename+".log"
     with open(filename, "w") as model_log:
 
-        for attribute in ["DATASET_DROP_RATE", "DO_USE_SCHEDULER", "LEARNING_RATE", "EPOCHS", "BATCH_SIZE", "NUM_WORKERS", "IMG_SIZE", "TEST_SPLIT", "TRAIN_SPLIT", "VAL_SPLIT", "WEIGHTS_CK", "WEIGHTS_GOOGLE", "WEIGHTS", "train_losses", "val_losses", "OPTIMIZER"]:
+        for attribute in ["DATASET_DROP_RATE", "DO_USE_SCHEDULER", "LEARNING_RATE", "EPOCHS", "BATCH_SIZE", "NUM_WORKERS", "IMG_SIZE", "TEST_SPLIT", "TRAIN_SPLIT", "VAL_SPLIT", "WEIGHTS_CK", "WEIGHTS_GOOGLE", "WEIGHTS", "train_losses", "val_losses", "OPTIMIZER", "GOOGLE_TRAIN_SPLIT", "CK_TRAIN_SPLIT"]:
             line = [str(attribute), str(globals()[attribute])]
             model_log.write(" ".join(line) + "\n")
     model_log.close()
@@ -180,7 +180,8 @@ train_loader = torch.utils.data.DataLoader(train_dataset, batch_size=BATCH_SIZE,
 val_loader = torch.utils.data.DataLoader(val_dataset, batch_size=BATCH_SIZE, shuffle=True, drop_last=True, num_workers=NUM_WORKERS)
 
 
-model, optimizer, exp_lr_scheduler = get_model()
+model = get_model()
+optimizer, exp_lr_scheduler = get_optimizer(model)
 loss_func = CrossEntropyLossSoftTarget
 
 train_losses, val_losses = [], []
@@ -302,16 +303,21 @@ with torch.no_grad():
     for batch in test_loader:
         face, emotions = batch
 
-        optimizer.zero_grad()
-        emotions = emotions.squeeze(0)
+    optimizer.zero_grad()
+    emotions = emotions.squeeze(0)
 
-        outputs = model(face).squeeze(0)
-        outputs = softmax(outputs)
-        # outputs = torch.zeros(len(EMOTION_DECLARATION)).scatter(0, indices, topk)
-        print(emotions)
-        print(outputs)
-        # 2 = maximum mistake
-        acc = (2 - torch.sum(torch.abs(emotions - outputs))) / 2
-        list_acc.append(acc)
+    outputs = model(face).squeeze(0)
+    outputs = softmax(outputs)
+    # outputs = torch.zeros(len(EMOTION_DECLARATION)).scatter(0, indices, topk)
+    print(emotions)
+    print(outputs)
+    # 2 = maximum mistake
+    acc = (2 - torch.sum(torch.abs(emotions - outputs))) / 2
+    a = 0
+    b = 0
+    print(torch.max(outputs, dim=0, keepdim=True, out=(a, b)))
+    print(a, b)
+    # acc_binary = torch.topk(k=1,)
+    acc_duo = list_acc.append(acc)
 
 print('Total acc', 100 * sum(list_acc) / len(list_acc))
