@@ -22,10 +22,11 @@ def number_action(number_name):
     return number
 
 
-def random_string(stringLength=8):
+def random_string(string_length=8):
     lettersAndDigits = string.ascii_letters + string.digits
-    return ''.join((random.choice(lettersAndDigits) for i in range(stringLength)))
+    return ''.join((random.choice(lettersAndDigits) for i in range(string_length)))
 
-def random_string(stringLength=8):
+
+def random_string(string_length=8):
     lettersAndDigits = string.ascii_letters + string.digits
-    return ''.join((random.choice(lettersAndDigits) for i in range(stringLength)))
+    return ''.join((random.choice(lettersAndDigits) for i in range(string_length)))

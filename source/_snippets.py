@@ -1,4 +1,6 @@
 
+# Custom snippets
+
 from __future__ import absolute_import, division, print_function, unicode_literals
 import torch.optim as optim
 import torch.nn.functional as F

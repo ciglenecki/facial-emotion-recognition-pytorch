@@ -22,6 +22,10 @@ import random
 from paths import *
 total = np.zeros(8)
 
+"""
+Calculate sum of emotions in CK+ or Google dataset
+Used for calculating class weights
+"""
 
 counter = 0
 for numpy in (Path(PATH_NUMPY_CK).glob('*.npy')):

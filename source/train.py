@@ -32,7 +32,6 @@ def write_model_log(filename, train_losses, val_losses):
 
     filename = str(PATH_MODEL_TMP) + filename+".log"
     with open(filename, "w") as model_log:
-
         for attribute in ["DATASET_DROP_RATE", "DO_USE_SCHEDULER", "LEARNING_RATE", "EPOCHS", "BATCH_SIZE", "NUM_WORKERS", "IMG_SIZE", "TEST_SPLIT", "TRAIN_SPLIT", "VAL_SPLIT", "WEIGHTS_CK", "WEIGHTS_GOOGLE", "WEIGHTS", "train_losses", "val_losses", "OPTIMIZER", "GOOGLE_TRAIN_SPLIT", "CK_TRAIN_SPLIT"]:
             line = [str(attribute), str(globals()[attribute])]
             model_log.write(" ".join(line) + "\n")
@@ -91,23 +90,28 @@ def set_train_val_size(TRAIN_SPLIT, VAL_SPLIT):
 
 def calc_batch_acc(outputs, emotions):
     """
-    0.0, 0.5, 0.5, 0.0,   1.0, 0.0, 0.0 ,0.0
-    0.5, 0.5, 0.0, 0.0,   0.5, 0.5, 0.0, 0.0
+    [[0, 0.5, 0.5, 0, 0], [1.0, 0, 0, 0]] # a = input
+    [[0, 0.6, 0.4, 0, 0], [0.5, 0, 0.5, 0]] # b = output
 
-    -0.5, 0.0, 0.5, 0.0   0.5, -0.5, 0.0, 0.0
+    0, -0.1, 0.1, 0     0.5, 0, -0.5, 0   # step 1 finding differences (a - b)
 
-    0.5, 0.0, 0.5, 0.0    0.5, 0.5, 0.0, 0.0
+    0, 0.1, 0.1, 0, 0   0.5, 0, 0.5,  0   # step 2 abs of differences
 
-    1 1
-    1 1
+    0.2, 0.5                            # step 3 summing errors
 
-    50% 50%
+    2 - 0.2, 2 - 0.5                    # step 4 scaling errors to 2
+    1.8, 1.5                            # step 5 (0 = very bad, ..., 1 = ok, ..., 2 = perfect)
+
+    0.9, 0.75                           # step 6 scaling to [0, 1] by diving with /2
+
+    90% correct prediction for first vector
+    75% correct prediction for second vector
     """
     sums = torch.sum(torch.abs(emotions - outputs), dim=1)
     return float(torch.mean((2 - sums)/2))
 
 
-class FERDataset(Dataset):
+class NPYDataset(Dataset):
     def __init__(self, filepaths_numpy, transform_image=None, transform_emotion=None):
         self.filepaths_numpy = filepaths_numpy
         self.transform_image = transform_image
@@ -154,7 +158,7 @@ transform_image_val = transforms.Compose([
     transforms.Normalize(mean=[0.485, 0.456, 0.406], std=[
         0.229, 0.224, 0.225])
 ])
-dataset = FERDataset(filepaths_numpy=FILEPATHS_NUMPY,
+dataset = NPYDataset(filepaths_numpy=FILEPATHS_NUMPY,
                      transform_emotion=True,
                      transform_image=transform_image_train)
 
@@ -174,7 +178,6 @@ val_dataset.transform_image = transform_image_val
 print("Dataset:", len(dataset), "\n")
 print("\nTrain, val:", train_size, val_size)
 
-print()
 
 train_loader = torch.utils.data.DataLoader(train_dataset, batch_size=BATCH_SIZE, shuffle=True, drop_last=True, num_workers=NUM_WORKERS)
 val_loader = torch.utils.data.DataLoader(val_dataset, batch_size=BATCH_SIZE, shuffle=True, drop_last=True, num_workers=NUM_WORKERS)
@@ -215,11 +218,11 @@ if (DO_TRAIN_MODEL):
             loss.backward()
             optimizer.step()
 
-            train_loss += float(loss) * int(emotions.size(0))  # emotion.   size(0) = batch size, dont use batch size cuz it might not be  16
+            train_loss += float(loss) * int(emotions.size(0))  # emotion.   size(0) = batch size, dont use batch size because it might not be 16
 
             if verbose:
                 print()
-                print("Batch("+str(BATCH_SIZE)+"): "+str(i*BATCH_SIZE)+"/" + str(len(train_dataset)))
+                print("Batch("+str(BATCH_SIZE)+"): "+str(i*BATCH_SIZE)+"/" + str(len(train_dataset)))W
                 print("batch_loss", float(loss)/BATCH_SIZE)
                 print()
                 verbose = False
@@ -281,43 +284,3 @@ if (DO_TRAIN_MODEL):
     plt.legend(frameon=False)
     plt.savefig(str(Path(PATH_VISUALS, filename+'.png')))
     print('Plot saved to: ', str(Path(PATH_VISUALS, filename+'.png')))
-
-
-test_dataset = FERDataset(filepaths_numpy=FILEPATHS_NUMPY_TEST,
-                          transform_emotion=True,
-                          transform_image=transform_image_val)
-
-test_loader = torch.utils.data.DataLoader(test_dataset, batch_size=1, shuffle=True, drop_last=True, num_workers=NUM_WORKERS)
-
-model, _, _ = get_model()
-model.load_state_dict(torch.load(str(Path(PATH_MODELS, 'resnet50_trained_acc_55.51374188840743_drop_0.0_epoch_44_lr_0.01_rLq7pt36.pth'))))
-
-
-correct = 0
-total = 0
-j = 0
-model.eval()
-list_acc = []
-softmax = nn.Softmax(dim=0)
-with torch.no_grad():
-    for batch in test_loader:
-        face, emotions = batch
-
-    optimizer.zero_grad()
-    emotions = emotions.squeeze(0)
-
-    outputs = model(face).squeeze(0)
-    outputs = softmax(outputs)
-    # outputs = torch.zeros(len(EMOTION_DECLARATION)).scatter(0, indices, topk)
-    print(emotions)
-    print(outputs)
-    # 2 = maximum mistake
-    acc = (2 - torch.sum(torch.abs(emotions - outputs))) / 2
-    a = 0
-    b = 0
-    print(torch.max(outputs, dim=0, keepdim=True, out=(a, b)))
-    print(a, b)
-    # acc_binary = torch.topk(k=1,)
-    acc_duo = list_acc.append(acc)
-
-print('Total acc', 100 * sum(list_acc) / len(list_acc))

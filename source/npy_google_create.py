@@ -8,21 +8,15 @@ import argparse
 from pathlib import Path, PurePath
 from paths import *
 from facenet_pytorch import MTCNN, InceptionResnetV1
+from misc_input import *
 
 from config import *
 import torchvision
 
-
-def bool_action(action_name):
-    result = ''
-    while (result != 'y') and (result != 'n'):
-        result = input(action_name + "? - y/n\n")
-
-    if result == 'y':
-        result = True
-    elif result == 'n':
-        result = False
-    return result
+"""
+Create numpy vectors (.npy file) where each numpy vector looks like
+[google_image, emotion]
+"""
 
 
 # Config
@@ -45,21 +39,21 @@ def create_vectors(emotion_name, img_fullpath):
     img = Image.open(img_fullpath).convert("RGB")  # RGB needed for face_detect
     x, y = img.size
 
-    if x > MIN_PIC_SIZE and y > MIN_PIC_SIZE:  # face detection error if too small !!!
+    if x > MIN_PIC_SIZE and y > MIN_PIC_SIZE:  # face detection error if image is too small !!!
         img = face_detect(img)
         if type(img) != type(None):
             img = np.transpose(img.numpy().astype('uint8'), (1, 2, 0))  # unit8 + transform
             # img = Image.fromarray(img, 'RGB')
-            # img.show()
+            # img.show() # show image
 
             emo_vector = calc_emo_vector(emotion_name)
             total_emo = np.add(emo_vector, total_emo)
 
             img_fullpath = img_fullpath.stem[0:20]  # shorten name to 20 chars
-            # Save img
-            if (SAVE_NPY):
+
+            if (SAVE_NPY):  # Saving numpy vector
                 npy_filename = str(Path(PATH_NUMPY_GOOGLE, str(emotion_name) + "_" + str(img_fullpath)))
-                np.save(npy_filename, np.array((img, emo_vector)))
+                np.save(npy_filename, np.array((img, emo_vector)))  # vector is image and emotion of that image
         else:
             print("No face found on", img_fullpath)
             with open("faceless_google.txt", "a+") as f:

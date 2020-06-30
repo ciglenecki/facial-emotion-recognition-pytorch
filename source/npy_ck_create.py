@@ -13,12 +13,17 @@ from misc_input import *
 import torchvision
 import matplotlib.pyplot as plt
 import PIL.ImageOps
-# Config
 
-SAVE_NPY = bool_action("Save npy file")
+"""
+Create numpy vectors (.npy file) where each numpy vector looks like
+
+[ck_image, emotion]
+"""
+
+SAVE_NPY = bool_action("Save npy file")  # asks if you want to crate new npys
 NEUTRAL_EXISTS = True
 
-USE_FACE_DETECT = bool_action("Apply facedetect")
+USE_FACE_DETECT = bool_action("Apply facedetect")  # asks if you want to perform facedetect
 if USE_FACE_DETECT:
     face_detect = MTCNN(image_size=IMG_SIZE, select_largest=False, post_process=False)
 
@@ -192,6 +197,3 @@ for i, f in enumerate(FILEPATHS_CK_EMOTIONS, start=0):
     filename = fullpath_to_filename(f)
     person, seq_num, seq_count_text, _ = split_filename(filename)
     create_vectors(person, seq_num, seq_count_text)
-
-    if i % 30 == 0:
-        print(i, "/300")

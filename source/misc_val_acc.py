@@ -1,6 +1,5 @@
 from __future__ import (absolute_import, division, print_function,
                         unicode_literals)
-
 import os
 import sys
 from pathlib import Path, PurePath
@@ -24,30 +23,38 @@ from tabulate import tabulate
 import copy
 BATCH_SIZE = 3
 
-a = torch.tensor([[0, 0.5, 0.5, 0, 0], [0.5, 0, 0.5, 0, 0], [0, 0, 0, 0.5, 0.5]])
-b = torch.tensor([[0, 0.5, 0.5, 0, 0], [0.5, 0, 0, 0, 0], [0, 0, 0.5, 0.5, 0]])
-c = torch.tensor([0, 0, 0, 0.5, 0.5])
-d = torch.tensor([0, 0, 0.5, 0, 0.5])
+"""
+Example of calculating accuracy
+
+"""
+
+a = torch.tensor([[0, 0.5, 0.5, 0, 0], [1.0, 0, 0, 0]])
+b = torch.tensor([[0, 0.6, 0.4, 0, 0], [0.5, 0, 0.5, 0]])
 
 
-def calc_batch_acc(outputs, emotions):
+def calc_batch_acc(input_emotions, prediction_emotions):
     """
-    0.0, 0.5, 0.5, 0.0,   1.0, 0.0, 0.0 ,0.0
-    0.5, 0.5, 0.0, 0.0,   0.5, 0.5, 0.0, 0.0
+    [[0, 0.5, 0.5, 0, 0], [1.0, 0, 0, 0]] # a = input
+    [[0, 0.6, 0.4, 0, 0], [0.5, 0, 0.5, 0]] # b = output
 
-    -0.5, 0.0, 0.5, 0.0   0.5, -0.5, 0.0, 0.0
+    0, -0.1, 0.1, 0     0.5, 0, -0.5, 0   # step 1 finding differences (a - b)
 
-    0.5, 0.0, 0.5, 0.0    0.5, 0.5, 0.0, 0.0
+    0, 0.1, 0.1, 0, 0   0.5, 0, 0.5,  0   # step 2 abs of differences
 
-    1 1
-    1 1
+    0.2, 0.5                            # step 3 summing errors
 
-    50% 50%
+    2 - 0.2, 2 - 0.5                    # step 4 scaling errors to 2
+    1.8, 1.5                            # step 5 (0 = very bad, ..., 1 = ok, ..., 2 = perfect)
+
+    0.9, 0.75                           # step 6 scaling to [0, 1] by diving with /2
+
+    90% correct prediction for first vector
+    75% correct prediction for second vector
     """
-    print("A:", outputs)
-    print("B:", emotions)
+    print("input:", input_emotions)
+    print("prediction:", prediction_emotions)
 
-    div = torch.abs(emotions - outputs)
+    div = torch.abs(input_emotions - prediction_emotions)
     sums = torch.sum(div, dim=1)
     sums2 = (2 - sums)/2
     res = torch.mean(sums2)

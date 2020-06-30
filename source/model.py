@@ -29,9 +29,6 @@ from config_train import *
 
 def CrossEntropyLossSoftTarget(pred, soft_targets, weights, verbose=False):
 
-    def batch_tensor_value(tensor):
-        return (torch.sum(tensor, dim=0)/len(tensor)).data
-
     logsoftmax = nn.LogSoftmax(dim=1)
     softmax = nn.Softmax(dim=1)
 
@@ -42,6 +39,11 @@ def CrossEntropyLossSoftTarget(pred, soft_targets, weights, verbose=False):
             weighted_loss, dim=1
         )
     )
+
+    # only for console logging
+    def batch_tensor_value(tensor):
+        return (torch.sum(tensor, dim=0)/len(tensor)).data
+
     if (verbose):
         # Softmax and LogSoftmax are applied to 2D vectors, then batch_tensor_value takes average to 1D vector
         batch_soft_targets = batch_tensor_value(soft_targets)
@@ -91,14 +93,8 @@ def get_model():
     num_features = model.fc.in_features  # Model's last layer output number
 
     model.fc = nn.Sequential(
-        nn.Linear(num_features, len(EMOTION_DECLARATION)),
-        # nn.Linear(num_features, len(EMOTION_DECLARATION)**2),
-        # nn.BatchNorm1d(len(EMOTION_DECLARATION)**2),
-        # nn.ReLU(),
-        # nn.Dropout(0.2),
-        # nn.Linear(len(EMOTION_DECLARATION)**2, len(EMOTION_DECLARATION)),
+        nn.Linear(num_features, len(EMOTION_DECLARATION)),  # Last layer of ResNet outputs 1000 classes, we need 8... 1000 -> 8
     )
-
     return model
 
 
@@ -108,5 +104,5 @@ def get_optimizer(model):
 
     elif OPTIMIZER == 1:
         optimizer = optim.Adam(model.parameters(), lr=LEARNING_RATE)
-    exp_lr_scheduler = lr_scheduler.StepLR(optimizer, step_size=int(EPOCHS/4), gamma=0.1)
+    exp_lr_scheduler = lr_scheduler.StepLR(optimizer, step_size=int(EPOCHS/4), gamma=0.1)  # divide learning rate 10 every forth epoch
     return optimizer, exp_lr_scheduler

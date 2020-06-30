@@ -1,3 +1,7 @@
+"""
+Global config file
+"""
+
 EMOTION_DECLARATION = [
     "neutral",
     "anger",
@@ -16,8 +20,8 @@ VAL_SPLIT = 0.1 * (1/(1-TEST_SPLIT))
 GOOGLE_TRAIN_SPLIT = 1
 CK_TRAIN_SPLIT = 1
 
-GOOGLE_TEST_SPLIT = 0
+GOOGLE_TEST_SPLIT = 1
 CK_TEST_SPLIT = 1
 
 IMG_SIZE = 224
-MIN_PIC_SIZE = 20  # MIN FACE SIZE
+MIN_PIC_SIZE = 20  # Minimum size of 20x20 px

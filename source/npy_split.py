@@ -25,9 +25,12 @@ import random
 from paths import *
 from config import *
 
+"""
+Split .npy files, training/test
+"""
 i = 0
-PATH_NUMPY = PATH_NUMPY_CK  # numpy_google | numpy
-PATH_TEST = Path(PATH_NUMPY, "test")
+PATH_NUMPY = PATH_NUMPY_CK  # PATH_NUMPY_GOOGLE | PATH_NUMPY_CK
+PATH_TEST = Path(PATH_NUMPY, "test")  # save folder
 
 
 files_numpy = [f for f in listdir(PATH_TEST) if isfile(join(PATH_TEST, f))]
@@ -47,4 +50,4 @@ for numpy in random_files:
               os.path.join(PATH_TEST, numpy))
     i += 1
 
-print("Created ", i, " files in folder ", PATH_TEST)
+print("Created ", i, " npy files in folder ", PATH_TEST)
